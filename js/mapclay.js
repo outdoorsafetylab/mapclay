@@ -56,9 +56,13 @@ const viewers = new Set();
 fromElements.forEach(function (element, index) {
   const config = jsyaml.load(element.textContent) ?? {};
 
+  // If preset is define, apply previous config as prototype
   if (index != 0 && config.hasOwnProperty("preset") && config.preset == "last") {
     let lastConfig = targetElements[index - 1].config
     Object.setPrototypeOf(config, lastConfig);
+  }
+  if (! config.viewer) {
+    config.viewer = Object.keys(AdapterUrl)[0]
   }
   targetElements[index].config = config;
   viewers.add(config.viewer);
