@@ -4,7 +4,7 @@ Create a HTML file with the following contents:
 
 ```html
 <div class="map"></div>
-<script type="module" src="https://unpkg.com/mapclay@0.1.2/js/mapclay.js"></script>
+<script type="module" src="https://unpkg.com/mapclay@0.1.3/js/mapclay.js"></script>
 ```
 
 By default, `mapclay.js` will render elements with `class="map"` as web map.
