@@ -48,7 +48,13 @@ export default class extends defaultExport {
     });
 
     if (config.mapbox) {
-      olms.apply(map, config.mapbox.style);
+      olms.apply(
+        map, 
+        config.mapbox.style,
+        {
+          accessToken: config.mapbox.accessToken
+        }
+      );
     }
 
     return map;
