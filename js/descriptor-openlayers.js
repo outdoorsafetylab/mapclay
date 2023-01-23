@@ -9,40 +9,47 @@ export default class extends defaultExport {
   ]
 
   async importModules(config) {
-    await import('https://unpkg.com/ol-mapbox-style@9.4.0/dist/olms.js');
+    if (config.mapbox) {
+      await import('https://unpkg.com/ol-mapbox-style@9.4.0/dist/olms.js');
+    }
   } 
 
   createMap(element, config) {
     // Set projection to WGS84
     ol.proj.useGeographic();
 
-    var baseLayer = new ol.layer.Tile({
-      source: new ol.source.OSM()
-    })
+    // Add class for popup
+    this.definePopup();
+
+    // Set base layer by config
+    var baseLayer;
 
     if (config.XYZ) {
       baseLayer = new ol.layer.Tile({
         source: new ol.source.XYZ({ url: config.XYZ }) 
       })
-    } 
-    if (config.mapbox) {
-      baseLayer = new ol.layer.MapboxVector({
-        styleUrl: config.mapbox.style,
-        accessToken: config.mapbox.accessToken
+    } else if (config.mapbox) {
+      // do nothing
+    } else {
+      baseLayer = new ol.layer.Tile({
+        source: new ol.source.OSM()
       })
     }
 
     // Set basemap and camera
     const map =  new ol.Map({
-      layers: [ baseLayer ],
+      layers: baseLayer ? [ baseLayer ] : [],
       target: element,
       view: new ol.View({
+        constrainResolution: true,
         center: config.center,
         zoom: config.zoom
       }),
     });
 
-    this.definePopup();
+    if (config.mapbox) {
+      olms.apply(map, config.mapbox.style);
+    }
 
     return map;
   };
