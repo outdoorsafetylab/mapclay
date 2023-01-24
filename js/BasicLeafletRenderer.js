@@ -1,4 +1,4 @@
-import defaultExport from './BaseDescriptor.js';
+import defaultExport from './BaseRenderer.js';
 
 export default class extends defaultExport {
   version = '1.9.3';

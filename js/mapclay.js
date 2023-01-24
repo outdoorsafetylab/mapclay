@@ -1,9 +1,9 @@
 import 'https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js';
 
-const AdapterUrl = Object.freeze({
-  openlayers: './descriptor-openlayers.js', 
-  leaflet:    './descriptor-leaflet.js',
-  maplibre:   './descriptor-maplibre.js'
+const rendererInfo = Object.freeze({
+  openlayers: './BasicOpenlayersRenderer.js', 
+  leaflet:    './BasicLeafletRenderer.js',
+  maplibre:   './BasicMaplibreRenderer.js'
 });
 
 function loadResource(url) {
@@ -49,8 +49,8 @@ let fromSelector = currentScript.dataset.from;
 fromSelector ??= targetSelector; 
 const fromElements = Array.from(parentElement.querySelectorAll(fromSelector));
 
-// Set of map viewers in config texts
-const viewers = new Set();
+// Set of map renders in config texts
+const usedRenderers = new Set();
 
 // Get config from elements
 fromElements.forEach(function (element, index) {
@@ -61,34 +61,34 @@ fromElements.forEach(function (element, index) {
     let lastConfig = targetElements[index - 1].config
     Object.setPrototypeOf(config, lastConfig);
   }
-  if (! config.viewer) {
-    config.viewer = Object.keys(AdapterUrl)[0]
+  if (! config.use) {
+    config.use = Object.keys(rendererInfo)[0]
   }
   targetElements[index].config = config;
-  viewers.add(config.viewer);
+  usedRenderers.add(config.use);
 })
 
-/* For each map viewer:
-   1. Load related methods in adapter file
+/* For each map renderer:
+   1. Load related methods in renderer file
    2. Put scripts and CSS into DOM
-   3. Render maps which use this viewer */
-for (let viewer of viewers) {
-  // TODO handle undefined viewer
-  let adapter = new (await import(AdapterUrl[viewer])).default();
+   3. Render maps which use this renderer */
+for (let rendererName of usedRenderers) {
+  // TODO handle undefined renderer
+  let renderer = new (await import(rendererInfo[rendererName])).default();
 
   let promises = [];
 
-  adapter.resources.forEach((url) => {
+  renderer.resources.forEach((url) => {
 	promises.push(loadResource(url));
   });
 
   Promise.all(promises)
     .then(function() {
-      // After map viewer script is loaded, render maps
+      // After map renderer script is loaded, render maps
       targetElements.filter(ele => 
-        ele.config.viewer == viewer
+        ele.config.use == rendererName
       ).forEach(ele => {
-        adapter.renderMap(ele);
+        renderer.renderMap(ele);
       });
     }).catch(function(script) {
       console.log(script + ' failed to load');
