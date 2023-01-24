@@ -1,28 +1,42 @@
 ## Quick Start
 
-Create a HTML file with the following contents:
+Create an HTML file with the following contents:
 
 ```html
 <div class="map"></div>
 <script type="module" src="https://unpkg.com/mapclay@0.1.3/js/mapclay.js"></script>
 ```
 
-By default, `mapclay.js` will render elements with `class="map"` as web map.
+By default, `mapclay.js` will render elements with `class="map"` as web map:
+![](resources/example_1.png)
+
+By default, the center of map would be Taiwan (**121E 23N**), my hometown.
 
 Here is another example:
 
 ```html
+<div class="map"></div>
 <pre class="map">
-render: maplibre
+viewer: maplibre
 width: 50vw
 height: 500px
 center: [142.73, 43.83]
 </pre>
-<script type="module" src="https://unpkg.com/mapclay@0.1.2/js/mapclay.js"></script>
+<script type="module" src="https://unpkg.com/mapclay@0.1.3/js/mapclay.js"></script>
 ```
 
-In this case, we use [maplibre][] as viewer. The map's width should occupy half of viewport.
+Here is the result, another map is rendered:
+![](resources/example_2.png)
+
+In this case, a new element with `class="map"` is added. Its text is used to configure a map.
+`<pre>` is used instead to preserve the newlines in text.
+
+we take [maplibre][] as map viewer. The map's width should occupy half of viewport.
 And height should be 500px. The center of map is **140.73E 43.83N**.
+
+Each viewer has its own default value.
+By default, [maplibre][] use [demotiles][] as its basemap
+
 
 ## Why This?
 
@@ -32,8 +46,9 @@ But to make a web map with them, adequate frontend knowledge are necessary.
 
 As a hiker and a part-time volunteer of rescue, I have many friends who need to 
 create digital maps for a variety of activities. Since most of them are not 
-developer, their solutions are QGIS, Garmin BaseCamp or Google My-Map/Earth.
-And none of these solutions can fulfill the followings at the same time:
+developer, their solutions are *QGIS*, *Garmin BaseCamp* or *Google My-Map/Earth*.
+These solutions have better UI, but none of them can fulfill the followings 
+at the same time:
 
 1. Easily integrated into a web page
 1. Open source solution and no 3rd party service needed
@@ -46,15 +61,16 @@ In short, **mapclay** is the abstraction for those use cases.
 
 `mapclay.js` only do several things:
 
-1. Use selector (`.map` by default) to get elements about map rendering
+1. Use CSS selector (`.map` by default) to get elements about map rendering
 1. Parse inner text of each elements from YAML format into object. 
 1. If object has no property called `viewer`, assign it by default value.
-1. For each `viewer` used, coresponding **Descriptor** JS class uses method 
-   `renderMap()` to render elements into map.
+1. For each `viewer` used, coresponding **Descriptor** JS class uses 
+   `renderMap()` method to render elements into map.
 
-By default, `mapclay.js` comes with three valid **Descriptor** JS class: 
+By default, `mapclay.js` comes with three valid **Descriptor** JS classes: 
 `openlayers`, `maplibre` and `leaflet`. Of course each of them use map library 
 in the same name.
+
 
 ## Contribution
 
@@ -70,3 +86,4 @@ https://maps4html.org/web-map-doc/
 http://cartodb.github.io/odyssey.js/
 
 [maplibre]: https://maplibre.org/projects/maplibre-gl-js/
+[demotiles]: https://github.com/maplibre/demotiles/
