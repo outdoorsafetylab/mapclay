@@ -16,7 +16,7 @@ Here is another example:
 ```html
 <div class="map"></div>
 <pre class="map">
-viewer: maplibre
+use: maplibre
 width: 50vw
 height: 500px
 center: [142.73, 43.83]
@@ -26,15 +26,15 @@ center: [142.73, 43.83]
 
 Here is the result, another map is rendered:
 
-![](resources/example_2.png)
+<img width="500px" src="resources/example_2.png">
 
 In this case, a new element with `class="map"` is added. Its text is used to configure a map.
 `<pre>` is used instead to preserve the newlines in text.
 
-Here we use [maplibre][] as map viewer. The map's width should occupy half of viewport.
+Here we use [maplibre][] as map renderer. The map's width should occupy half of viewport.
 And height should be 500px. The center of map is **140.73E 43.83N**.
 
-Each viewer has its own default values.
+Each renderer has its own default values.
 By default, [maplibre][] use [demotiles][] as its basemap
 
 
@@ -63,13 +63,13 @@ In short, **mapclay** is the abstraction for those use cases.
 
 1. Use CSS selector (`.map` by default) to get elements about map rendering
 1. Parse inner text of each element from YAML format into object. 
-1. If object has no property called `viewer`, assign it by default value.
-1. For each `viewer` used, coresponding **Descriptor** JS class uses 
+1. If object has no property called `use`, assign it by default value.
+1. For each `use` value, a coresponding **Renderer** JS class uses 
    `renderMap()` method to render elements into maps.
 
-By default, `mapclay.js` comes with three preinstalled **Descriptor** JS classes: 
-`openlayers`, `maplibre` and `leaflet`. Of course each of them use map library 
-with the same name.
+By default, `mapclay.js` comes with three preinstalled **Renderer** JS [classes][]: 
+`openlayers`, `maplibre` and `leaflet`.
+Of course each of them use map library with the same name.
 
 
 ## Contribution
@@ -87,3 +87,4 @@ http://cartodb.github.io/odyssey.js/
 
 [maplibre]: https://maplibre.org/projects/maplibre-gl-js/
 [demotiles]: https://github.com/maplibre/demotiles/
+[classes]: https://github.com/typebrook/mapclay.js/tree/master/js/
