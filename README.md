@@ -7,10 +7,9 @@ Create an HTML file with the following contents:
 <script type="module" src="https://unpkg.com/mapclay@0.1.3/js/mapclay.js"></script>
 ```
 
-By default, `mapclay.js` will render elements with `class="map"` as web map:
-![](resources/example_1.png)
+`mapclay.js` simply renders elements with `class="map"`(by default) as web map:
 
-By default, the center of map would be Taiwan (**121E 23N**), my hometown.
+<img width="250px" src="resources/example_1.png">
 
 Here is another example:
 
@@ -26,15 +25,16 @@ center: [142.73, 43.83]
 ```
 
 Here is the result, another map is rendered:
+
 ![](resources/example_2.png)
 
 In this case, a new element with `class="map"` is added. Its text is used to configure a map.
 `<pre>` is used instead to preserve the newlines in text.
 
-we take [maplibre][] as map viewer. The map's width should occupy half of viewport.
+Here we use [maplibre][] as map viewer. The map's width should occupy half of viewport.
 And height should be 500px. The center of map is **140.73E 43.83N**.
 
-Each viewer has its own default value.
+Each viewer has its own default values.
 By default, [maplibre][] use [demotiles][] as its basemap
 
 
@@ -62,14 +62,14 @@ In short, **mapclay** is the abstraction for those use cases.
 `mapclay.js` only do several things:
 
 1. Use CSS selector (`.map` by default) to get elements about map rendering
-1. Parse inner text of each elements from YAML format into object. 
+1. Parse inner text of each element from YAML format into object. 
 1. If object has no property called `viewer`, assign it by default value.
 1. For each `viewer` used, coresponding **Descriptor** JS class uses 
-   `renderMap()` method to render elements into map.
+   `renderMap()` method to render elements into maps.
 
-By default, `mapclay.js` comes with three valid **Descriptor** JS classes: 
+By default, `mapclay.js` comes with three preinstalled **Descriptor** JS classes: 
 `openlayers`, `maplibre` and `leaflet`. Of course each of them use map library 
-in the same name.
+with the same name.
 
 
 ## Contribution
