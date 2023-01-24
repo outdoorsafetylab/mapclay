@@ -1,3 +1,5 @@
+[![npm version](https://badge.fury.io/js/mapclay.svg)](https://badge.fury.io/js/mapclay)
+
 ## Quick Start
 
 Create an HTML file with the following contents:
