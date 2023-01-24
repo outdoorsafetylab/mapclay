@@ -4,7 +4,7 @@ Create an HTML file with the following contents:
 
 ```html
 <div class="map"></div>
-<script type="module" src="https://unpkg.com/mapclay@0.1.3/js/mapclay.js"></script>
+<script type="module" src="https://unpkg.com/mapclay@{VERSION}/js/mapclay.js"></script>
 ```
 
 `mapclay.js` simply renders elements with `class="map"`(by default) as web map:
@@ -21,7 +21,7 @@ width: 50vw
 height: 500px
 center: [142.73, 43.83]
 </pre>
-<script type="module" src="https://unpkg.com/mapclay@0.1.3/js/mapclay.js"></script>
+<script type="module" src="https://unpkg.com/mapclay@{VERSION}/js/mapclay.js"></script>
 ```
 
 Here is the result, another map is rendered:
@@ -72,6 +72,52 @@ By default, `mapclay.js` comes with three preinstalled **Renderer** JS [classes]
 Of course each of them use map library with the same name.
 
 
+## Integration
+
+### hugo
+
+[hugo][] is a popular static site generator. Write markdown files, 
+then you get well-organized web pages. Just a little tweak, you can write 
+configuration in Code Blocks and get map quickly in generated pages.
+
+Put a [render hook][] file called `render-codeblock-map.html` into `layouts/_default/_markup/`
+in your hugo project. With the following contents:
+
+```html
+<div>
+  <pre class="map">
+    {{- .Inner | safeHTML }}
+  </pre>
+</div>
+{{ .Page.Store.Set "hasMap" true }}
+```
+
+This override the default markdown rendering behavior of hugo. Now if a markdown
+file contains Code Blocks marked `map` like this:
+
+    ```map
+    width: 500px
+    height: 500px
+    center: [142.73, 43.83]
+    zoom: 10
+    ```
+
+Then this creates a `<pre>` tag and put
+codes inside it. Also this marks the web page `hasMap=true` property.
+
+Then in each necessary templates (said `layouts/_default/single.html`),
+put the following contents at the end:
+
+```html
+{{ if .Page.Store.Get "hasMap" }}
+<script type="module" src="https://unpkg.com/mapclay@{VERSION}/js/mapclay.js"></script>
+{{ end }}
+```
+
+So each page marked `hasMap=ture` would has `mapclay.js` loaded after DOM parsed.
+And you get map in your pages.
+
+
 ## Contribution
 
 Since I am not a frontend guy, source code should break some conventions or
@@ -85,6 +131,8 @@ https://maps4html.org/web-map-doc/
 ### odyssey.js
 http://cartodb.github.io/odyssey.js/
 
-[maplibre]: https://maplibre.org/projects/maplibre-gl-js/
-[demotiles]: https://github.com/maplibre/demotiles/
-[classes]: https://github.com/typebrook/mapclay.js/tree/master/js/
+[maplibre]:     https://maplibre.org/projects/maplibre-gl-js/
+[demotiles]:    https://github.com/maplibre/demotiles/
+[classes]:      https://github.com/typebrook/mapclay.js/tree/master/js/
+[hugo]:         https://gohugo.io/
+[render hook]:  https://gohugo.io/templates/render-hooks/
