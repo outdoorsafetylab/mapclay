@@ -10,7 +10,7 @@ export default class extends defaultExport {
 
   createMap(element, config){
     let latLon = Array.from(config.center).reverse()
-    let map =  L.map(element).setView(latLon, config.zoom);
+    let map = L.map(element).setView(latLon, config.zoom);
     let xyz = config.XYZ
       ? config.XYZ
       : 'https://tile.openstreetmap.org/{z}/{x}/{y}.png'

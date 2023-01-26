@@ -37,7 +37,7 @@ export default class extends defaultExport {
     }
 
     // Set basemap and camera
-    const map =  new ol.Map({
+    const map = new ol.Map({
       layers: baseLayer ? [ baseLayer ] : [],
       target: element,
       view: new ol.View({
@@ -153,7 +153,7 @@ export default class extends defaultExport {
   }
 
   defaultMarkerImage() {
-    let svg = `<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="30px" height="30px" viewBox="0 0 30 30" enable-background="new 0 0 30 30">    
+    let svg = `<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="30px" height="30px" viewBox="0 0 30 30" enable-background="new 0 0 30 30">
                  <path fill="#156BB1" d="M22.906,10.438c0,4.367-6.281,14.312-7.906,17.031c-1.719-2.75-7.906-12.665-7.906-17.031S10.634,2.531,15,2.531S22.906,6.071,22.906,10.438z"/>
                  <circle fill="#FFFFFF" cx="15" cy="10.677" r="3.291"/>
                </svg>`;
@@ -351,7 +351,7 @@ export default class extends defaultExport {
     map.on('singleclick', function(evt) {
       const feature = map.forEachFeatureAtPixel(evt.pixel, function (feature) {
         let features = feature.get('features');
-        return features ?  features[0] : null
+        return features ? features[0] : null
       });
       if (feature){
         popup.show(evt.coordinate, feature.get('name'));
