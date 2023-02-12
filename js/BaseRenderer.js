@@ -61,6 +61,9 @@ export default class {
 
   // Transform element contains config text into map
   async renderMap(element) {
+    // Remove all childs
+    element.replaceChildren([])
+
     // If config has no prototype, apply defautConfig
     // To prevent necessary configs are not defined
     if (! element.config.hasOwnProperty('preset')) {
@@ -68,7 +71,7 @@ export default class {
     }
 
     // Print map config
-    this.printConfig(element, element.config);
+    //this.printConfig(element, element.config);
 
     // Set width/height for div
     element.style.width = element.config.width;

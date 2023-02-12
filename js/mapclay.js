@@ -53,44 +53,57 @@ const fromElements = Array.from(parentElement.querySelectorAll(fromSelector));
 const usedRenderers = new Set();
 
 // Get config from elements
-fromElements.forEach(function (element, index) {
-  const config = jsyaml.load(element.textContent) ?? {};
+function assignConfig() {
+  fromElements.forEach(function (element, index) {
+    const config = jsyaml.load(element.value ?? element.textContent) ?? {};
+    console.log(config)
 
-  // If preset is define, apply previous config as prototype
-  if (index != 0 && config.hasOwnProperty("preset") && config.preset == "last") {
-    let lastConfig = targetElements[index - 1].config
-    Object.setPrototypeOf(config, lastConfig);
-  }
-  if (! config.use) {
-    config.use = Object.keys(rendererInfo)[0]
-  }
-  targetElements[index].config = config;
-  usedRenderers.add(config.use);
-})
+    // If preset is define, apply previous config as prototype
+    if (index != 0 && config.hasOwnProperty("preset") && config.preset == "last") {
+      let lastConfig = targetElements[index - 1].config
+      Object.setPrototypeOf(config, lastConfig);
+    }
+    if (! config.use) {
+      config.use = Object.keys(rendererInfo)[0]
+    }
+    targetElements[index].config = config;
+    usedRenderers.add(config.use);
+  })
+}
 
 /* For each map renderer:
    1. Load related methods in renderer file
    2. Put scripts and CSS into DOM
    3. Render maps which use this renderer */
-for (let rendererName of usedRenderers) {
-  // TODO handle undefined renderer
-  let renderer = new (await import(rendererInfo[rendererName])).default();
 
-  let promises = [];
+async function refreshMap() {
+  assignConfig()
 
-  renderer.resources.forEach((url) => {
-	promises.push(loadResource(url));
-  });
+  for (let rendererName of usedRenderers) {
+    // TODO handle undefined renderer
+    let renderer = new (await import(rendererInfo[rendererName])).default();
 
-  Promise.all(promises)
-    .then(function() {
-      // After map renderer script is loaded, render maps
-      targetElements.filter(ele => 
-        ele.config.use == rendererName
-      ).forEach(ele => {
-        renderer.renderMap(ele);
-      });
-    }).catch(function(script) {
-      console.log(script + ' failed to load');
+    let promises = [];
+
+    renderer.resources.forEach((url) => {
+      promises.push(loadResource(url));
     });
+
+    Promise.all(promises)
+      .then(function() {
+        // After map renderer script is loaded, render maps
+        targetElements.filter(ele => 
+          ele.config.use == rendererName
+        ).forEach(ele => {
+          renderer.renderMap(ele);
+        });
+      }).catch(function(script) {
+        console.log(script + ' failed to load');
+      });
+  }
 }
+
+refreshMap()
+
+export { refreshMap };
+window.refreshMap = refreshMap
