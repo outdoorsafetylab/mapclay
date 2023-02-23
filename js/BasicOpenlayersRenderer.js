@@ -297,7 +297,7 @@ export default class extends defaultExport {
     };
 
     const popupCSS = `
-            .ol-popup {
+      .ol-popup {
         position: absolute;
         background-color: white;
         box-shadow: 0 1px 4px rgba(0,0,0,0.2);
