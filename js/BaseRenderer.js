@@ -80,6 +80,7 @@ export default class {
     // Configure Map
     await this.importModules(element.config);
     const map = this.createMap(element, element.config);
+    element.map = map
     this.afterMapCreated(map, element.config);
   }
 }

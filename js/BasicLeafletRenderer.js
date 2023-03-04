@@ -8,7 +8,13 @@ export default class extends defaultExport {
     `https://unpkg.com/leaflet@${this.version}/dist/leaflet.css`
   ]
 
-  createMap(element, config){
+  createMap(element, config) {
+    // If Map Container is initialized, remove it
+    if (element.map && element.map.remove) {
+      element.map.off()
+      element.map.remove()
+    }
+
     let latLon = Array.from(config.center).reverse()
     let map = L.map(element).setView(latLon, config.zoom);
     let xyz = config.XYZ
