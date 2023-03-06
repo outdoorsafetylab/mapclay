@@ -1,7 +1,7 @@
 import defaultExport from './BaseRenderer.js';
 
 export default class extends defaultExport {
-  version = '7.2.2';
+  version = '7.3.0';
 
   resources = [
     `https://cdn.jsdelivr.net/npm/ol@${this.version}/dist/ol.js`,
