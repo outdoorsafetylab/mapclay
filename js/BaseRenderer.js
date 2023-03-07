@@ -77,11 +77,12 @@ export default class {
     element.style.width = element.config.width;
     element.style.height = element.config.height;
 
+    this.config = element.config;
     // Configure Map
-    await this.importModules(element.config);
-    const map = this.createMap(element, element.config);
-    element.map = map
-    this.afterMapCreated(map, element.config);
+    await this.importModules(this.config);
+    const map = this.createMap(element, this.config);
+    element.map = map // Used to check element is already a map container
+    this.afterMapCreated(map, this.config);
   }
 }
 
