@@ -63,10 +63,15 @@ function assignConfig() {
       let lastConfig = targetElements[index - 1].config
       Object.setPrototypeOf(config, lastConfig);
     }
+
+    // Set use with default value (if not set)
     if (! config.use) {
       config.use = Object.keys(rendererInfo)[0]
     }
+
+    // Apply config onto element
     targetElements[index].config = config;
+
     usedRenderers.add(config.use);
   })
 }

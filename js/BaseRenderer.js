@@ -65,7 +65,7 @@ export default class {
     element.replaceChildren([])
 
     // If config has no prototype, apply defautConfig
-    // To prevent necessary configs are not defined
+    // This prevents necessary configs are not defined
     if (! element.config.hasOwnProperty('preset')) {
       Object.setPrototypeOf(element.config, this.defaultConfig)
     }
