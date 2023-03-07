@@ -72,6 +72,8 @@ export default class extends defaultExport {
         center: config.center
       });
     }
+
+    super.setInteraction(map, config)
   };
 
   // Configure controls
@@ -360,4 +362,53 @@ export default class extends defaultExport {
       }
     });
   }
+
+  handleKey(map, code) {
+    if (! super.handleKey(map, code)) { return; }
+
+    let nextStatus = this.config.steps[this.at]
+    flyTo(map, nextStatus, function(){})
+  }
+}
+
+// Pan map to a specific location
+function flyTo(map, status, done) {
+  const duration = 2500;
+  const view = map.getView();
+  const nextZoom = status.zoom ? status.zoom : view.getZoom();
+  const nextCenter = status.center ? status.center : view.center;
+
+  let parts = 2;
+  let called = false;
+  function callback(complete) {
+    --parts;
+    if (called) {
+      return;
+    }
+    if (parts === 0 || !complete) {
+      called = true;
+      done(complete);
+    }
+  }
+
+  // Move view to the given location
+  view.animate(
+    {
+      center: nextCenter,
+      duration: duration,
+    },
+    callback
+  );
+  // At the same time, zoom out and zoom in
+  view.animate(
+    {
+      zoom: (view.getZoom() + nextZoom) /2 -1,
+      duration: duration / 2,
+    },
+    {
+      zoom: nextZoom,
+      duration: duration / 2,
+    },
+    callback
+  );
 }

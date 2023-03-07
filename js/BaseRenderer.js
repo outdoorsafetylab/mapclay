@@ -14,8 +14,13 @@ export default class {
     control: { 
       fullscreen: false 
     },
-    debug: false
+    debug: false,
+
+    steps: []
   }
+
+  // Used for animation
+  at = 0
 
   // Import modules based on config
   importModules(config){};
@@ -29,7 +34,12 @@ export default class {
     this.setExtra(map, config);
   };
   // Add Interaction Options
-  setInteraction(map, config){};
+  setInteraction(map, config){
+    const renderer = this
+    window.addEventListener('keydown', function(e){
+      renderer.handleKey(map, e.keyCode)
+    })
+  };
   // Add Control Options
   setControl(map, config){};
   // Add GIS data
@@ -44,6 +54,23 @@ export default class {
   };
   // Do extra stuff
   setExtra(map, config){};
+
+  // Handle key events
+  handleKey(map, code) {
+    if (this.config.steps.length < 2) { return false; }
+
+    if (code == 39) { 
+      ++this.at;
+      if (this.at == this.config.steps.length) { this.at = 0; }
+    }
+    else if (code == 37) { 
+      --this.at; 
+      if (this.at == -1) { this.at = this.config.steps.length - 1; }
+    }
+    else { return false; }
+
+    return true
+  }
 
   // Clean original content
   // And pretty-print config at a new <div> upon map
@@ -70,14 +97,18 @@ export default class {
       Object.setPrototypeOf(element.config, this.defaultConfig)
     }
 
-    // Print map config
-    //this.printConfig(element, element.config);
-
     // Set width/height for div
     element.style.width = element.config.width;
     element.style.height = element.config.height;
 
     this.config = element.config;
+
+    // Set current center/zoom as the first element of steps[]
+    this.config.steps.unshift({ 
+      center: this.config.center, 
+      zoom: this.config.zoom 
+    })
+
     // Configure Map
     await this.importModules(this.config);
     const map = this.createMap(element, this.config);
