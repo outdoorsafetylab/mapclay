@@ -40,7 +40,7 @@ const currentScript = Array.from(document.querySelectorAll("script"))
 const parentElement = currentScript.parentElement;
 
 // Use targetSelector to get elements which will render maps
-let targetSelector = currentScript.dataset.target;
+let targetSelector = currentScript.dataset.to;
 targetSelector ??= ".map";
 const targetElements = Array.from(parentElement.querySelectorAll(targetSelector));
 
