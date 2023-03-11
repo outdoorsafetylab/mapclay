@@ -2,21 +2,73 @@
 
 <body style="display: flex; flex-direction: row;">
 
+<!-- Area of Editing -->
 <div style="display: flex; flex-direction: column">
-<label for="story">Use YAML to create a map:</label>
-<textarea id="map" rows="15" cols="50" style="width: 50vw; font-size: 20px">
+  <label for="story">Use YAML to create a map:</label>
+  <textarea id="map-text" rows="15" cols="50" style="width: 50vw; height: 300px; font-size: 20px">
 width: 50vw
 height: 80vh
-</textarea>
-<input type="button" value="Refresh" onclick="refreshMap()">
+  </textarea>
+  <input type="button" value="Refresh" onclick="refreshMap()">
+  <div style="display: grid; grid-template-columns: 1fr 1fr 1fr;"> 
+    <div id="use" style="display: flex; flex-direction: row">
+      <fieldset>
+        <legend>Use which renderer?</legend>
+        <div>
+          <input type="radio" name="use" value="openlayers" checked/>
+          <label>openlayers</label>
+        </div>
+        <div>
+          <input type="radio" name="use" value="maplibre"/>
+          <label>maplibre</label>
+        </div>
+        <div>
+          <input type="radio" name="use" value="leaflet"/>
+          <label>leaflet</label>
+        </div>
+      </fieldset>
+    </div>
+    <div id="XYZ" style="display: flex; flex-direction: row">
+      <fieldset>
+        <legend>Template of Tile Service</legend>
+        <div>
+          <input type="radio" name="XYZ" value="http://b.tile.openstreetmap.org/{z}/{x}/{y}.png" checked/>
+          <label>OSM Mapnik</label>
+        </div>
+        <div>
+          <input type="radio" name="XYZ" value="https://a.tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey=a5dd6a2f1c934394bce6b0fb077203eb"/>
+          <label>OpenCycleMap</label>
+        </div>
+        <div>
+          <input type="radio" name="XYZ" value="https://tile.happyman.idv.tw/map/moi_osm/{z}/{x}/{y}.png"/>
+          <label>Rudymap</label>
+        </div>
+      </fieldset>
+    </div>
+    <div id="link" style="display: flex; flex-direction: row">
+      <fieldset>
+        <legend>Use permalink</legend>
+        <div>
+          <input type="radio" name="link" value="false" checked/>
+          <label>False</label>
+        </div>
+        <div>
+          <input type="radio" name="link" value="true"/>
+          <label>True</label>
+        </div>
+      </fieldset>
+    </div>
+  </div>
 </div>
+<script type="module" src="input.js"></script>
 
-<div class="map"></div>
+<!-- Area of Rendered Map -->
+<div id="map"></div>
 <script 
   type="module" 
   src="../js/mapclay.js"
-  data-from="#map"
-  data-to=".map">
+  data-from="#map-text"
+  data-to="#map">
 </script>
 
 </body>
