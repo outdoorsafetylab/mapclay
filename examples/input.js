@@ -1,14 +1,31 @@
 import 'https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js';
 
-const radioButtons = document.querySelectorAll('input[type="radio"]');
+const choices = document.querySelectorAll('div[class="field"]');
 const textArea = document.querySelector('#map-text');
 
-radioButtons.forEach((radioButton) => {
-  radioButton.addEventListener('change', (event) => {
-    if (event.target.checked) {
+choices.forEach((choice) => {
+  choice.addEventListener('click', (event) => {
+      choice.querySelector('input[type="radio"]').checked = true
+
+      const field = choice.querySelector('input').name
       const options = jsyaml.load(textArea.value, 'utf8');
-      options[radioButton.name] = radioButton.value;
+      var value = choice.dataset.value
+
+      if (! value) {
+        value = choice.querySelector('input[type="text"]').value
+      }
+      if (choice.dataset.type == "boolean") {
+        value = value === 'true'
+      }
+
+      options[field] = value
       textArea.value = jsyaml.dump(options);
-    }
+  });
+});
+
+const textInputs = document.querySelectorAll('input[type="text"]');
+textInputs.forEach((input) => {
+  input.addEventListener('focusout', (event) => {
+    input.parentElement.click()
   });
 });
