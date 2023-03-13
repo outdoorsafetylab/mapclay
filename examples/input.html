@@ -10,20 +10,20 @@ width: 50vw
 height: 80vh
   </textarea>
   <input type="button" value="Refresh" onclick="refreshMap()">
-  <div style="display: grid; grid-template-columns: 1fr 1fr 1fr;"> 
+  <div style="display: grid; grid-auto-flow: column dense;;"> 
     <div id="use" style="display: flex; flex-direction: row">
       <fieldset>
         <legend>Use which renderer?</legend>
-        <div>
-          <input type="radio" name="use" value="openlayers" checked/>
+        <div class="field" data-value="openlayers">
+          <input type="radio" name="use" checked/>
           <label>openlayers</label>
         </div>
-        <div>
-          <input type="radio" name="use" value="maplibre"/>
+        <div class="field" data-value="maplibre">
+          <input type="radio" name="use"/>
           <label>maplibre</label>
         </div>
-        <div>
-          <input type="radio" name="use" value="leaflet"/>
+        <div class="field" data-value="leaflet">
+          <input type="radio" name="use"/>
           <label>leaflet</label>
         </div>
       </fieldset>
@@ -31,29 +31,34 @@ height: 80vh
     <div id="XYZ" style="display: flex; flex-direction: row">
       <fieldset>
         <legend>Template of Tile Service</legend>
-        <div>
-          <input type="radio" name="XYZ" value="http://b.tile.openstreetmap.org/{z}/{x}/{y}.png" checked/>
+        <div class="field" data-value="http://b.tile.openstreetmap.org/{z}/{x}/{y}.png">
+          <input type="radio" name="XYZ" checked/>
           <label>OSM Mapnik</label>
         </div>
-        <div>
-          <input type="radio" name="XYZ" value="https://a.tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey=a5dd6a2f1c934394bce6b0fb077203eb"/>
+        <div class="field" data-value="https://a.tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey=a5dd6a2f1c934394bce6b0fb077203eb">
+          <input type="radio" name="XYZ"/>
           <label>OpenCycleMap</label>
         </div>
-        <div>
-          <input type="radio" name="XYZ" value="https://tile.happyman.idv.tw/map/moi_osm/{z}/{x}/{y}.png"/>
+        <div class="field" data-value="https://tile.happyman.idv.tw/map/moi_osm/{z}/{x}/{y}.png">
+          <input type="radio" name="XYZ"/>
           <label>Rudymap</label>
+        </div>
+        <div class="field" data-value="">
+          <input type="radio" name="XYZ" />
+          <label>Custom</label>
+          <input type="text" style="width: 300px">
         </div>
       </fieldset>
     </div>
     <div id="link" style="display: flex; flex-direction: row">
       <fieldset>
         <legend>Use permalink</legend>
-        <div>
-          <input type="radio" name="link" value="false" checked/>
+        <div class="field" data-type="boolean" data-value=false>
+          <input type="radio" name="link" checked/>
           <label>False</label>
         </div>
-        <div>
-          <input type="radio" name="link" value="true"/>
+        <div class="field" data-type="boolean" data-value=true>
+          <input type="radio" name="link"/>
           <label>True</label>
         </div>
       </fieldset>
