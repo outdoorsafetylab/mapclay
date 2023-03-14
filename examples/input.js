@@ -5,27 +5,41 @@ const textArea = document.querySelector('#map-text');
 
 choices.forEach((choice) => {
   choice.addEventListener('click', (event) => {
+    // Check radio button
     choice.querySelector('input[type="radio"]').checked = true
 
+    // Get field for current option
     const field = choice.querySelector('input').name
-    var options = jsyaml.load(textArea.value, 'utf8');
-    options = options ? options : {}
 
-
+    // Get value from div or text input
     var value = choice.dataset.value
+    value = value ? value : choice.querySelector('input[type="text"]').value;
 
-    if (! value) {
-      value = choice.querySelector('input[type="text"]').value;
-    }
-    if (choice.dataset.type == "boolean") {
-      value = value === 'true';
+    // Change value by type
+    switch (choice.dataset.type) {
+      case "boolean":
+        value = value === 'true';
+        break;
+      case "array":
+        value = JSON.parse(value);
+        break;
+      case "number":
+        value = Number.parseFloat(value);
+        break;
     }
 
+    // Get assignment of new value 
+    // Considering nested attribute, use object here
     var assign = {};
     field.split('.').reverse().forEach((key, index) => {
       assign = { [key]: index == 0 ? value : assign }
     })
 
+    // Get current options from textArea
+    var options = jsyaml.load(textArea.value, 'utf8');
+    options = options ? options : {}
+
+    // Set new value
     Object.assign(options, assign)
     textArea.value = jsyaml.dump(options);
   });
