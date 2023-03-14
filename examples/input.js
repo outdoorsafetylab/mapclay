@@ -8,7 +8,10 @@ choices.forEach((choice) => {
       choice.querySelector('input[type="radio"]').checked = true
 
       const field = choice.querySelector('input').name
-      const options = jsyaml.load(textArea.value, 'utf8');
+      var options = jsyaml.load(textArea.value, 'utf8');
+      options = options ? options : {}
+
+    
       var value = choice.dataset.value
 
       if (! value) {
@@ -18,7 +21,12 @@ choices.forEach((choice) => {
         value = value === 'true'
       }
 
-      options[field] = value
+      var assign = {};
+      field.split('.').reverse().forEach((key, index) => {
+        assign = { [key]: index == 0 ? value : assign }
+      })
+
+      Object.assign(options, assign)
       textArea.value = jsyaml.dump(options);
   });
 });
