@@ -5,29 +5,29 @@ const textArea = document.querySelector('#map-text');
 
 choices.forEach((choice) => {
   choice.addEventListener('click', (event) => {
-      choice.querySelector('input[type="radio"]').checked = true
+    choice.querySelector('input[type="radio"]').checked = true
 
-      const field = choice.querySelector('input').name
-      var options = jsyaml.load(textArea.value, 'utf8');
-      options = options ? options : {}
+    const field = choice.querySelector('input').name
+    var options = jsyaml.load(textArea.value, 'utf8');
+    options = options ? options : {}
 
-    
-      var value = choice.dataset.value
 
-      if (! value) {
-        value = choice.querySelector('input[type="text"]').value
-      }
-      if (choice.dataset.type == "boolean") {
-        value = value === 'true'
-      }
+    var value = choice.dataset.value
 
-      var assign = {};
-      field.split('.').reverse().forEach((key, index) => {
-        assign = { [key]: index == 0 ? value : assign }
-      })
+    if (! value) {
+      value = choice.querySelector('input[type="text"]').value;
+    }
+    if (choice.dataset.type == "boolean") {
+      value = value === 'true';
+    }
 
-      Object.assign(options, assign)
-      textArea.value = jsyaml.dump(options);
+    var assign = {};
+    field.split('.').reverse().forEach((key, index) => {
+      assign = { [key]: index == 0 ? value : assign }
+    })
+
+    Object.assign(options, assign)
+    textArea.value = jsyaml.dump(options);
   });
 });
 
