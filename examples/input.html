@@ -12,6 +12,72 @@ height: 80vh
   <input type="button" value="Refresh" onclick="refreshMap()">
   <div style="width: 50vw; display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));"> 
     <fieldset style="width=fit-content">
+      <legend>Width</legend>
+      <div class="field" data-value="500px">
+        <input type="radio" name="width" checked/>
+        <label>500px</label>
+      </div>
+      <div class="field" data-value="700px">
+        <input type="radio" name="width"/>
+        <label>700px</label>
+      </div>
+      <div class="field" data-value="50vw">
+        <input type="radio" name="width"/>
+        <label>50vw</label>
+      </div>
+      <div class="field" data-value="">
+        <input type="radio" name="width" />
+        <label>Custom</label>
+        <input type="text">
+      </div>
+    </fieldset>
+    <fieldset style="height=fit-content">
+      <legend>Height</legend>
+      <div class="field" data-value="500px">
+        <input type="radio" name="height" checked/>
+        <label>500px</label>
+      </div>
+      <div class="field" data-value="700px">
+        <input type="radio" name="height"/>
+        <label>700px</label>
+      </div>
+      <div class="field" data-value="50vw">
+        <input type="radio" name="height"/>
+        <label>50vh</label>
+      </div>
+      <div class="field" data-value="">
+        <input type="radio" name="height" />
+        <label>Custom</label>
+        <input type="text">
+      </div>
+    </fieldset>
+    <fieldset style="height=fit-content">
+      <legend>Center</legend>
+      <div class="field" data-type="array" data-value="[138, 36]">
+        <input type="radio" name="center"/>
+        <label>Japan</label>
+      </div>
+      <div class="field" data-type="array" data-value="[121, 24]">
+        <input type="radio" name="center" checked/>
+        <label>Taiwan</label>
+      </div>
+    </fieldset>
+    <fieldset style="height=fit-content">
+      <legend>Zoom</legend>
+      <div class="field" data-type="number" data-value="5">
+        <input type="radio" name="zoom"/>
+        <label>5</label>
+      </div>
+      <div class="field" data-type="number" data-value="8">
+        <input type="radio" name="zoom"/>
+        <label>8</label>
+      </div>
+      <div class="field" data-type="number" data-value="12">
+        <input type="radio" name="zoom"/>
+        <label>12</label>
+      </div>
+    </fieldset>
+    <fieldset style="width=fit-content">
       <legend>Use which renderer?</legend>
       <div class="field" data-value="openlayers">
         <input type="radio" name="use" checked/>
@@ -48,11 +114,11 @@ height: 80vh
     </fieldset>
     <fieldset>
       <legend>Use permalink</legend>
-      <div class="field" data-type="boolean" data-value=false>
+      <div class="field" data-type="boolean" data-value="false">
         <input type="radio" name="link" checked/>
         <label>False</label>
       </div>
-      <div class="field" data-type="boolean" data-value=true>
+      <div class="field" data-type="boolean" data-value="true">
         <input type="radio" name="link"/>
         <label>True</label>
       </div>
