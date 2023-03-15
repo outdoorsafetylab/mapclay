@@ -4,17 +4,101 @@
 
 <!-- Area of Editing -->
 <div style="display: flex; flex-direction: column; max-width: 50vw">
-  <label for="story">Use YAML to create a map:</label>
+  <div>
+    <label for="story">Use YAML to create a map:</label>
+    <input type="button" value="Refresh" onclick="refreshMap()">
+  </div>
   <textarea id="map-text" rows="15" cols="50" style="width: 50vw; height: 300px; font-size: 20px">
 width: 50vw
 height: 80vh
   </textarea>
-  <input type="button" value="Refresh" onclick="refreshMap()">
   <div style="width: 50vw; display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));"> 
+    <fieldset style="width=fit-content">
+      <legend>Width</legend>
+      <div class="field" data-value="500px">
+        <input type="radio" name="width"/>
+        <label>500px</label>
+      </div>
+      <div class="field" data-value="700px">
+        <input type="radio" name="width"/>
+        <label>700px</label>
+      </div>
+      <div class="field" data-value="50vw">
+        <input type="radio" name="width"/>
+        <label>50vw</label>
+      </div>
+      <div class="field" data-value="">
+        <input type="radio" name="width" />
+        <label>Custom</label>
+        <input type="text" style="margin-left: 26px">
+      </div>
+      <div class="field" data-value="">
+        <input type="radio" name="width" />
+        <label>Clear</label>
+      </div>
+    </fieldset>
+    <fieldset style="height=fit-content">
+      <legend>Height</legend>
+      <div class="field" data-value="500px">
+        <input type="radio" name="height"/>
+        <label>500px</label>
+      </div>
+      <div class="field" data-value="700px">
+        <input type="radio" name="height"/>
+        <label>700px</label>
+      </div>
+      <div class="field" data-value="50vw">
+        <input type="radio" name="height"/>
+        <label>50vh</label>
+      </div>
+      <div class="field" data-value="">
+        <input type="radio" name="height" />
+        <label>Custom</label>
+        <input type="text" style="margin-left: 26px">
+      </div>
+      <div class="field" data-value="">
+        <input type="radio" name="height" />
+        <label>Clear</label>
+      </div>
+    </fieldset>
+    <fieldset style="height=fit-content">
+      <legend>Center</legend>
+      <div class="field" data-type="array" data-value="[138, 36]">
+        <input type="radio" name="center"/>
+        <label>Japan</label>
+      </div>
+      <div class="field" data-type="array" data-value="[121, 24]">
+        <input type="radio" name="center"/>
+        <label>Taiwan</label>
+      </div>
+      <div class="field" data-value="">
+        <input type="radio" name="center" />
+        <label>Clear</label>
+      </div>
+    </fieldset>
+    <fieldset style="height=fit-content">
+      <legend>Zoom</legend>
+      <div class="field" data-type="number" data-value="5">
+        <input type="radio" name="zoom"/>
+        <label>5</label>
+      </div>
+      <div class="field" data-type="number" data-value="8">
+        <input type="radio" name="zoom"/>
+        <label>8</label>
+      </div>
+      <div class="field" data-type="number" data-value="12">
+        <input type="radio" name="zoom"/>
+        <label>12</label>
+      </div>
+      <div class="field" data-value="">
+        <input type="radio" name="zoom" />
+        <label>Clear</label>
+      </div>
+    </fieldset>
     <fieldset style="width=fit-content">
       <legend>Use which renderer?</legend>
       <div class="field" data-value="openlayers">
-        <input type="radio" name="use" checked/>
+        <input type="radio" name="use"/>
         <label>openlayers</label>
       </div>
       <div class="field" data-value="maplibre">
@@ -25,11 +109,15 @@ height: 80vh
         <input type="radio" name="use"/>
         <label>leaflet</label>
       </div>
+      <div class="field" data-value="">
+        <input type="radio" name="use" />
+        <label>Clear</label>
+      </div>
     </fieldset>
     <fieldset>
       <legend>Template of Tile Service</legend>
       <div class="field" data-value="http://b.tile.openstreetmap.org/{z}/{x}/{y}.png">
-        <input type="radio" name="XYZ" checked/>
+        <input type="radio" name="XYZ"/>
         <label>OSM Mapnik</label>
       </div>
       <div class="field" data-value="https://a.tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey=a5dd6a2f1c934394bce6b0fb077203eb">
@@ -43,24 +131,32 @@ height: 80vh
       <div class="field" data-value="">
         <input type="radio" name="XYZ" />
         <label>Custom</label>
-        <input type="text">
+        <input type="text" style="margin-left: 26px">
+      </div>
+      <div class="field" data-value="">
+        <input type="radio" name="XYZ" />
+        <label>Clear</label>
       </div>
     </fieldset>
     <fieldset>
       <legend>Use permalink</legend>
-      <div class="field" data-type="boolean" data-value=false>
-        <input type="radio" name="link" checked/>
+      <div class="field" data-type="boolean" data-value="false">
+        <input type="radio" name="link"/>
         <label>False</label>
       </div>
-      <div class="field" data-type="boolean" data-value=true>
+      <div class="field" data-type="boolean" data-value="true">
         <input type="radio" name="link"/>
         <label>True</label>
+      </div>
+      <div class="field" data-value="">
+        <input type="radio" name="link" />
+        <label>Clear</label>
       </div>
     </fieldset>
     <fieldset>
       <legend>Mapbox Style</legend>
       <div class="field" data-value="https://demotiles.maplibre.org/style.json">
-        <input type="radio" name="mapbox.style" checked/>
+        <input type="radio" name="mapbox.style"/>
         <label>Maplibre demotiles</label>
       </div>
       <div class="field" data-value="mapbox://styles/mapbox/bright-v9">
@@ -74,7 +170,27 @@ height: 80vh
       <div class="field" data-value="">
         <input type="radio" name="mapbox.style" />
         <label>Custom</label>
-        <input type="text">
+        <input type="text" style="margin-left: 26px">
+      </div>
+      <div class="field" data-value="">
+        <input type="radio" name="mapbox.style" />
+        <label>Clear</label>
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend>GPX file</legend>
+      <div class="field" data-value="./run.gpx">
+        <input type="radio" name="GPX"/>
+        <label>Test file from Mapbox glossary</label>
+      </div>
+      <div class="field" data-value="">
+        <input type="radio" name="GPX"/>
+        <label>Custom</label>
+        <input type="text" style="margin-left: 26px">
+      </div>
+      <div class="field" data-value="">
+        <input type="radio" name="GPX" />
+        <label>Clear</label>
       </div>
     </fieldset>
   </div>
