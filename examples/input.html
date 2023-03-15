@@ -14,6 +14,25 @@ height: 80vh
   </textarea>
   <div style="width: 50vw; display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));"> 
     <fieldset style="width=fit-content">
+      <legend>Use which renderer?</legend>
+      <div class="field" data-value="openlayers">
+        <input type="radio" name="use"/>
+        <label>openlayers</label>
+      </div>
+      <div class="field" data-value="maplibre">
+        <input type="radio" name="use"/>
+        <label>maplibre</label>
+      </div>
+      <div class="field" data-value="leaflet">
+        <input type="radio" name="use"/>
+        <label>leaflet</label>
+      </div>
+      <div class="field" data-value="">
+        <input type="radio" name="use" />
+        <label>Clear</label>
+      </div>
+    </fieldset>
+    <fieldset style="width=fit-content">
       <legend>Width</legend>
       <div class="field" data-value="500px">
         <input type="radio" name="width"/>
@@ -92,25 +111,6 @@ height: 80vh
       </div>
       <div class="field" data-value="">
         <input type="radio" name="zoom" />
-        <label>Clear</label>
-      </div>
-    </fieldset>
-    <fieldset style="width=fit-content">
-      <legend>Use which renderer?</legend>
-      <div class="field" data-value="openlayers">
-        <input type="radio" name="use"/>
-        <label>openlayers</label>
-      </div>
-      <div class="field" data-value="maplibre">
-        <input type="radio" name="use"/>
-        <label>maplibre</label>
-      </div>
-      <div class="field" data-value="leaflet">
-        <input type="radio" name="use"/>
-        <label>leaflet</label>
-      </div>
-      <div class="field" data-value="">
-        <input type="radio" name="use" />
         <label>Clear</label>
       </div>
     </fieldset>
