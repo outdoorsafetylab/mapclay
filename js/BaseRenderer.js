@@ -3,19 +3,20 @@ export default class {
   // Resources about Script or CSS file
   resources = [];
 
+  supportOptions = [
+    "width",
+    "height",
+    "center",
+    "zoom",
+    "step"
+  ]
+
   // Default configuation for map 
   defaultConfig = {
     width: "300px",
     height: "300px",
-
     center: [121, 24],
     zoom: 7,
-
-    control: { 
-      fullscreen: false 
-    },
-    debug: false,
-
     steps: []
   }
 
