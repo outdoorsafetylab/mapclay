@@ -27,6 +27,7 @@ export default class extends defaultExport {
       element.map.off()
       element.map.remove()
     }
+    delete element._leaflet_id
 
     let latLon = Array.from(config.center).reverse()
     let map = L.map(element).setView(latLon, config.zoom);
