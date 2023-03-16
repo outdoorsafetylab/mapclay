@@ -14,7 +14,8 @@ height: 80vh
   </textarea>
   <div style="width: 50vw; display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));"> 
     <fieldset style="width=fit-content">
-      <legend>Use which renderer?</legend>
+      <legend>use</legend>
+      <p>Use which renderer?</p>
       <div class="field" data-value="openlayers">
         <input type="radio" name="use"/>
         <label>openlayers</label>
@@ -33,7 +34,8 @@ height: 80vh
       </div>
     </fieldset>
     <fieldset style="width=fit-content">
-      <legend>Width</legend>
+      <legend>width</legend>
+      <div>Width of map container</p>
       <div class="field" data-value="500px">
         <input type="radio" name="width"/>
         <label>500px</label>
@@ -57,7 +59,8 @@ height: 80vh
       </div>
     </fieldset>
     <fieldset style="height=fit-content">
-      <legend>Height</legend>
+      <legend>height</legend>
+      <p>Height of map container</p>
       <div class="field" data-value="500px">
         <input type="radio" name="height"/>
         <label>500px</label>
@@ -81,7 +84,8 @@ height: 80vh
       </div>
     </fieldset>
     <fieldset style="height=fit-content">
-      <legend>Center</legend>
+      <legend>center</legend>
+      <p>Center of map, format is [Longitude, Latitude]</p>
       <div class="field" data-type="array" data-value="[138, 36]">
         <input type="radio" name="center"/>
         <label>Japan</label>
@@ -92,7 +96,7 @@ height: 80vh
       </div>
       <div class="field" data-type="array" data-value="">
         <input type="radio" name="center" />
-        <label>Custom [Lon, Lat]</label>
+        <label>Custom</label>
         <input type="text" style="margin-left: 26px">
       </div>
       <div class="field" data-value="">
@@ -101,7 +105,8 @@ height: 80vh
       </div>
     </fieldset>
     <fieldset style="height=fit-content">
-      <legend>Zoom</legend>
+      <legend>zoom</legend>
+      <p>Zoom level of map</p>
       <div class="field" data-type="number" data-value="5">
         <input type="radio" name="zoom"/>
         <label>5</label>
@@ -125,7 +130,8 @@ height: 80vh
       </div>
     </fieldset>
     <fieldset>
-      <legend>Template of Tile Service</legend>
+      <legend>XYZ</legend>
+      <p>Template of slippy Tile Service</p>
       <div class="field" data-value="http://b.tile.openstreetmap.org/{z}/{x}/{y}.png">
         <input type="radio" name="XYZ"/>
         <label>OSM Mapnik</label>
@@ -149,7 +155,8 @@ height: 80vh
       </div>
     </fieldset>
     <fieldset>
-      <legend>Fullscreen button</legend>
+      <legend>control.fullscreen</legend>
+      <p>Fullscreen button</p>
       <div class="field" data-type="boolean" data-value="false">
         <input type="radio" name="control.fullscreen"/>
         <label>False</label>
@@ -164,7 +171,8 @@ height: 80vh
       </div>
     </fieldset>
     <fieldset>
-      <legend>Scale bar</legend>
+      <legend>control.scale</legend>
+      <p>Scale Bar</p>
       <div class="field" data-type="boolean" data-value="false">
         <input type="radio" name="control.scale"/>
         <label>False</label>
@@ -179,7 +187,8 @@ height: 80vh
       </div>
     </fieldset>
     <fieldset>
-      <legend>Debug</legend>
+      <legend>debug</legend>
+      <p>Show boundary and index of each tile</p>
       <div class="field" data-type="boolean" data-value="false">
         <input type="radio" name="debug"/>
         <label>False</label>
@@ -194,7 +203,8 @@ height: 80vh
       </div>
     </fieldset>
     <fieldset>
-      <legend>Use permalink</legend>
+      <legend>link</legend>
+      <p>Use permalink for map location</p>
       <div class="field" data-type="boolean" data-value="false">
         <input type="radio" name="link"/>
         <label>False</label>
@@ -209,7 +219,8 @@ height: 80vh
       </div>
     </fieldset>
     <fieldset>
-      <legend>Mapbox Style</legend>
+      <legend>mapbox.style</legend>
+      <p>URL of Mapbox Style file</p> 
       <div class="field" data-value="https://demotiles.maplibre.org/style.json">
         <input type="radio" name="mapbox.style"/>
         <label>Maplibre demotiles</label>
@@ -233,7 +244,8 @@ height: 80vh
       </div>
     </fieldset>
     <fieldset>
-      <legend>GPX file</legend>
+      <legend>GPX</legend>
+      <p>URL of GPX file</p>
       <div class="field" data-value="./run.gpx">
         <input type="radio" name="GPX"/>
         <label>Test file from Mapbox glossary</label>
