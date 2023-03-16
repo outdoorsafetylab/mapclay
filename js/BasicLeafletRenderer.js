@@ -8,6 +8,19 @@ export default class extends defaultExport {
     `https://unpkg.com/leaflet@${this.version}/dist/leaflet.css`
   ]
 
+  supportOptions = this.supportOptions + [
+    "control.fullscreen",
+    "control.scale",
+    "debug",
+  ]
+
+  defaultConfig = Object.assign(this.defaultConfig, {
+    control: {
+      fullscreen: false,
+      scale: false
+    },
+  })
+
   createMap(element, config) {
     // If Map Container is initialized, remove it
     if (element.map && element.map.remove) {
@@ -56,8 +69,7 @@ export default class extends defaultExport {
       L.GridLayer.GridDebug = L.GridLayer.extend({
         createTile: function (coords) {
           const tile = document.createElement('div');
-          tile.style.outline = '1px solid';
-          tile.style.padding = '3px';
+          tile.style.outline = '2px solid';
           tile.style.fontWeight = 'bold';
           tile.style.fontSize = '14pt';
           tile.innerHTML = [coords.z, coords.x, coords.y].join('/');

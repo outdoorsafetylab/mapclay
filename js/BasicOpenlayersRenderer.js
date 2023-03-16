@@ -8,6 +8,21 @@ export default class extends defaultExport {
     `https://cdn.jsdelivr.net/npm/ol@${this.version}/ol.css`
   ]
 
+  supportOptions = this.supportOptions + [
+    "control.fullscreen",
+    "control.scale",
+    "mapbox.style",
+    "maobox.accessToken",
+    "debug",
+  ]
+
+  defaultConfig = Object.assign(this.defaultConfig, {
+    control: {
+      fullscreen: false,
+      scale: false
+    },
+  })
+
   async importModules(config) {
     if (config.mapbox) {
       await import('https://unpkg.com/ol-mapbox-style@9.4.0/dist/olms.js');

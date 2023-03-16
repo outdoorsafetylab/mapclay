@@ -8,6 +8,21 @@ export default class extends defaultExport {
     `https://unpkg.com/maplibre-gl@${this.version}/dist/maplibre-gl.css`
   ]
 
+  supportOptions = this.supportOptions + [
+    "control.fullscreen",
+    "control.scale",
+    "mapbox.style",
+    "maobox.accessToken",
+    "debug",
+  ]
+
+  defaultConfig = Object.assign(this.defaultConfig, {
+    control: {
+      fullscreen: false,
+      scale: false
+    },
+  })
+
   createMap(element, config) {
     let style = 'https://demotiles.maplibre.org/style.json';
     if (config.XYZ) {
