@@ -8,7 +8,7 @@ export default class {
     "height",
     "center",
     "zoom",
-    "step"
+    "steps"
   ]
 
   // Default configuation for map 
