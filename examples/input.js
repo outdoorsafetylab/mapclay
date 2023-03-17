@@ -4,7 +4,7 @@ const choices = document.querySelectorAll('div[class="field"]');
 const textArea = document.querySelector('#map-text');
 
 textArea.addEventListener('focusout', (event) => {
-  refreshMap();
+  autoRefresh() && refreshMap();
 });
 
 choices.forEach((choice) => {
@@ -57,7 +57,7 @@ choices.forEach((choice) => {
 
     const newText = jsyaml.dump(options);
     textArea.value = newText.startsWith('{}') ? '' : newText
-    refreshMap()
+    autoRefresh() && refreshMap()
   });
 });
 
@@ -79,4 +79,9 @@ function removeEmptyStrings(obj) {
       delete obj[key];
     }
   }
+}
+
+function autoRefresh() {
+  const checkbox = document.querySelector('.auto-refresh')
+  return checkbox ? checkbox.checked : false
 }
