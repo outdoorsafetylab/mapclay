@@ -8,11 +8,14 @@ export default class extends defaultExport {
     `https://unpkg.com/leaflet@${this.version}/dist/leaflet.css`
   ]
 
-  supportOptions = this.supportOptions + [
+  supportOptions = this.supportOptions.concat([
+    "XYZ",
     "control.fullscreen",
     "control.scale",
-    "debug",
-  ]
+    "GPX",
+    "link",
+    "debug"
+  ])
 
   defaultConfig = Object.assign(this.defaultConfig, {
     control: {
