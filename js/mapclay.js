@@ -107,6 +107,7 @@ async function refreshMap() {
         // After map renderer script is loaded, render maps
         shouldRenderElements.forEach(ele => {
           renderer.renderMap(ele);
+          ele.dispatchEvent(new Event('map-rendered'));
         });
       }).catch(function(script) {
         console.log(script + ' failed to load');

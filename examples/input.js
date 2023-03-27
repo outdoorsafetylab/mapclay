@@ -1,13 +1,20 @@
 import 'https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js';
 
-const choices = document.querySelectorAll('div[class="field"]');
+const map = document.querySelector('#map');
 const textArea = document.querySelector('#map-text');
+const fieldsets = document.querySelectorAll('fieldset');
+
+//const sharedElement = document.getElementById('shared-element');
+map.addEventListener('map-loaded', () => {
+  refresh(false);
+});
 
 // When focus out textArea, refresh Map and set radio buttons
 textArea.addEventListener('focusout', (event) => {
-  refresh();
+  refresh(autoRefresh());
 });
 
+const choices = document.querySelectorAll('div[class="field"]');
 choices.forEach((choice) => {
   choice.addEventListener('click', (event) => {
     // Check radio button
@@ -28,7 +35,7 @@ choices.forEach((choice) => {
       value = textInput ? textInput.value : ""
     }
 
-    // Change value by type
+    // Change value by type;
     switch (choice.dataset.type) {
       case "boolean":
         value = value === 'true';
@@ -49,8 +56,7 @@ choices.forEach((choice) => {
     })
 
     // Get current options from textArea
-    var options = jsyaml.load(textArea.value, 'utf8');
-    options = options ? options : {}
+    var options = getOptions();
  
     // Set new value
     Object.assign(options, assign)
@@ -58,7 +64,7 @@ choices.forEach((choice) => {
 
     const newText = jsyaml.dump(options);
     textArea.value = newText.startsWith('{}') ? '' : newText
-    refresh();
+    refresh(autoRefresh());
   });
 });
 
@@ -89,17 +95,49 @@ function autoRefresh() {
 }
 
 // Refresh Map
-async function refresh() {
-  autoRefresh() && await refreshMap();
+async function refresh(alsoRefreshMap) {
+  // Refresh Map if needed
+  alsoRefreshMap && await refreshMap();
 
-  // Hide fieldsets which are not supported by current renderer
-  document.querySelectorAll('fieldset').forEach((fieldset) => {
-    const legend = fieldset.querySelector('legend')
-    const fields = fieldset.querySelectorAll('div[class="field"]');
-    if (renderer.supportOptions.includes(legend.textContent)) {
+  const options = getOptions();
+  const optionsDic = getAllKeysAndValues(options)
+
+  fieldsets.forEach((fieldset) => {
+    const legend = fieldset.querySelector('legend').textContent
+
+    // Hide fieldsets which are not supported by current renderer
+    if (renderer.supportOptions.includes(legend)) {
       fieldset.style.display = "block";
     } else {
       fieldset.style.display = "none";
     }
+
+    // Set field by content of textarea
+    const value = optionsDic[legend]
+    if (value) {
+      var field = fieldset.querySelector(`div.field[data-value="${value}"]`)
+      field = field ? field : fieldset.querySelector(`div.field[data-value=""]`)
+      field.querySelector('input[type="radio"]').checked = true;
+    }
   })
+}
+
+function getOptions() {
+  var options = jsyaml.load(textArea.value, 'utf8');
+  return options ? options : {}
+}
+
+function getAllKeysAndValues(obj) {
+  let result = {};
+  for (let key in obj) {
+    if (typeof obj[key] === 'object') {
+      const nestedResult = getAllKeysAndValues(obj[key]);
+      for (let nestedKey in nestedResult) {
+        result[`${key}.${nestedKey}`] = nestedResult[nestedKey];
+      }
+    } else {
+      result[key] = obj[key];
+    }
+  }
+  return result;
 }
