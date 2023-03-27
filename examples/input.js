@@ -3,8 +3,9 @@ import 'https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js';
 const choices = document.querySelectorAll('div[class="field"]');
 const textArea = document.querySelector('#map-text');
 
+// When focus out textArea, refresh Map and set radio buttons
 textArea.addEventListener('focusout', (event) => {
-  autoRefresh() && refreshMap();
+  refresh();
 });
 
 choices.forEach((choice) => {
@@ -57,7 +58,7 @@ choices.forEach((choice) => {
 
     const newText = jsyaml.dump(options);
     textArea.value = newText.startsWith('{}') ? '' : newText
-    autoRefresh() && refreshMap()
+    refresh();
   });
 });
 
@@ -81,7 +82,24 @@ function removeEmptyStrings(obj) {
   }
 }
 
+// Check if auto refresh is checked
 function autoRefresh() {
   const checkbox = document.querySelector('.auto-refresh')
   return checkbox ? checkbox.checked : false
+}
+
+// Refresh Map
+async function refresh() {
+  autoRefresh() && await refreshMap();
+
+  // Hide fieldsets which are not supported by current renderer
+  document.querySelectorAll('fieldset').forEach((fieldset) => {
+    const legend = fieldset.querySelector('legend')
+    const fields = fieldset.querySelectorAll('div[class="field"]');
+    if (renderer.supportOptions.includes(legend.textContent)) {
+      fieldset.style.display = "block";
+    } else {
+      fieldset.style.display = "none";
+    }
+  })
 }
