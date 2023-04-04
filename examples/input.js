@@ -114,11 +114,9 @@ async function refresh(alsoRefreshMap) {
 
     // Set field by content of textarea
     const value = optionsDic[legend]
-    if (value) {
-      var field = fieldset.querySelector(`div.field[data-value="${value}"]`)
-      field = field ? field : fieldset.querySelector(`div.field[data-value=""]`)
-      field.querySelector('input[type="radio"]').checked = true;
-    }
+    var field = fieldset.querySelector(`div.field[data-value="${value}"]`)
+    field = field ? field : fieldset.querySelector(`div.field[data-value=""]`)
+    field.querySelector('input[type="radio"]').checked = true;
   })
 }
 
@@ -141,3 +139,5 @@ function getAllKeysAndValues(obj) {
   }
   return result;
 }
+
+refresh(autoRefresh());
