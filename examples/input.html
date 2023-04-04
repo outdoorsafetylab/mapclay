@@ -1,9 +1,42 @@
 <!DOCTYPE html>
+<head>
+<style>
+  body {
+    display: flex;
+    flex-direction: row;
+  }
 
-<body style="display: flex; flex-direction: row;">
+  #left {
+    display: flex; 
+    flex-direction: column; 
+    max-width: 50vw;
+  }
+
+  #fieldsets {
+    width: 50vw;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
+
+  #map-text {
+    width: 50vw;
+    height: 300px;
+    font-size: 20px;
+  }
+
+  .field input[type="text"] {
+    margin-left: 18px;
+  }
+
+  fieldset {
+  }
+</style>
+</head>
+
+<body>
 
 <!-- Area of Editing -->
-<div style="display: flex; flex-direction: column; max-width: 50vw">
+<div id="left">
   <div>
     <label for="story">Use YAML to create a map:</label>
     <input type="button" value="Refresh" onclick="refreshMap()">
@@ -12,12 +45,12 @@
       <label>Auto Refresh</label>
     </div>
   </div>
-  <textarea id="map-text" rows="15" cols="50" style="width: 50vw; height: 300px; font-size: 20px">
+  <textarea id="map-text" rows="15" cols="50">
 width: 50vw
 height: 80vh
   </textarea>
-  <div style="width: 50vw; display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));"> 
-    <fieldset style="width=fit-content">
+  <div id="fieldsets"> 
+  <fieldset>
       <legend>use</legend>
       <p>Use which renderer?</p>
       <div class="field" data-value="openlayers">
@@ -37,7 +70,7 @@ height: 80vh
         <label>Clear</label>
       </div>
     </fieldset>
-    <fieldset style="width=fit-content">
+  <fieldset>
       <legend>width</legend>
       <p>Width of map container</p>
       <div class="field" data-value="500px">
@@ -55,14 +88,14 @@ height: 80vh
       <div class="field" data-value="">
         <input type="radio" name="width" />
         <label>Custom</label>
-        <input type="text" style="margin-left: 26px">
+        <input type="text">
       </div>
       <div class="field" data-value="">
         <input type="radio" name="width" />
         <label>Clear</label>
       </div>
     </fieldset>
-    <fieldset style="height=fit-content">
+    <fieldset>
       <legend>height</legend>
       <p>Height of map container</p>
       <div class="field" data-value="500px">
@@ -80,14 +113,14 @@ height: 80vh
       <div class="field" data-value="">
         <input type="radio" name="height" />
         <label>Custom</label>
-        <input type="text" style="margin-left: 26px">
+        <input type="text">
       </div>
       <div class="field" data-value="">
         <input type="radio" name="height" />
         <label>Clear</label>
       </div>
     </fieldset>
-    <fieldset style="height=fit-content">
+    <fieldset>
       <legend>center</legend>
       <p>Center of map, format is [Longitude, Latitude]</p>
       <div class="field" data-type="array" data-value="[138, 36]">
@@ -101,14 +134,14 @@ height: 80vh
       <div class="field" data-type="array" data-value="">
         <input type="radio" name="center" />
         <label>Custom</label>
-        <input type="text" style="margin-left: 26px">
+        <input type="text">
       </div>
       <div class="field" data-value="">
         <input type="radio" name="center" />
         <label>Clear</label>
       </div>
     </fieldset>
-    <fieldset style="height=fit-content">
+    <fieldset>
       <legend>zoom</legend>
       <p>Zoom level of map</p>
       <div class="field" data-type="number" data-value="5">
@@ -126,7 +159,7 @@ height: 80vh
       <div class="field" data-type="number" data-value="">
         <input type="radio" name="zoom" />
         <label>Custom</label>
-        <input type="text" style="margin-left: 26px">
+        <input type="text">
       </div>
       <div class="field" data-value="">
         <input type="radio" name="zoom" />
@@ -151,7 +184,7 @@ height: 80vh
       <div class="field" data-value="">
         <input type="radio" name="XYZ" />
         <label>Custom</label>
-        <input type="text" style="margin-left: 26px">
+        <input type="text">
       </div>
       <div class="field" data-value="">
         <input type="radio" name="XYZ" />
@@ -240,7 +273,7 @@ height: 80vh
       <div class="field" data-value="">
         <input type="radio" name="mapbox.style" />
         <label>Custom</label>
-        <input type="text" style="margin-left: 26px">
+        <input type="text">
       </div>
       <div class="field" data-value="">
         <input type="radio" name="mapbox.style" />
@@ -257,7 +290,7 @@ height: 80vh
       <div class="field" data-value="">
         <input type="radio" name="GPX"/>
         <label>Custom</label>
-        <input type="text" style="margin-left: 26px">
+        <input type="text">
       </div>
       <div class="field" data-value="">
         <input type="radio" name="GPX" />
