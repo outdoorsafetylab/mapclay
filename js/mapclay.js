@@ -56,7 +56,6 @@ const usedRenderers = new Set();
 function assignConfig() {
   fromElements.forEach(function (element, index) {
     const config = jsyaml.load(element.value ?? element.textContent) ?? {};
-    console.log(config)
 
     // If preset is define, apply previous config as prototype
     if (index != 0 && config.hasOwnProperty("preset") && config.preset == "last") {
@@ -88,6 +87,15 @@ async function refreshMap() {
     // TODO handle undefined renderer
     let renderer = new (await import(rendererInfo[rendererName])).default();
 
+    let shouldRenderElements = targetElements.filter(ele => 
+          ele.config.use == rendererName
+    )
+
+    // Set widow.renderer as current used renderer
+    if (shouldRenderElements.length > 0) {
+      window.renderer = renderer
+    }
+
     let promises = [];
 
     renderer.resources.forEach((url) => {
@@ -97,10 +105,9 @@ async function refreshMap() {
     Promise.all(promises)
       .then(function() {
         // After map renderer script is loaded, render maps
-        targetElements.filter(ele => 
-          ele.config.use == rendererName
-        ).forEach(ele => {
+        shouldRenderElements.forEach(ele => {
           renderer.renderMap(ele);
+          ele.dispatchEvent(new Event('map-rendered'));
         });
       }).catch(function(script) {
         console.log(script + ' failed to load');

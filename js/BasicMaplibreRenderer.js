@@ -8,13 +8,16 @@ export default class extends defaultExport {
     `https://unpkg.com/maplibre-gl@${this.version}/dist/maplibre-gl.css`
   ]
 
-  supportOptions = this.supportOptions + [
+  supportOptions = this.supportOptions.concat([
+    "XYZ",
     "control.fullscreen",
     "control.scale",
     "mapbox.style",
     "maobox.accessToken",
+    "GPX",
+    "link",
     "debug",
-  ]
+  ])
 
   defaultConfig = Object.assign(this.defaultConfig, {
     control: {

@@ -4,6 +4,7 @@ export default class {
   resources = [];
 
   supportOptions = [
+    "use",
     "width",
     "height",
     "center",
