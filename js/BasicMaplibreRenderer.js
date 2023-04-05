@@ -54,6 +54,7 @@ export default class extends defaultExport {
     this.setInteraction(map, config);
     this.setControl(map, config);
     map.on('load', () => {
+      this.updateCamera(map, config, false)
       this.setData(map, config);
       this.setExtra(map, config);
     });
@@ -61,6 +62,7 @@ export default class extends defaultExport {
 
   // Configure interactions
   setInteraction(map, config) {
+    super.setInteraction(map, config)
   };
 
   // Configure controls
@@ -125,11 +127,20 @@ export default class extends defaultExport {
     };
   }
 
-  updateCamera(map, config, useAnimation) {
+  handleKey(map, code) {
+    if (! super.handleKey(map, code)) { return; }
+
+    let nextStatus = this.config.updates[this.at];
+    let center = nextStatus.center ? nextStatus.center : map.getCenter().reverse();
+    let zoom = nextStatus.zoom ? nextStatus.zoom : map.getZoom();
+    this.updateCamera(map, { center: center, zoom: zoom }, true)
+  }
+
+  updateCamera(map, options, useAnimation) {
     if (useAnimation) {
       map.flyTo({ 
-        center: config.center,
-        zoom: config.zoom
+        center: options.center,
+        zoom: options.zoom
       })
     } else {
       map.setCenter(options.center)

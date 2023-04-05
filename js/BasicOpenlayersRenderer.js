@@ -379,7 +379,7 @@ export default class extends defaultExport {
   handleKey(map, code) {
     if (! super.handleKey(map, code)) { return; }
 
-    let nextStatus = this.config.steps[this.at]
+    let nextStatus = this.config.updates[this.at]
     flyTo(map, nextStatus, function(){})
   }
 

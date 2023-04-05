@@ -44,6 +44,7 @@ export default class extends defaultExport {
   // Configure interactions
   setInteraction(map, config) {
     config.link == true && this.addPermalink(map);
+    super.setInteraction(map, config)
   };
 
   // Configure controls
@@ -137,12 +138,21 @@ export default class extends defaultExport {
     }
   }
 
-  updateCamera(map, config, useAnimation) {
-    let latLon = Array.from(config.center).reverse()
+  handleKey(map, code) {
+    if (! super.handleKey(map, code)) { return; }
+
+    let nextStatus = this.config.updates[this.at];
+    let center = nextStatus.center ? nextStatus.center : map.getCenter().reverse();
+    let zoom = nextStatus.zoom ? nextStatus.zoom : map.getZoom();
+    this.updateCamera(map, { center: center, zoom: zoom }, false)
+  }
+
+  updateCamera(map, options, useAnimation) {
+    let latLon = Array.from(options.center).reverse()
     if (useAnimation) {
-      map.flyTo(latLon, config.zoom);
+      map.flyTo(latLon, options.zoom);
     } else {
-      map.setView(latLon, config.zoom);
+      map.setView(latLon, options.zoom);
     }
   }
 }

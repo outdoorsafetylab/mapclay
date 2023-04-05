@@ -9,7 +9,7 @@ export default class {
     "height",
     "center",
     "zoom",
-    "steps"
+    "updates"
   ]
 
   // Default configuation for map 
@@ -18,7 +18,7 @@ export default class {
     height: "300px",
     center: [121, 24],
     zoom: 7,
-    steps: []
+    updates: []
   }
 
   // Used for animation
@@ -29,7 +29,7 @@ export default class {
   // Create map object
   createMap(element, config){};
   // After map object is created, apply configurations
-  afterMapCreated(map, config){
+  afterMapCreated(map, config) {
     this.updateCamera(map, config, false)
     this.setInteraction(map, config);
     this.setControl(map, config);
@@ -63,15 +63,15 @@ export default class {
 
   // Handle key events
   handleKey(map, code) {
-    if (this.config.steps.length < 2) { return false; }
+    if (this.config.updates.length < 2) { return false; }
 
-    if (code == 39) { 
+    if (code == 78) { 
       ++this.at;
-      if (this.at == this.config.steps.length) { this.at = 0; }
+      if (this.at == this.config.updates.length) { this.at = 0; }
     }
-    else if (code == 37) { 
+    else if (code == 80) { 
       --this.at; 
-      if (this.at == -1) { this.at = this.config.steps.length - 1; }
+      if (this.at == -1) { this.at = this.config.updates.length - 1; }
     }
     else { return false; }
 
@@ -109,10 +109,15 @@ export default class {
 
     this.config = element.config;
 
-    // Set current center/zoom as the first element of steps[]
-    this.config.steps.unshift({ 
+    // Set current center/zoom as the first element of updates[]
+    this.config.updates.unshift({ 
       center: this.config.center, 
       zoom: this.config.zoom 
+    })
+    // If some options are missing, use previous one's
+    this.config.updates.forEach((update, index) => {
+      if (! update.center) { update.center = this.config.updates[index - 1].center }
+      if (! update.zoom) { update.zoom = this.config.updates[index - 1].zoom }
     })
 
     // Configure Map
