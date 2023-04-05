@@ -10,8 +10,8 @@ Create an HTML file with the following contents:
 ```
 
 `mapclay.js` simply renders elements with `class="map"`(by default) as web map:
-
 <img width="250px" src="resources/example_1.png">
+
 
 Here is another example:
 
@@ -33,8 +33,11 @@ Here is the result, another map is rendered:
 In this case, a new element with `class="map"` is added. Its text is used to configure a map.
 `<pre>` is used instead to preserve the newlines in text.
 
-Here we use [maplibre][] as map renderer. The map's width should occupy half of viewport.
-And height should be 500px. The center of map is **140.73E 43.83N**.
+For each option:
+`use: maplibre`: Here we use [maplibre][] as map renderer
+`width: 50vw`: The map's width should occupy half of viewport
+`hieght: 500px`: And height should be 500px.
+`center: [142.73, 43.83]`: The center of map is **140.73E 43.83N**.
 
 Each renderer has its own default values.
 By default, [maplibre][] use [demotiles][] as its basemap
@@ -68,6 +71,46 @@ In short, **mapclay** is the abstraction for those use cases.
 1. If object has no property called `use`, assign it by default value.
 1. For each `use` value, a coresponding **Renderer** JS class uses 
    `renderMap()` method to render elements into maps.
+
+```mermaid
+flowchart
+  subgraph mapclay.js
+    direction TB
+    1.1(Define renderInfo)
+    1.2(Check which element\nscript would apply on)
+    1.3(Define targetElements\nand fromElements)
+    1.1 --> 1.2 --> 1.3 --> refresh_map
+  end
+  subgraph refresh_map["refreshMap()"]
+    2.1(Get options from elements)
+    2.1 --> for_each_element --> for_each_renderer
+  end
+  subgraph for_each_element["For each element"]
+    direction TB
+    3.1(If preset is set, get options\nfrom previous element)
+    3.2(Set default renderer\nif it is not set)
+    3.3(Add used renderer)
+    3.1 --> 3.2 --> 3.3
+  end
+  subgraph for_each_renderer["For each renderer used"]
+    direction TB
+    4.1(Import renderer\nby await)
+    4.2(Set renderer as\nproperty of window)
+    4.3(IO: Load resources)
+    4.4(Promise: Render each\nelements use this renderer)
+    4.1 --> 4.2 --> 4.3 --> 4.4
+  end
+  subgraph renderer
+    subgraph render_map["renderMap()"]
+      5.1(Remove all children elements)
+      5.2(Set element\nwidth/hieght)
+      5.3(IO: import modules)
+      5.4("createMap()")
+      5.5("afterMapCreated()")
+      5.1 --> 5.2 --> 5.3 --> 5.4 --> 5.5
+    end
+  end
+```
 
 By default, `mapclay.js` comes with three preinstalled **Renderer** JS [classes][]: 
 `openlayers`, `maplibre` and `leaflet`.
