@@ -60,8 +60,6 @@ export default class extends defaultExport {
       target: element,
       view: new ol.View({
         constrainResolution: true,
-        center: config.center,
-        zoom: config.zoom
       }),
     });
 
@@ -85,10 +83,7 @@ export default class extends defaultExport {
       map.addInteraction(
         new ol.interaction.Link()
       );
-      map.getView().animate({
-        zoom: config.zoom,
-        center: config.center
-      });
+      this.updateCamera(map, config, false)
     }
 
     super.setInteraction(map, config)
@@ -386,6 +381,16 @@ export default class extends defaultExport {
 
     let nextStatus = this.config.steps[this.at]
     flyTo(map, nextStatus, function(){})
+  }
+
+  updateCamera(map, options, useAnimation) {
+    const view = map.getView();
+    if (useAnimation) {
+      flyTo(map, { center: options.center, zoom: options.zoom })
+    } else {
+      view.setCenter(options.center)
+      view.setZoom(options.zoom)
+    }
   }
 }
 

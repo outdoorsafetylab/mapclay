@@ -32,8 +32,7 @@ export default class extends defaultExport {
     }
     delete element._leaflet_id
 
-    let latLon = Array.from(config.center).reverse()
-    let map = L.map(element).setView(latLon, config.zoom);
+    let map = L.map(element);
     let xyz = config.XYZ
       ? config.XYZ
       : 'https://tile.openstreetmap.org/{z}/{x}/{y}.png'
@@ -88,7 +87,7 @@ export default class extends defaultExport {
       map.addLayer(L.gridLayer.gridDebug());
     }
     if (config.eval) {
-      eval(config.eval)
+      eval(config.eval);
     }
   };
 
@@ -135,6 +134,15 @@ export default class extends defaultExport {
     document.body.append(script);
     script.onload = () => {
       L.Permalink.setup(map);
+    }
+  }
+
+  updateCamera(map, config, useAnimation) {
+    let latLon = Array.from(config.center).reverse()
+    if (useAnimation) {
+      map.flyTo(latLon, config.zoom);
+    } else {
+      map.setView(latLon, config.zoom);
     }
   }
 }

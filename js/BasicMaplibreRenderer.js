@@ -44,8 +44,6 @@ export default class extends defaultExport {
     let map = new maplibregl.Map({
       container: element,
       style: style,
-      center: config.center,
-      zoom: config.zoom -1 ,
       hash: config.link == true ? true : false
     });
 
@@ -125,5 +123,17 @@ export default class extends defaultExport {
         }
       });
     };
+  }
+
+  updateCamera(map, config, useAnimation) {
+    if (useAnimation) {
+      map.flyTo({ 
+        center: config.center,
+        zoom: config.zoom
+      })
+    } else {
+      map.setCenter(options.center)
+      map.setZoom(options.zoom)
+    }
   }
 }

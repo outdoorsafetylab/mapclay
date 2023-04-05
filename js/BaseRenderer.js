@@ -30,6 +30,7 @@ export default class {
   createMap(element, config){};
   // After map object is created, apply configurations
   afterMapCreated(map, config){
+    this.updateCamera(map, config, false)
     this.setInteraction(map, config);
     this.setControl(map, config);
     this.setData(map, config);
@@ -56,6 +57,9 @@ export default class {
   };
   // Do extra stuff
   setExtra(map, config){};
+
+  // Update camera, like center or zoom level
+  updateCamera(map, options, useAnimation){};
 
   // Handle key events
   handleKey(map, code) {
