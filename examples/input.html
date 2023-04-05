@@ -91,10 +91,6 @@ height: 80vh
         <label>Custom</label>
         <input type="text">
       </div>
-      <div class="field" data-value="">
-        <input type="radio" name="width" />
-        <label>Clear</label>
-      </div>
     </fieldset>
     <fieldset>
       <legend>height</legend>
@@ -116,10 +112,6 @@ height: 80vh
         <label>Custom</label>
         <input type="text">
       </div>
-      <div class="field" data-value="">
-        <input type="radio" name="height" />
-        <label>Clear</label>
-      </div>
     </fieldset>
     <fieldset>
       <legend>center</legend>
@@ -136,10 +128,6 @@ height: 80vh
         <input type="radio" name="center" />
         <label>Custom</label>
         <input type="text">
-      </div>
-      <div class="field" data-value="">
-        <input type="radio" name="center" />
-        <label>Clear</label>
       </div>
     </fieldset>
     <fieldset>
@@ -162,10 +150,6 @@ height: 80vh
         <label>Custom</label>
         <input type="text">
       </div>
-      <div class="field" data-value="">
-        <input type="radio" name="zoom" />
-        <label>Clear</label>
-      </div>
     </fieldset>
     <fieldset>
       <legend>XYZ</legend>
@@ -186,10 +170,6 @@ height: 80vh
         <input type="radio" name="XYZ" />
         <label>Custom</label>
         <input type="text">
-      </div>
-      <div class="field" data-value="">
-        <input type="radio" name="XYZ" />
-        <label>Clear</label>
       </div>
     </fieldset>
     <fieldset>
@@ -276,10 +256,6 @@ height: 80vh
         <label>Custom</label>
         <input type="text">
       </div>
-      <div class="field" data-value="">
-        <input type="radio" name="mapbox.style" />
-        <label>Clear</label>
-      </div>
     </fieldset>
     <fieldset>
       <legend>GPX</legend>
@@ -293,14 +269,9 @@ height: 80vh
         <label>Custom</label>
         <input type="text">
       </div>
-      <div class="field" data-value="">
-        <input type="radio" name="GPX" />
-        <label>Clear</label>
-      </div>
     </fieldset>
   </div>
 </div>
-<script type="module" src="input.js"></script>
 
 <!-- Area of Rendered Map -->
 <div id="map"></div>
@@ -309,6 +280,10 @@ height: 80vh
   src="../js/mapclay.js"
   data-from="#map-text"
   data-to="#map">
+</script>
+<script 
+  type="module" 
+  src="input.js">
 </script>
 
 </body>
