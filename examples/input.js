@@ -36,7 +36,7 @@ choices.forEach((choice) => {
     }
 
     // Change value by type;
-    switch (choice.dataset.type) {
+    switch (choice.parentElement.dataset.type) {
       case "boolean":
         value = value === 'true';
         break;
@@ -100,7 +100,6 @@ async function refresh(alsoRefreshMap) {
   alsoRefreshMap && await refreshMap();
 
   const options = getOptions();
-  const optionsDic = getAllKeysAndValues(options)
 
   fieldsets.forEach((fieldset) => {
     const legend = fieldset.querySelector('legend').textContent
@@ -112,32 +111,38 @@ async function refresh(alsoRefreshMap) {
       fieldset.style.display = "none";
     }
 
+    function getInner(path, obj) {
+      const properties = path.split('.');
+      let value = obj;
+
+      for (let property of properties) {
+        if (value.hasOwnProperty(property)) {
+          value = value[property];
+        } else {
+          return "";
+        }
+      }
+
+      return value;
+    }
+
+    // Get current value of each field from textarea
+    var value = getInner(legend, options);
+    if (fieldset.dataset.type == 'array') {
+      value = `[${value.toString()}]`
+    }
+
     // Set field by content of textarea
-    const value = optionsDic[legend]
     var field = fieldset.querySelector(`div.field[data-value="${value}"]`)
     field = field ? field : fieldset.querySelector(`div.field[data-value=""]`)
     field.querySelector('input[type="radio"]').checked = true;
   })
 }
 
+// Get current options from textarea
 function getOptions() {
   var options = jsyaml.load(textArea.value, 'utf8');
   return options ? options : {}
-}
-
-function getAllKeysAndValues(obj) {
-  let result = {};
-  for (let key in obj) {
-    if (typeof obj[key] === 'object') {
-      const nestedResult = getAllKeysAndValues(obj[key]);
-      for (let nestedKey in nestedResult) {
-        result[`${key}.${nestedKey}`] = nestedResult[nestedKey];
-      }
-    } else {
-      result[key] = obj[key];
-    }
-  }
-  return result;
 }
 
 refresh(autoRefresh());
