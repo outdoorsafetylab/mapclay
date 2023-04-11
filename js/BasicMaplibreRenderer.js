@@ -9,7 +9,6 @@ export default class extends defaultExport {
   ]
 
   supportOptions = this.supportOptions.concat([
-    "XYZ",
     "control.fullscreen",
     "control.scale",
     "mapbox.style",
@@ -27,38 +26,50 @@ export default class extends defaultExport {
   })
 
   createMap(element, config) {
-    let style = 'https://demotiles.maplibre.org/style.json';
-    if (config.XYZ) {
-      style = {
-        version: 8,
-        sources: {
-          image: { type: "raster", tiles: [config.XYZ], tileSize: 256 }
-        },
-        layers: [{ id: "image", type: "raster", source: "image" }]
-      };
-    }
-    if (config.mapbox && config.mapbox.style) {
-      style = config.mapbox.style;
-    }
-
     let map = new maplibregl.Map({
       container: element,
-      style: style,
-      hash: config.link == true ? true : false
+      hash: config.link == true ? true : false,
     });
 
     return map;
   };
 
   afterMapCreated(map, config){
+    this.setData(map, config);
     this.setInteraction(map, config);
     this.setControl(map, config);
-    map.on('load', () => {
+    map.on('styledata', () => {
       this.updateCamera(map, config, false)
-      this.setData(map, config);
+    });
+    map.on('load', () => {
+      super.setData(map, config)
       this.setExtra(map, config);
     });
   };
+
+  setData(map, config) {
+    const tileData = config.data.filter(datum => datum.type == 'tile')
+    var style = {}
+
+    if (tileData.length == 0) {
+      style = config.mapbox && config.mapbox.style
+        ? config.mapbox.style
+        : 'https://demotiles.maplibre.org/style.json'
+    } else {
+      style = {
+        version: 8,
+        sources: {},
+        layers: [],
+      }
+      tileData.forEach((datum, index) => {
+        const source = datum.name ? datum.name : index.toString() 
+        style.sources[source] = { type: "raster", tiles: [datum.url], tileSize: 256 }
+        style.layers.push({ id: source, type: "raster", source: source})
+      })
+    }
+
+    map.setStyle(style)
+  }
 
   // Configure interactions
   setInteraction(map, config) {

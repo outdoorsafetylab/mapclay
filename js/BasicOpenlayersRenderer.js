@@ -9,7 +9,6 @@ export default class extends defaultExport {
   ]
 
   supportOptions = this.supportOptions.concat([
-    "XYZ",
     "control.fullscreen",
     "control.scale",
     "mapbox.style",
@@ -42,21 +41,8 @@ export default class extends defaultExport {
     // Set base layer by config
     var baseLayer;
 
-    if (config.XYZ) {
-      baseLayer = new ol.layer.Tile({
-        source: new ol.source.XYZ({ url: config.XYZ }) 
-      })
-    } else if (config.mapbox) {
-      // do nothing
-    } else {
-      baseLayer = new ol.layer.Tile({
-        source: new ol.source.OSM()
-      })
-    }
-
     // Set basemap and camera
     const map = new ol.Map({
-      layers: baseLayer ? [ baseLayer ] : [],
       target: element,
       view: new ol.View({
         constrainResolution: true,
@@ -75,6 +61,24 @@ export default class extends defaultExport {
 
     return map;
   };
+
+  setData(map, config) {
+    const tileData = config.data.filter(datum => datum.type == 'tile')
+    if (tileData.length == 0) {
+      let baseLayer = new ol.layer.Tile({
+        source: new ol.source.OSM()
+      })
+      map.addLayer(baseLayer)
+    } else {
+      tileData.forEach(datum => {
+        let tileLayer = new ol.layer.Tile({
+          source: new ol.source.XYZ({ url: datum.url })
+        })
+        map.addLayer(tileLayer)
+      })
+    }
+    super.setData(map, config)
+  }
 
   // Configure interactions
   setInteraction(map, config) {

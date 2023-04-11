@@ -9,7 +9,6 @@ export default class extends defaultExport {
   ]
 
   supportOptions = this.supportOptions.concat([
-    "XYZ",
     "control.fullscreen",
     "control.scale",
     "GPX",
@@ -33,13 +32,22 @@ export default class extends defaultExport {
     delete element._leaflet_id
 
     let map = L.map(element);
-    let xyz = config.XYZ
-      ? config.XYZ
-      : 'https://tile.openstreetmap.org/{z}/{x}/{y}.png'
-
-    L.tileLayer(xyz).addTo(map);
     return map;
   };
+
+  setData(map, config) {
+    const tileData = config.data.filter(datum => datum.type == 'tile')
+    if (tileData.length == 0) {
+      const osmTile = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png'
+      L.tileLayer(osmTile).addTo(map);
+    } else {
+      tileData.forEach(datum => {
+        const customTile = datum.url
+        L.tileLayer(customTile).addTo(map);
+      })
+    }
+    super.setData(map, config)
+  }
 
   // Configure interactions
   setInteraction(map, config) {

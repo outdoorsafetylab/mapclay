@@ -9,7 +9,8 @@ export default class {
     "height",
     "center",
     "zoom",
-    "updates"
+    "updates",
+    "XYZ",
   ]
 
   // Default configuation for map 
@@ -31,9 +32,9 @@ export default class {
   // After map object is created, apply configurations
   afterMapCreated(map, config) {
     this.updateCamera(map, config, false)
+    this.setData(map, config);
     this.setInteraction(map, config);
     this.setControl(map, config);
-    this.setData(map, config);
     this.setExtra(map, config);
   };
   // Add Interaction Options
@@ -92,6 +93,18 @@ export default class {
     mapElement.parentNode.insertBefore(configDiv, mapElement);
   }
 
+  handleAliases() {
+    if (!this.config.data) {
+      this.config.data = []
+    }
+    if (this.config.XYZ) {
+      this.config.data.push({
+        type: "tile",
+        url: this.config.XYZ,
+      })
+    }
+  }
+
   // Transform element contains config text into map
   async renderMap(element) {
     // Remove all childs
@@ -108,13 +121,14 @@ export default class {
     element.style.height = element.config.height;
 
     this.config = element.config;
+    this.handleAliases()
 
     // Set current center/zoom as the first element of updates[]
     this.config.updates.unshift({ 
       center: this.config.center, 
       zoom: this.config.zoom 
     })
-    // If some options are missing, use previous one's
+    // If some options are missing in an update, use previous one's
     this.config.updates.forEach((update, index) => {
       if (! update.center) { update.center = this.config.updates[index - 1].center }
       if (! update.zoom) { update.zoom = this.config.updates[index - 1].zoom }
