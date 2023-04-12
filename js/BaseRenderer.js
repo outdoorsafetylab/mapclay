@@ -11,6 +11,7 @@ export default class {
     "zoom",
     "updates",
     "XYZ",
+    "GPX",
   ]
 
   // Default configuation for map 
@@ -50,10 +51,6 @@ export default class {
   setData(map, config){
     if (config.markers) {
       this.addMarkers(map, config.markers)
-    }
-
-    if (config.GPX) {
-      this.addGPXFiles(map, config.GPX)
     }
   };
   // Do extra stuff
@@ -101,6 +98,12 @@ export default class {
       this.config.data.push({
         type: "tile",
         url: this.config.XYZ,
+      })
+    }
+    if (this.config.GPX) {
+      this.config.data.push({
+        type: "gpx",
+        url: this.config.GPX,
       })
     }
   }

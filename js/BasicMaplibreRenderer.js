@@ -11,8 +11,7 @@ export default class extends defaultExport {
   supportOptions = this.supportOptions.concat([
     "control.fullscreen",
     "control.scale",
-    "mapbox.style",
-    "maobox.accessToken",
+    "STYLE",
     "GPX",
     "link",
     "debug",
@@ -34,6 +33,16 @@ export default class extends defaultExport {
     return map;
   };
 
+  handleAliases() {
+    super.handleAliases()
+    if (this.config.STYLE) {
+      this.config.data.push({
+        type: "style",
+        url: this.config.STYLE
+      })
+    }
+  }
+
   afterMapCreated(map, config){
     this.setData(map, config);
     this.setInteraction(map, config);
@@ -52,8 +61,8 @@ export default class extends defaultExport {
     var style = {}
 
     if (tileData.length == 0) {
-      style = config.mapbox && config.mapbox.style
-        ? config.mapbox.style
+      style = config.STYLE
+        ? config.STYLE
         : 'https://demotiles.maplibre.org/style.json'
     } else {
       style = {
