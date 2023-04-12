@@ -28,6 +28,8 @@ export default class extends defaultExport {
     let map = new maplibregl.Map({
       container: element,
       hash: config.link == true ? true : false,
+      center: config.center,
+      zoom: config.zoom,
     });
 
     return map;
@@ -47,9 +49,6 @@ export default class extends defaultExport {
     this.setData(map, config);
     this.setInteraction(map, config);
     this.setControl(map, config);
-    map.on('styledata', () => {
-      this.updateCamera(map, config, false)
-    });
     map.on('load', () => {
       super.setData(map, config)
       this.setExtra(map, config);

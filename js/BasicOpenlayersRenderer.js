@@ -44,6 +44,8 @@ export default class extends defaultExport {
       target: element,
       view: new ol.View({
         constrainResolution: true,
+        center: config.center,
+        zoom: config.zoom,
       }),
     });
 
@@ -100,7 +102,6 @@ export default class extends defaultExport {
       map.addInteraction(
         new ol.interaction.Link()
       );
-      this.updateCamera(map, config, false)
     }
 
     super.setInteraction(map, config)

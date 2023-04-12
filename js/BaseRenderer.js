@@ -32,7 +32,6 @@ export default class {
   createMap(element, config){};
   // After map object is created, apply configurations
   afterMapCreated(map, config) {
-    this.updateCamera(map, config, false)
     this.setData(map, config);
     this.setInteraction(map, config);
     this.setControl(map, config);
