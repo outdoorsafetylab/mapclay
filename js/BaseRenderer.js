@@ -51,12 +51,30 @@ export default class {
     if (config.markers) {
       this.addMarkers(map, config.markers)
     }
+
+    // Tile
+    const tileData = config.data.filter(datum => datum.type == 'tile')
+    this.addTileData(map, tileData);
+
+    // Set GPX file
+    const gpxData = config.data.filter(datum => datum.type == 'gpx')
+    if (gpxData.length != 0) {
+      gpxData.forEach(datum => {
+        this.addGPXFile(map, datum.url)
+      })
+    }
   };
   // Do extra stuff
   setExtra(map, config){};
 
   // Update camera, like center or zoom level
   updateCamera(map, options, useAnimation){};
+
+  // Import GPX files
+  addTileData(map, tileData) {};
+
+  // Import GPX files
+  addGPXFile(map, gpxUrl) {};
 
   // Handle key events
   handleKey(map, code) {

@@ -25,8 +25,25 @@ export default class extends defaultExport {
   })
 
   createMap(element, config) {
+    const styleDatum = config.data.filter(datum => datum.type == 'style')[0];
+    const tileData = config.data.filter(datum => datum.type == 'tile');
+    
+    var style;
+    if (styleDatum) {
+      style = styleDatum.url
+    } else if (tileData.length != 0 ){
+      style = {
+        version: 8,
+        sources: {},
+        layers: [],
+      }
+    } else {
+      style = 'https://demotiles.maplibre.org/style.json'
+    }
+
     let map = new maplibregl.Map({
       container: element,
+      style: style,
       hash: config.link == true ? true : false,
       center: config.center,
       zoom: config.zoom,
@@ -46,38 +63,13 @@ export default class extends defaultExport {
   }
 
   afterMapCreated(map, config){
-    this.setData(map, config);
     this.setInteraction(map, config);
     this.setControl(map, config);
     map.on('load', () => {
-      super.setData(map, config)
+      this.setData(map, config)
       this.setExtra(map, config);
     });
   };
-
-  setData(map, config) {
-    const tileData = config.data.filter(datum => datum.type == 'tile')
-    var style = {}
-
-    if (tileData.length == 0) {
-      style = config.STYLE
-        ? config.STYLE
-        : 'https://demotiles.maplibre.org/style.json'
-    } else {
-      style = {
-        version: 8,
-        sources: {},
-        layers: [],
-      }
-      tileData.forEach((datum, index) => {
-        const source = datum.name ? datum.name : index.toString() 
-        style.sources[source] = { type: "raster", tiles: [datum.url], tileSize: 256 }
-        style.layers.push({ id: source, type: "raster", source: source})
-      })
-    }
-
-    map.setStyle(style)
-  }
 
   // Configure interactions
   setInteraction(map, config) {
@@ -119,7 +111,17 @@ export default class extends defaultExport {
     });
   }
 
-  addGPXFiles(map, gpxUrl) {
+  addTileData(map, tileData) {
+    const style = map.getStyle();
+    tileData.forEach((datum, index) => {
+      const source = datum.name ? datum.name : index.toString() 
+      style.sources[source] = { type: "raster", tiles: [datum.url], tileSize: 256 }
+      style.layers.push({ id: source, type: "raster", source: source})
+    })
+    map.setStyle(style)
+  }
+
+  addGPXFile(map, gpxUrl) {
     let script = document.createElement('script');
     script.src = "https://loc8.us/maplibre-gl-vector-text-protocol/dist/maplibre-gl-vector-text-protocol.js";
     document.body.append(script);

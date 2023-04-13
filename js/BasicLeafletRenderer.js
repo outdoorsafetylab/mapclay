@@ -36,20 +36,6 @@ export default class extends defaultExport {
     return map;
   };
 
-  setData(map, config) {
-    const tileData = config.data.filter(datum => datum.type == 'tile')
-    if (tileData.length == 0) {
-      const osmTile = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png'
-      L.tileLayer(osmTile).addTo(map);
-    } else {
-      tileData.forEach(datum => {
-        const customTile = datum.url
-        L.tileLayer(customTile).addTo(map);
-      })
-    }
-    super.setData(map, config)
-  }
-
   // Configure interactions
   setInteraction(map, config) {
     // Set center of map
@@ -113,7 +99,19 @@ export default class extends defaultExport {
     });
   }
 
-  addGPXFiles(map, gpxUrl) {
+  addTileData(map, tileData) {
+    if (tileData.length == 0) {
+      const osmTile = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png'
+      L.tileLayer(osmTile).addTo(map);
+    } else {
+      tileData.forEach(datum => {
+        const customTile = datum.url
+        L.tileLayer(customTile).addTo(map);
+      })
+    }
+  }
+
+  addGPXFile(map, gpxUrl) {
     let script = document.createElement('script');
     script.src = "https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.7.0/gpx.min.js";
     document.body.append(script);

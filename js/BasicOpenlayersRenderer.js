@@ -63,36 +63,15 @@ export default class extends defaultExport {
   }
 
   setData(map, config) {
-    // Style
+    // Process Maplibre/Mapbox Style
     const styleDatum = config.data.filter(datum => datum.type == 'style')[0]
     if (styleDatum) {
-      olms.apply(map, styleDatum.url);
-    }
-
-    // Tile
-    const tileData = config.data.filter(datum => datum.type == 'tile')
-    if (tileData.length == 0 && ! styleDatum) {
-      let baseLayer = new ol.layer.Tile({
-        source: new ol.source.OSM()
-      })
-      map.addLayer(baseLayer)
+      olms.apply(map, styleDatum.url).then(map =>
+        super.setData(map, config)
+      )
     } else {
-      tileData.forEach(datum => {
-        let tileLayer = new ol.layer.Tile({
-          source: new ol.source.XYZ({ url: datum.url })
-        })
-        map.addLayer(tileLayer)
-      })
+      super.setData(map, config)
     }
-
-    // GPX file
-    const gpxData = config.data.filter(datum => datum.type == 'gpx')
-    if (gpxData.length != 0) {
-      gpxData.forEach(datum => {
-        this.addGPXFiles(map, datum.url)
-      })
-    }
-    super.setData(map, config)
   }
 
   // Configure interactions
@@ -195,7 +174,24 @@ export default class extends defaultExport {
     return marker;
   }
 
-  addGPXFiles(map, gpxUrl) {
+  addTileData(map, tileData) {
+    const styleDatum = this.config.data.filter(datum => datum.type == 'style')[0]
+    if (!styleDatum && tileData.length == 0) {
+      let baseLayer = new ol.layer.Tile({
+        source: new ol.source.OSM()
+      })
+      map.addLayer(baseLayer)
+    } else {
+      tileData.forEach(datum => {
+        let tileLayer = new ol.layer.Tile({
+          source: new ol.source.XYZ({ url: datum.url })
+        })
+        map.addLayer(tileLayer)
+      })
+    }
+  }
+
+  addGPXFile(map, gpxUrl) {
     const style = {
       'MultiLineString': new ol.style.Style({
         stroke: new ol.style.Stroke({
