@@ -31,18 +31,7 @@ export default class extends defaultExport {
     }
     delete element._leaflet_id
 
-    const map = L.map(element)
-
-    // Set center of map
-    if (config.link) {
-      var mappos = L.Permalink.getMapLocation(
-        config.zoom, 
-        Array.from(config.center).reverse()
-      );
-      map.setView(mappos.center, mappos.zoom)
-    } else {
-      map.setView(Array.from(config.center).reverse(), config.zoom)
-    }
+    const map = L.map(element).setView(Array.from(config.center).reverse(), config.zoom)
 
     return map;
   };
@@ -63,7 +52,11 @@ export default class extends defaultExport {
 
   // Configure interactions
   setInteraction(map, config) {
-    config.link == true && this.addPermalink(map);
+    // Set center of map
+    if (config.link) {
+      this.addPermalink(map);
+    }
+
     super.setInteraction(map, config)
   };
 
@@ -155,6 +148,11 @@ export default class extends defaultExport {
     document.body.append(script);
     script.onload = () => {
       L.Permalink.setup(map);
+      var mappos = L.Permalink.getMapLocation(
+        this.config.zoom, 
+        Array.from(this.config.center).reverse()
+      );
+      map.setView(mappos.center, mappos.zoom)
     }
   }
 
@@ -164,11 +162,11 @@ export default class extends defaultExport {
     let nextStatus = this.config.updates[this.at];
     let center = nextStatus.center ? nextStatus.center : map.getCenter().reverse();
     let zoom = nextStatus.zoom ? nextStatus.zoom : map.getZoom();
-    this.updateCamera(map, { center: center, zoom: zoom }, false)
+    this.updateCamera(map, { center: center, zoom: zoom }, true)
   }
 
   updateCamera(map, options, useAnimation) {
-    let latLon = Array.from(options.center).reverse()
+    let latLon = L.latLng(options.center[1], options.center[0])
     if (useAnimation) {
       map.flyTo(latLon, options.zoom);
     } else {
