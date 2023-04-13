@@ -11,9 +11,7 @@ export default class extends defaultExport {
   supportOptions = this.supportOptions.concat([
     "control.fullscreen",
     "control.scale",
-    "mapbox.style",
-    "maobox.accessToken",
-    "GPX",
+    "STYLE",
     "link",
     "debug",
   ])
@@ -26,7 +24,7 @@ export default class extends defaultExport {
   })
 
   async importModules(config) {
-    if (config.mapbox) {
+    if (config.Style || config.data.filter(datum => datum.type == 'style').length != 0) {
       await import('https://unpkg.com/ol-mapbox-style@9.4.0/dist/olms.js');
     }
   } 
@@ -46,25 +44,34 @@ export default class extends defaultExport {
       target: element,
       view: new ol.View({
         constrainResolution: true,
+        center: config.center,
+        zoom: config.zoom,
       }),
     });
-
-    if (config.mapbox) {
-      olms.apply(
-        map, 
-        config.mapbox.style,
-        {
-          accessToken: config.mapbox.accessToken
-        }
-      );
-    }
 
     return map;
   };
 
+  handleAliases() {
+    super.handleAliases()
+    if (this.config.STYLE) {
+      this.config.data.push({
+        type: "style",
+        url: this.config.STYLE
+      })
+    }
+  }
+
   setData(map, config) {
+    // Style
+    const styleDatum = config.data.filter(datum => datum.type == 'style')[0]
+    if (styleDatum) {
+      olms.apply(map, styleDatum.url);
+    }
+
+    // Tile
     const tileData = config.data.filter(datum => datum.type == 'tile')
-    if (tileData.length == 0) {
+    if (tileData.length == 0 && ! styleDatum) {
       let baseLayer = new ol.layer.Tile({
         source: new ol.source.OSM()
       })
@@ -77,6 +84,14 @@ export default class extends defaultExport {
         map.addLayer(tileLayer)
       })
     }
+
+    // GPX file
+    const gpxData = config.data.filter(datum => datum.type == 'gpx')
+    if (gpxData.length != 0) {
+      gpxData.forEach(datum => {
+        this.addGPXFiles(map, datum.url)
+      })
+    }
     super.setData(map, config)
   }
 
@@ -87,7 +102,6 @@ export default class extends defaultExport {
       map.addInteraction(
         new ol.interaction.Link()
       );
-      this.updateCamera(map, config, false)
     }
 
     super.setInteraction(map, config)

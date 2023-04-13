@@ -31,7 +31,19 @@ export default class extends defaultExport {
     }
     delete element._leaflet_id
 
-    let map = L.map(element);
+    const map = L.map(element)
+
+    // Set center of map
+    if (config.link) {
+      var mappos = L.Permalink.getMapLocation(
+        config.zoom, 
+        Array.from(config.center).reverse()
+      );
+      map.setView(mappos.center, mappos.zoom)
+    } else {
+      map.setView(Array.from(config.center).reverse(), config.zoom)
+    }
+
     return map;
   };
 

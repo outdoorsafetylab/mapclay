@@ -11,8 +11,7 @@ export default class extends defaultExport {
   supportOptions = this.supportOptions.concat([
     "control.fullscreen",
     "control.scale",
-    "mapbox.style",
-    "maobox.accessToken",
+    "STYLE",
     "GPX",
     "link",
     "debug",
@@ -29,18 +28,27 @@ export default class extends defaultExport {
     let map = new maplibregl.Map({
       container: element,
       hash: config.link == true ? true : false,
+      center: config.center,
+      zoom: config.zoom,
     });
 
     return map;
   };
 
+  handleAliases() {
+    super.handleAliases()
+    if (this.config.STYLE) {
+      this.config.data.push({
+        type: "style",
+        url: this.config.STYLE
+      })
+    }
+  }
+
   afterMapCreated(map, config){
     this.setData(map, config);
     this.setInteraction(map, config);
     this.setControl(map, config);
-    map.on('styledata', () => {
-      this.updateCamera(map, config, false)
-    });
     map.on('load', () => {
       super.setData(map, config)
       this.setExtra(map, config);
@@ -52,8 +60,8 @@ export default class extends defaultExport {
     var style = {}
 
     if (tileData.length == 0) {
-      style = config.mapbox && config.mapbox.style
-        ? config.mapbox.style
+      style = config.STYLE
+        ? config.STYLE
         : 'https://demotiles.maplibre.org/style.json'
     } else {
       style = {
