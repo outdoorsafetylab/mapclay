@@ -23,6 +23,12 @@ export default class extends defaultExport {
     },
   })
 
+  async importModules(config) {
+    if (config.link) {
+      await import('https://rawgit.com/MarcChasse/leaflet.Permalink/master/leaflet.permalink.min.js');
+    }
+  } 
+
   createMap(element, config) {
     // If Map Container is initialized, remove it
     if (element.map && element.map.remove) {
@@ -141,17 +147,12 @@ export default class extends defaultExport {
   }
 
   addPermalink(map) {
-    let script = document.createElement('script');
-    script.src = "https://rawgit.com/MarcChasse/leaflet.Permalink/master/leaflet.permalink.min.js";
-    document.body.append(script);
-    script.onload = () => {
-      L.Permalink.setup(map);
-      var mappos = L.Permalink.getMapLocation(
-        this.config.zoom, 
-        Array.from(this.config.center).reverse()
-      );
-      map.setView(mappos.center, mappos.zoom)
-    }
+    L.Permalink.setup(map);
+    var mappos = L.Permalink.getMapLocation(
+      this.config.zoom, 
+      Array.from(this.config.center).reverse()
+    )
+    map.setView(mappos.center, mappos.zoom)
   }
 
   handleKey(map, code) {
