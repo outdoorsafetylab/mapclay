@@ -144,5 +144,3 @@ function getOptions() {
   var options = jsyaml.load(textArea.value, 'utf8');
   return options ? options : {}
 }
-
-refresh(autoRefresh());
