@@ -1,7 +1,7 @@
 export default class {
 
   // Resources about Script or CSS file
-  resources = [];
+  resources = new Set();
 
   supportOptions = [
     "use",
@@ -20,11 +20,15 @@ export default class {
     height: "300px",
     center: [121, 24],
     zoom: 7,
-    updates: []
+    updates: [],
+    data: [],
   }
 
   // Used for animation
   at = 0
+
+  // Get list of necessary resources 
+  getResources(config) { return this.resources }
 
   // Import modules based on config
   importModules(config){};
@@ -41,7 +45,7 @@ export default class {
   setInteraction(map, config){
     const renderer = this
     window.addEventListener('keydown', function(e){
-      renderer.handleKey(map, e.keyCode)
+      renderer.handleKey(map, config, e.keyCode)
     })
   };
   // Add Control Options
@@ -53,8 +57,7 @@ export default class {
     }
 
     // Tile
-    const tileData = config.data.filter(datum => datum.type == 'tile')
-    this.addTileData(map, tileData);
+    this.addTileData(map, config.data);
 
     // Set GPX file
     const gpxData = config.data.filter(datum => datum.type == 'gpx')
@@ -77,16 +80,16 @@ export default class {
   addGPXFile(map, gpxUrl) {};
 
   // Handle key events
-  handleKey(map, code) {
-    if (this.config.updates.length < 2) { return false; }
+  handleKey(map, config, code) {
+    if (config.updates.length < 2) { return false; }
 
     if (code == 78) { 
       ++this.at;
-      if (this.at == this.config.updates.length) { this.at = 0; }
+      if (this.at == config.updates.length) { this.at = 0; }
     }
     else if (code == 80) { 
       --this.at; 
-      if (this.at == -1) { this.at = this.config.updates.length - 1; }
+      if (this.at == -1) { this.at = config.updates.length - 1; }
     }
     else { return false; }
 
@@ -107,21 +110,22 @@ export default class {
     mapElement.parentNode.insertBefore(configDiv, mapElement);
   }
 
-  handleAliases() {
-    if (!this.config.data) {
-      this.config.data = []
-    }
-    if (this.config.XYZ) {
-      this.config.data.push({
+  handleAliases(options) {
+    if (!options.data) { options.data = [] }
+
+    if (options.XYZ) {
+      options.data.push({
         type: "tile",
-        url: this.config.XYZ,
+        url: options.XYZ,
       })
+      delete options.XYZ
     }
-    if (this.config.GPX) {
-      this.config.data.push({
+    if (options.GPX) {
+      options.data.push({
         type: "gpx",
-        url: this.config.GPX,
+        url: options.GPX,
       })
+      delete options.GPX
     }
   }
 
@@ -140,25 +144,22 @@ export default class {
     element.style.width = element.config.width;
     element.style.height = element.config.height;
 
-    this.config = element.config;
-    this.handleAliases()
-
     // Set current center/zoom as the first element of updates[]
-    this.config.updates.unshift({ 
-      center: this.config.center, 
-      zoom: this.config.zoom 
+    element.config.updates.unshift({ 
+      center: element.config.center, 
+      zoom: element.config.zoom 
     })
     // If some options are missing in an update, use previous one's
-    this.config.updates.forEach((update, index) => {
-      if (! update.center) { update.center = this.config.updates[index - 1].center }
-      if (! update.zoom) { update.zoom = this.config.updates[index - 1].zoom }
+    element.config.updates.forEach((update, index) => {
+      if (! update.center) { update.center = element.config.updates[index - 1].center }
+      if (! update.zoom) { update.zoom = element.config.updates[index - 1].zoom }
     })
 
     // Configure Map
-    await this.importModules(this.config);
-    const map = this.createMap(element, this.config);
+    await this.importModules(element.config);
+    const map = this.createMap(element, element.config);
     element.map = map // Used to check element is already a map container
-    this.afterMapCreated(map, this.config);
+    this.afterMapCreated(map, element.config);
   }
 }
 

@@ -10,25 +10,29 @@ function loadResource(url) {
   return new Promise(function(resolve, reject) {
     if (url.endsWith('.js')) {
       let script = document.createElement('script');
-      script.src = url;
-      script.async = false;
-      script.onload = function() {
-        resolve(url);
-      };
-      script.onerror = function() {
-        reject(url);
-      };
+      Object.assign(script, {
+        src: url,
+        async: false,
+        onload: function() {
+          resolve(url);
+        },
+        onerror: function() {
+          reject(url);
+        },
+      })
       document.head.appendChild(script);
     } else if (url.endsWith('.css')) {
       let link = document.createElement('link');
-      link.rel = 'stylesheet';
-      link.href = url;
-      link.onload = function() {
-        resolve(url);
-      };
-      link.onerror = function() {
-        reject(url);
-      };
+      Object.assign(link, {
+        rel: 'stylesheet',
+        href: url,
+        onload: function() {
+          resolve(url);
+        },
+        onerror: function() {
+          reject(url);
+        },
+      })
       document.head.appendChild(link);
     }
   });
@@ -87,18 +91,26 @@ async function refreshMap() {
     // TODO handle undefined renderer
     let renderer = new (await import(rendererInfo[rendererName])).default();
 
+    // Get elements which this renderer applys on
     let shouldRenderElements = targetElements.filter(ele => 
-          ele.config.use == rendererName
+      ele.config.use == rendererName
     )
+    shouldRenderElements.forEach( ele => {
+      renderer.handleAliases(ele.config)
+    })
+
 
     // Set widow.renderer as current used renderer
     if (shouldRenderElements.length > 0) {
       window.renderer = renderer
+    } else {
+      continue
     }
 
-    let promises = [];
 
-    renderer.resources.forEach((url) => {
+    // TODO FIX THIS
+    let promises = [];
+    renderer.resources.forEach(url => {
       promises.push(loadResource(url));
     });
 
