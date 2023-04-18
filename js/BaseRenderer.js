@@ -28,7 +28,7 @@ export default class {
   at = 0
 
   // Get list of necessary resources 
-  getResources(config) { return this.resources }
+  appendResources(config) { return this.resources }
 
   // Import modules based on config
   importModules(config){};

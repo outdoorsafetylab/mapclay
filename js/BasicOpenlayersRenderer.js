@@ -23,7 +23,7 @@ export default class extends defaultExport {
     },
   })
 
-  getResources(config) {
+  appendResources(config) {
     if (config.data && config.data.filter(d => d.type == 'tile').length > 1) {
       this.resources.add("https://unpkg.com/ol-layerswitcher@4.1.1/dist/ol-layerswitcher.js")
       this.resources.add("https://unpkg.com/ol-layerswitcher@4.1.1/dist/ol-layerswitcher.css")
