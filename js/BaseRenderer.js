@@ -138,6 +138,7 @@ export default class {
       })
       delete options.XYZ
     }
+
     if (options.GPX) {
       options.data.push({
         type: "gpx",
@@ -145,6 +146,21 @@ export default class {
       })
       delete options.GPX
     }
+
+    if (typeof options.center == 'string' && options.aliases.hasOwnProperty(options.center)) {
+      options.center = options.aliases[options.center]
+    }
+    options.updates.forEach(record => {
+      if (typeof record.center == 'string' && options.aliases.hasOwnProperty(record.center)) {
+        record.center = options.aliases[record.center]
+      }
+    })
+
+    options.data.forEach(record => {
+      if (options.aliases.hasOwnProperty(record.url)) {
+        record.url = options.aliases[record.url]
+      }
+    })
   }
 
   // Transform element contains config text into map
