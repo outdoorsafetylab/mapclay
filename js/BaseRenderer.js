@@ -1,7 +1,7 @@
 export default class {
 
   // Resources about Script or CSS file
-  resources = [];
+  resources = new Set();
 
   supportOptions = [
     "use",
@@ -20,11 +20,15 @@ export default class {
     height: "300px",
     center: [121, 24],
     zoom: 7,
-    updates: []
+    updates: [],
+    data: [],
   }
 
   // Used for animation
   at = 0
+
+  // Get list of necessary resources 
+  getResources(config) { return this.resources }
 
   // Import modules based on config
   importModules(config){};

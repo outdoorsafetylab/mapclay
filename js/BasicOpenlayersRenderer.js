@@ -3,10 +3,10 @@ import defaultExport from './BaseRenderer.js';
 export default class extends defaultExport {
   version = '7.3.0';
 
-  resources = [
+  resources = new Set([
     `https://cdn.jsdelivr.net/npm/ol@${this.version}/dist/ol.js`,
     `https://cdn.jsdelivr.net/npm/ol@${this.version}/ol.css`
-  ]
+  ])
 
   supportOptions = this.supportOptions.concat([
     "control.fullscreen",
@@ -22,6 +22,13 @@ export default class extends defaultExport {
       scale: false
     },
   })
+
+  getResources(config) {
+    if (config.data && config.data.filter(d => d.type == 'tile').length > 1 || config.XYZ) {
+      this.resources.add("https://unpkg.com/ol-layerswitcher@4.1.1/dist/ol-layerswitcher.js")
+      this.resources.add("https://unpkg.com/ol-layerswitcher@4.1.1/dist/ol-layerswitcher.css")
+    }
+  }
 
   async importModules(config) {
     if (config.Style || config.data.filter(datum => datum.type == 'style').length != 0) {

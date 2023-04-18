@@ -10,25 +10,29 @@ function loadResource(url) {
   return new Promise(function(resolve, reject) {
     if (url.endsWith('.js')) {
       let script = document.createElement('script');
-      script.src = url;
-      script.async = false;
-      script.onload = function() {
-        resolve(url);
-      };
-      script.onerror = function() {
-        reject(url);
-      };
+      Object.assign(script, {
+        src: url,
+        async: false,
+        onload: function() {
+          resolve(url);
+        },
+        onerror: function() {
+          reject(url);
+        },
+      })
       document.head.appendChild(script);
     } else if (url.endsWith('.css')) {
       let link = document.createElement('link');
-      link.rel = 'stylesheet';
-      link.href = url;
-      link.onload = function() {
-        resolve(url);
-      };
-      link.onerror = function() {
-        reject(url);
-      };
+      Object.assign(link, {
+        rel: 'stylesheet',
+        href: url,
+        onload: function() {
+          resolve(url);
+        },
+        onerror: function() {
+          reject(url);
+        },
+      })
       document.head.appendChild(link);
     }
   });
@@ -88,7 +92,7 @@ async function refreshMap() {
     let renderer = new (await import(rendererInfo[rendererName])).default();
 
     let shouldRenderElements = targetElements.filter(ele => 
-          ele.config.use == rendererName
+      ele.config.use == rendererName
     )
 
     // Set widow.renderer as current used renderer
@@ -98,7 +102,9 @@ async function refreshMap() {
 
     let promises = [];
 
-    renderer.resources.forEach((url) => {
+    // TODO FIX THIS
+    shouldRenderElements.forEach(e=>renderer.getResources(e.config))
+    renderer.resources.forEach(url => {
       promises.push(loadResource(url));
     });
 
