@@ -23,7 +23,7 @@ export default class extends defaultExport {
     },
   })
 
-  getResources(config) {
+  appendResources(config) {
     if (config.data && config.data.filter(d => d.type == 'tile').length > 1) {
       this.resources.add("https://unpkg.com/ol-layerswitcher@4.1.1/dist/ol-layerswitcher.js")
       this.resources.add("https://unpkg.com/ol-layerswitcher@4.1.1/dist/ol-layerswitcher.css")
@@ -104,6 +104,13 @@ export default class extends defaultExport {
       map.addControl(new ol.control.ScaleLine({
         units: 'metric'
       }))
+    }
+    if (map.getAllLayers().length > 1) {
+      const layerSwitcher = new LayerSwitcher({
+        reverse: true,
+        groupSelectStyle: 'group'
+      });
+      map.addControl(layerSwitcher);
     }
   };
 
@@ -187,13 +194,15 @@ export default class extends defaultExport {
     const tileData = data.filter(datum => datum.type == 'tile')
     if (!styleDatum && tileData.length == 0) {
       let baseLayer = new ol.layer.Tile({
-        source: new ol.source.OSM()
+        source: new ol.source.OSM(),
+        title: 'OpenStreetMap'
       })
       map.addLayer(baseLayer)
     } else {
       tileData.forEach(datum => {
         let tileLayer = new ol.layer.Tile({
-          source: new ol.source.XYZ({ url: datum.url })
+          source: new ol.source.XYZ({ url: datum.url }),
+          title: datum.title ? datum.title : "Anonymous"
         })
         map.addLayer(tileLayer)
       })

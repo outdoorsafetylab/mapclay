@@ -97,6 +97,7 @@ async function refreshMap() {
     )
     shouldRenderElements.forEach( ele => {
       renderer.handleAliases(ele.config)
+      renderer.appendResources(ele.config)
     })
 
 
@@ -108,7 +109,7 @@ async function refreshMap() {
     }
 
 
-    // TODO FIX THIS
+    // Load necessary resources
     let promises = [];
     renderer.resources.forEach(url => {
       promises.push(loadResource(url));

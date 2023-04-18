@@ -28,7 +28,7 @@ export default class {
   at = 0
 
   // Get list of necessary resources 
-  getResources(config) { return this.resources }
+  appendResources(config) { return this.resources }
 
   // Import modules based on config
   importModules(config){};
@@ -114,9 +114,27 @@ export default class {
     if (!options.data) { options.data = [] }
 
     if (options.XYZ) {
-      options.data.push({
-        type: "tile",
-        url: options.XYZ,
+      const xyzArray = typeof options.XYZ == 'string'
+        ? [ options.XYZ ]
+        : options.XYZ
+      xyzArray.forEach((record, index) => {
+        var obj;
+        if (typeof record == 'string') {
+          obj = {
+            type: "tile",
+            url: record,
+            title: `Anonymous_${index}`,
+          }
+        } else if (typeof record == 'object') {
+          obj = {
+            type: "tile",
+            url: record.url,
+            title: record.title ? record.title : `Anonymous_${index}`,
+          }
+        } else {
+          return;
+        }
+        options.data.push(obj)
       })
       delete options.XYZ
     }
