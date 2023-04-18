@@ -24,7 +24,7 @@ export default class extends defaultExport {
   })
 
   getResources(config) {
-    if (config.data && config.data.filter(d => d.type == 'tile').length > 1 || config.XYZ) {
+    if (config.data && config.data.filter(d => d.type == 'tile').length > 1) {
       this.resources.add("https://unpkg.com/ol-layerswitcher@4.1.1/dist/ol-layerswitcher.js")
       this.resources.add("https://unpkg.com/ol-layerswitcher@4.1.1/dist/ol-layerswitcher.css")
     }
@@ -59,13 +59,14 @@ export default class extends defaultExport {
     return map;
   };
 
-  handleAliases() {
-    super.handleAliases()
-    if (this.config.STYLE) {
-      this.config.data.push({
+  handleAliases(options) {
+    super.handleAliases(options)
+    if (options.STYLE) {
+      options.data.push({
         type: "style",
-        url: this.config.STYLE
+        url: options.STYLE
       })
+      delete options.STYLE
     }
   }
 
@@ -181,8 +182,9 @@ export default class extends defaultExport {
     return marker;
   }
 
-  addTileData(map, tileData) {
-    const styleDatum = this.config.data.filter(datum => datum.type == 'style')[0]
+  addTileData(map, data) {
+    const styleDatum = data.filter(datum => datum.type == 'style')[0]
+    const tileData = data.filter(datum => datum.type == 'tile')
     if (!styleDatum && tileData.length == 0) {
       let baseLayer = new ol.layer.Tile({
         source: new ol.source.OSM()
@@ -397,10 +399,10 @@ export default class extends defaultExport {
     });
   }
 
-  handleKey(map, code) {
-    if (! super.handleKey(map, code)) { return; }
+  handleKey(map, config, code) {
+    if (! super.handleKey(map, config, code)) { return; }
 
-    let nextStatus = this.config.updates[this.at]
+    let nextStatus = config.updates[this.at]
     flyTo(map, nextStatus, function(){})
   }
 

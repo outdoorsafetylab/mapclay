@@ -46,7 +46,7 @@ export default class extends defaultExport {
   setInteraction(map, config) {
     // Set center of map
     if (config.link) {
-      this.addPermalink(map);
+      this.addPermalink(map, config);
     }
 
     super.setInteraction(map, config)
@@ -146,19 +146,19 @@ export default class extends defaultExport {
     }
   }
 
-  addPermalink(map) {
+  addPermalink(map, config) {
     L.Permalink.setup(map);
     var mappos = L.Permalink.getMapLocation(
-      this.config.zoom, 
-      Array.from(this.config.center).reverse()
+      config.zoom, 
+      Array.from(config.center).reverse()
     )
     map.setView(mappos.center, mappos.zoom)
   }
 
-  handleKey(map, code) {
-    if (! super.handleKey(map, code)) { return; }
+  handleKey(map, config, code) {
+    if (! super.handleKey(map, config, code)) { return; }
 
-    let nextStatus = this.config.updates[this.at];
+    let nextStatus = config.updates[this.at];
     let center = nextStatus.center ? nextStatus.center : map.getCenter().reverse();
     let zoom = nextStatus.zoom ? nextStatus.zoom : map.getZoom();
     this.updateCamera(map, { center: center, zoom: zoom }, true)

@@ -91,19 +91,25 @@ async function refreshMap() {
     // TODO handle undefined renderer
     let renderer = new (await import(rendererInfo[rendererName])).default();
 
+    // Get elements which this renderer applys on
     let shouldRenderElements = targetElements.filter(ele => 
       ele.config.use == rendererName
     )
+    shouldRenderElements.forEach( ele => {
+      renderer.handleAliases(ele.config)
+    })
+
 
     // Set widow.renderer as current used renderer
     if (shouldRenderElements.length > 0) {
       window.renderer = renderer
+    } else {
+      continue
     }
 
-    let promises = [];
 
     // TODO FIX THIS
-    shouldRenderElements.forEach(e=>renderer.getResources(e.config))
+    let promises = [];
     renderer.resources.forEach(url => {
       promises.push(loadResource(url));
     });
