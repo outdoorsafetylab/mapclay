@@ -117,19 +117,19 @@ export default class {
       const xyzArray = typeof options.XYZ == 'string'
         ? [ options.XYZ ]
         : options.XYZ
-      xyzArray.forEach(record => {
+      xyzArray.forEach((record, index) => {
         var obj;
         if (typeof record == 'string') {
           obj = {
             type: "tile",
             url: record,
-            title: "Anonymous",
+            title: `Anonymous_${index}`,
           }
         } else if (typeof record == 'object') {
           obj = {
             type: "tile",
             url: record.url,
-            title: record.title ? record.title : "Anonymous",
+            title: record.title ? record.title : `Anonymous_${index}`,
           }
         } else {
           return;

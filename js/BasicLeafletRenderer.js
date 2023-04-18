@@ -106,15 +106,23 @@ export default class extends defaultExport {
   }
 
   addTileData(map, tileData) {
+    var baseLayers = {}
+    var overlayMaps = {}
     if (tileData.length == 0) {
       const osmTile = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png'
       L.tileLayer(osmTile).addTo(map);
     } else {
-      tileData.forEach(datum => {
+      tileData.forEach((datum, index) => {
         const customTile = datum.url
-        L.tileLayer(customTile).addTo(map);
+        const layer = L.tileLayer(customTile);
+        const title = datum.title ? datum.title : `Anonymous_${index}`
+        if (index == 0) {
+          layer.addTo(map)
+        }
+        baseLayers[title] = layer
       })
     }
+    var layerControl = L.control.layers(baseLayers, overlayMaps).addTo(map);
   }
 
   addGPXFile(map, gpxUrl) {
