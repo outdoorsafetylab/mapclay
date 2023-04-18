@@ -105,6 +105,13 @@ export default class extends defaultExport {
         units: 'metric'
       }))
     }
+    if (map.getAllLayers().length > 1) {
+      const layerSwitcher = new LayerSwitcher({
+        reverse: true,
+        groupSelectStyle: 'group'
+      });
+      map.addControl(layerSwitcher);
+    }
   };
 
   // Configure extra stuff
@@ -187,13 +194,15 @@ export default class extends defaultExport {
     const tileData = data.filter(datum => datum.type == 'tile')
     if (!styleDatum && tileData.length == 0) {
       let baseLayer = new ol.layer.Tile({
-        source: new ol.source.OSM()
+        source: new ol.source.OSM(),
+        title: 'OpenStreetMap'
       })
       map.addLayer(baseLayer)
     } else {
       tileData.forEach(datum => {
         let tileLayer = new ol.layer.Tile({
-          source: new ol.source.XYZ({ url: datum.url })
+          source: new ol.source.XYZ({ url: datum.url }),
+          title: datum.title ? datum.title : "Anonymous"
         })
         map.addLayer(tileLayer)
       })

@@ -114,9 +114,27 @@ export default class {
     if (!options.data) { options.data = [] }
 
     if (options.XYZ) {
-      options.data.push({
-        type: "tile",
-        url: options.XYZ,
+      const xyzArray = typeof options.XYZ == 'string'
+        ? [ options.XYZ ]
+        : options.XYZ
+      xyzArray.forEach(record => {
+        var obj;
+        if (typeof record == 'string') {
+          obj = {
+            type: "tile",
+            url: record,
+            title: "Anonymous",
+          }
+        } else if (typeof record == 'object') {
+          obj = {
+            type: "tile",
+            url: record.url,
+            title: record.title ? record.title : "Anonymous",
+          }
+        } else {
+          return;
+        }
+        options.data.push(obj)
       })
       delete options.XYZ
     }
