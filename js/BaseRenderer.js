@@ -168,12 +168,6 @@ export default class {
     // Remove all childs
     element.replaceChildren([])
 
-    // If config has no prototype, apply defautConfig
-    // This prevents necessary configs are not defined
-    if (! element.config.hasOwnProperty('preset')) {
-      Object.setPrototypeOf(element.config, this.defaultConfig)
-    }
-
     // Set width/height for div
     element.style.width = element.config.width;
     element.style.height = element.config.height;

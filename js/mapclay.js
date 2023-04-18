@@ -96,6 +96,11 @@ async function refreshMap() {
       ele.config.use == rendererName
     )
     shouldRenderElements.forEach( ele => {
+      // If config has no prototype, apply defautConfig
+      // This prevents necessary configs are not defined
+      if (! ele.config.hasOwnProperty('preset')) {
+        Object.setPrototypeOf(ele.config, renderer.defaultConfig)
+      }
       renderer.handleAliases(ele.config)
       renderer.appendResources(ele.config)
     })
