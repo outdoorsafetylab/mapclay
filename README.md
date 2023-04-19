@@ -1,8 +1,13 @@
 [![npm version](https://badge.fury.io/js/mapclay.svg)](https://badge.fury.io/js/mapclay)
 
+In short, this module allows user build web map as soon as possible by simple options.
+
+No third-party Map Framework dominates.
+This module just creates an interface to connect options and pre-defined map renderer.
+
 ## Quick Start
 
-Create an HTML file with the following contents:
+Create an HTML file with the following lines:
 
 ```html
 <div class="map"></div>
@@ -10,19 +15,20 @@ Create an HTML file with the following contents:
 ```
 
 `mapclay.js` simply renders elements with `class="map"`(by default) as web map:
+
 <img width="250px" src="resources/example_1.png">
 
 
 Here is another example:
 
 ```html
-<div class="map"></div>
 <pre class="map">
 use: maplibre
-width: 50vw
-height: 500px
+width: 40vw
+height: 300px
 center: [142.73, 43.83]
 </pre>
+<div class="map"></div>
 <script type="module" src="https://unpkg.com/mapclay@{VERSION}/js/mapclay.js"></script>
 ```
 
@@ -35,12 +41,12 @@ In this case, a new element with `class="map"` is added. Its text is used to con
 
 For each option:
 `use: maplibre`: Here we use [maplibre][] as map renderer
-`width: 50vw`: The map's width should occupy half of viewport
-`hieght: 500px`: And height should be 500px.
-`center: [142.73, 43.83]`: The center of map is **140.73E 43.83N**.
+`width: 40vw`: The map's width should occupy half of viewport
+`hieght: 300px`: And height should be 500px.
+`center: [142.73, 43.83]`: The center of map is **140.73E 43.83N** (Hokaido).
 
-Each renderer has its own default values.
-By default, [maplibre][] use [demotiles][] as its basemap
+Each renderer has its own default way to render a map.
+By default, [maplibre][] use [demotiles][] as its basemap.
 
 
 ## Why This?
@@ -52,6 +58,7 @@ But to make a web map with them, adequate frontend knowledge are necessary.
 As a hiker and a part-time volunteer of rescue, I have many friends who need to 
 create digital maps for a variety of activities. Since most of them are not 
 developer, their solutions are *QGIS*, *Garmin BaseCamp* or *Google My-Map/Earth*.
+
 These solutions have better UI, but none of them can fulfill the followings 
 at the same time:
 
@@ -62,105 +69,12 @@ at the same time:
 
 In short, **mapclay** is the abstraction for those use cases.
 
-## How it works?
 
-`mapclay.js` only do several things:
+## Behind the hoods
 
-1. Use CSS selector (`.map` by default) to get elements about map rendering
-1. Parse inner text of each element from YAML format into object. 
-1. If object has no property called `use`, assign it by default value.
-1. For each `use` value, a coresponding **Renderer** JS class uses 
-   `renderMap()` method to render elements into maps.
-
-```mermaid
-flowchart
-  subgraph mapclay.js
-    direction TB
-    1.1(Define renderInfo)
-    1.2(Check which element\nscript would apply on)
-    1.3(Define targetElements\nand fromElements)
-    1.1 --> 1.2 --> 1.3 --> refresh_map
-  end
-  subgraph refresh_map["refreshMap()"]
-    2.1(Get options from elements)
-    2.1 --> for_each_element --> for_each_renderer
-  end
-  subgraph for_each_element["For each element"]
-    direction TB
-    3.1(If preset is set, get options\nfrom previous element)
-    3.2(Set default renderer\nif it is not set)
-    3.3(Add used renderer)
-    3.1 --> 3.2 --> 3.3
-  end
-  subgraph for_each_renderer["For each renderer used"]
-    direction TB
-    4.1(Import renderer\nby await)
-    4.2(Set renderer as\nproperty of window)
-    4.3(IO: Load resources)
-    4.4(Promise: Render each\nelements use this renderer)
-    4.1 --> 4.2 --> 4.3 --> 4.4
-  end
-  subgraph renderer
-    subgraph render_map["renderMap()"]
-      5.1(Remove all children elements)
-      5.2(Set element\nwidth/hieght)
-      5.3(IO: import modules)
-      5.4("createMap()")
-      5.5("afterMapCreated()")
-      5.1 --> 5.2 --> 5.3 --> 5.4 --> 5.5
-    end
-  end
-```
-
-By default, `mapclay.js` comes with three preinstalled **Renderer** JS [classes][]: 
-`openlayers`, `maplibre` and `leaflet`.
-Of course each of them use map library with the same name.
-
-
-## Integration
-
-### hugo
-
-[hugo][] is a popular static site generator. Write markdown files, 
-then you get well-organized web pages. Just a little tweak, you can write 
-configuration in Code Blocks and get map quickly in generated pages.
-
-Put a [render hook][] file called `render-codeblock-map.html` into `layouts/_default/_markup/`
-in your hugo project. With the following contents:
-
-```html
-<div>
-  <pre class="map">
-    {{- .Inner | safeHTML }}
-  </pre>
-</div>
-{{ .Page.Store.Set "hasMap" true }}
-```
-
-This override the default markdown rendering behavior of hugo. Now if a markdown
-file contains Code Blocks marked `map` like this:
-
-    ```map
-    width: 500px
-    height: 500px
-    center: [142.73, 43.83]
-    zoom: 10
-    ```
-
-Then this creates a `<pre>` tag and put
-codes inside it. Also this marks the web page `hasMap=true` property.
-
-Then in each necessary templates (said `layouts/_default/single.html`),
-put the following contents at the end:
-
-```html
-{{ if .Page.Store.Get "hasMap" }}
-<script type="module" src="https://unpkg.com/mapclay@{VERSION}/js/mapclay.js"></script>
-{{ end }}
-```
-
-So each page marked `hasMap=ture` would has `mapclay.js` loaded after DOM parsed.
-And you get map in your pages.
+Read wiki page for more information:
+- [How it works?][]
+- [Integration][]
 
 
 ## Contribution
@@ -178,6 +92,5 @@ http://cartodb.github.io/odyssey.js/
 
 [maplibre]:     https://maplibre.org/projects/maplibre-gl-js/
 [demotiles]:    https://github.com/maplibre/demotiles/
-[classes]:      https://github.com/typebrook/mapclay.js/tree/master/js/
-[hugo]:         https://gohugo.io/
-[render hook]:  https://gohugo.io/templates/render-hooks/
+[How it works?]: /typebrook/mapclay.js/wiki/How-it-works
+[Integration]: /typebrook/mapclay.js/wiki/Integration
