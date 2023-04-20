@@ -57,14 +57,23 @@ const fromElements = Array.from(parentElement.querySelectorAll(fromSelector));
 const usedRenderers = new Set();
 
 // Get config from elements
-function assignConfig() {
-  fromElements.forEach(function (element, index) {
-    const config = jsyaml.load(element.value ?? element.textContent) ?? {};
+async function assignConfig() {
+  return Promise.all(fromElements.map(async (element, index) => {
+    let config = jsyaml.load(element.value ?? element.textContent) ?? {};
 
     // If preset is define, apply previous config as prototype
-    if (index != 0 && config.hasOwnProperty("preset") && config.preset == "last") {
-      let lastConfig = targetElements[index - 1].config
-      Object.setPrototypeOf(config, lastConfig);
+    if (config.hasOwnProperty("preset")) {
+      if (index != 0 && config.preset == "last") {
+        // Apply last element's config as preset
+        let lastConfig = targetElements[index - 1].config
+        Object.setPrototypeOf(config, lastConfig);
+      } else {
+        // Fetch remote resource as preset
+        const response = await fetch(config.preset)
+        const text = await response.text()
+        const presetObj = jsyaml.load(text)
+        config = Object.assign({}, presetObj, config)
+      }
     }
 
     // Set use with default value (if not set)
@@ -75,8 +84,9 @@ function assignConfig() {
     // Apply config onto element
     targetElements[index].config = config;
 
+    // Append necessary renderer
     usedRenderers.add(config.use);
-  })
+  }))
 }
 
 /* For each map renderer:
@@ -85,7 +95,12 @@ function assignConfig() {
    3. Render maps which use this renderer */
 
 async function refreshMap() {
-  assignConfig()
+  try {
+    await assignConfig()
+  } catch {
+    console.log('Fail to parse options')
+    return
+  }
 
   for (let rendererName of usedRenderers) {
     // TODO handle undefined renderer
@@ -96,10 +111,12 @@ async function refreshMap() {
       ele.config.use == rendererName
     )
     shouldRenderElements.forEach( ele => {
+      // If config has no prototype, apply defautConfig
+      // This prevents necessary configs are not defined
+      Object.setPrototypeOf(ele.config, renderer.defaultConfig)
       renderer.handleAliases(ele.config)
       renderer.appendResources(ele.config)
     })
-
 
     // Set widow.renderer as current used renderer
     if (shouldRenderElements.length > 0) {
@@ -108,23 +125,21 @@ async function refreshMap() {
       continue
     }
 
-
     // Load necessary resources
     let promises = [];
     renderer.resources.forEach(url => {
       promises.push(loadResource(url));
     });
 
-    Promise.all(promises)
-      .then(function() {
+    Promise.all(promises).then(function() {
         // After map renderer script is loaded, render maps
         shouldRenderElements.forEach(ele => {
           renderer.renderMap(ele);
           ele.dispatchEvent(new Event('map-rendered'));
         });
-      }).catch(function(script) {
+    }).catch(function(script) {
         console.log(script + ' failed to load');
-      });
+    });
   }
 }
 
