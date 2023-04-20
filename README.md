@@ -92,5 +92,5 @@ http://cartodb.github.io/odyssey.js/
 
 [maplibre]:     https://maplibre.org/projects/maplibre-gl-js/
 [demotiles]:    https://github.com/maplibre/demotiles/
-[How it works?]: /typebrook/mapclay.js/wiki/How-it-works
-[Integration]: /typebrook/mapclay.js/wiki/Integration
+[How it works?]: https://github.com/typebrook/mapclay.js/wiki/How-it-works
+[Integration]: https://github.com/typebrook/mapclay.js/wiki/Integration
