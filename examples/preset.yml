@@ -1,4 +1,11 @@
 aliases:
+  OSM Carto: http://b.tile.openstreetmap.org/{z}/{x}/{y}.png
+  OpenCycleMap: https://a.tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey=a5dd6a2f1c934394bce6b0fb077203eb
+  Rudymap: https://tile.happyman.idv.tw/map/moi_osm/{z}/{x}/{y}.png
+  Happyman_gpx: https://tile.happyman.idv.tw/map/gpxtrack/{z}/{x}/{y}.png
+  Happyman_moi: https://tile.happyman.idv.tw/map/moi_osm/{z}/{x}/{y}.png
+  NLSC: http://wmts.nlsc.gov.tw/wmts/PHOTO2/default/GoogleMapsCompatible/{z}/{y}/{x}
+  NLSC_topo: http://wmts.nlsc.gov.tw/wmts/PHOTO_MIX/default/GoogleMapsCompatible/{z}/{y}/{x}
   Tokyo: [ 139.6917, 35.6895 ]
   Delhi: [ 77.1025, 28.7041 ]
   Shanghai: [ 121.4737, 31.2304 ]
@@ -18,4 +25,3 @@ aliases:
   Lagos: [ 3.3792, 6.5244 ]
   Rio de Janeiro: [ -43.1729, -22.9068 ]
   Tianjin: [ 117.1767, 39.0842 ]
-
