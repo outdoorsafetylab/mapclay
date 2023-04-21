@@ -1,6 +1,7 @@
 import defaultExport from './BaseRenderer.js';
 
 export default class extends defaultExport {
+  id = 'maplibre';
   version = '2.4.0';
 
   resources = [

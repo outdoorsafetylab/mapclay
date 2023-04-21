@@ -1,6 +1,7 @@
 import defaultExport from './BaseRenderer.js';
 
 export default class extends defaultExport {
+  id = 'leaflet';
   version = '1.9.3';
 
   resources = [

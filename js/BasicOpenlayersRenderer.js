@@ -1,6 +1,7 @@
 import defaultExport from './BaseRenderer.js';
 
 export default class extends defaultExport {
+  id = 'openlayers'
   version = '7.3.0';
 
   resources = new Set([
