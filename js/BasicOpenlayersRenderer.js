@@ -106,7 +106,7 @@ export default class extends defaultExport {
         units: 'metric'
       }))
     }
-    if (map.getAllLayers().length > 1) {
+    if (config.data.filter(d => d.type == 'tile').length > 1) {
       const layerSwitcher = new LayerSwitcher({
         reverse: true,
         groupSelectStyle: 'group'

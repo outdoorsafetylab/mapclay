@@ -52,10 +52,6 @@ export default class {
   setControl(map, config){};
   // Add GIS data
   setData(map, config){
-    if (config.markers) {
-      this.addMarkers(map, config.markers)
-    }
-
     // Tile
     this.addTileData(map, config.data);
 
@@ -65,6 +61,10 @@ export default class {
       gpxData.forEach(datum => {
         this.addGPXFile(map, datum.url)
       })
+    }
+
+    if (config.markers) {
+      this.addMarkers(map, config.markers)
     }
   };
   // Do extra stuff
