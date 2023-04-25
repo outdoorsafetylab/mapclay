@@ -274,5 +274,21 @@ height: 80vh
   type="module" 
   src="input.js">
 </script>
+<script src="https://unpkg.com/leader-line@1.0.7/leader-line.min.js"></script>
+<script>
+  console.log('foo')
+  window.addEventListener('keydown', function(e){
+    console.log(e.keyCode)
+    var startElement = document.getElementById('left')
+    var endElement = document.getElementById('ol-popup')
+    if (e.keyCode == 76) { 
+      new LeaderLine(
+        LeaderLine.mouseHoverAnchor(endElement),
+        startElement
+      );
+    }
+  })
+</script>
+
 
 </body>

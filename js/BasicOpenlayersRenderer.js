@@ -255,6 +255,7 @@ export default class extends defaultExport {
 
         this.container = element;
         this.container.className = 'ol-popup';
+        this.container.id = 'ol-popup';
 
         this.closer = document.createElement('a');
         this.closer.className = 'ol-popup-closer';
@@ -396,16 +397,17 @@ export default class extends defaultExport {
   addPopup(map) {
     let popup = new ol.Overlay.Popup();
     map.addOverlay(popup);
+      popup.show([121, 24], 'foo');
     map.on('singleclick', function(evt) {
       const feature = map.forEachFeatureAtPixel(evt.pixel, function (feature) {
         let features = feature.get('features');
         return features ? features[0] : null
       });
-      if (feature){
-        popup.show(evt.coordinate, feature.get('name'));
-      } else {
-        popup.hide()
-      }
+      //if (feature){
+      //  popup.show(evt.coordinate, feature.get('name'));
+      //} else {
+      //  popup.hide()
+      //}
     });
   }
 
