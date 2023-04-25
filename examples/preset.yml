@@ -25,31 +25,30 @@ aliases:
   Lagos: [ 3.3792, 6.5244 ]
   Rio de Janeiro: [ -43.1729, -22.9068 ]
   Tianjin: [ 117.1767, 39.0842 ]
-eval: >-
-  switch (this.id) {
-    case 'openlayers':
-      map.getViewport().addEventListener('contextmenu', function (evt) {
-        evt.preventDefault();
-        const text = map.getEventCoordinate(evt).map(f=>f.toFixed(7));
-        const coord = `[${text}]`
-        navigator.clipboard.writeText(coord);
-        alert('Copied coordiantes: ' + coord);
-      })
-      break;
-    case 'leaflet':
-      map.on('contextmenu', function(e) {
-        var coords = '[' + e.latlng.lat.toFixed(7) + ', ' + e.latlng.lng.toFixed(7) + ']';
-        navigator.clipboard.writeText(coords);
-        alert('Copied coordiantes (LatLong format): ' + coords);
-      });
-      break;
-    case 'maplibre':
-      console.log('maplibre')
-      map.on('contextmenu', function(e) {
-        var coords = '[' + e.lngLat.lng.toFixed(7) + ', ' + e.lngLat.lat.toFixed(7) + ']';
-        navigator.clipboard.writeText(coords);
-        alert('Copied coordiantes: ' + coords);
-      });
-      break;
-  }
 
+switch (this.id) {
+  case 'openlayers':
+    map.getViewport().addEventListener('contextmenu', function (evt) {
+      evt.preventDefault();
+      const text = map.getEventCoordinate(evt).map(f=>f.toFixed(7));
+      const coord = `[${text}]`
+      navigator.clipboard.writeText(coord);
+      alert('Copied coordiantes: ' + coord);
+    })
+    break;
+  case 'leaflet':
+    map.on('contextmenu', function(e) {
+      var coords = '[' + e.latlng.lat.toFixed(7) + ', ' + e.latlng.lng.toFixed(7) + ']';
+      navigator.clipboard.writeText(coords);
+      alert('Copied coordiantes (LatLong format): ' + coords);
+    });
+    break;
+  case 'maplibre':
+    console.log('maplibre')
+    map.on('contextmenu', function(e) {
+      var coords = '[' + e.lngLat.lng.toFixed(7) + ', ' + e.lngLat.lat.toFixed(7) + ']';
+      navigator.clipboard.writeText(coords);
+      alert('Copied coordiantes: ' + coords);
+    });
+    break;
+}

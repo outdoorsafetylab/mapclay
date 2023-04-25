@@ -56,10 +56,24 @@ const fromElements = Array.from(parentElement.querySelectorAll(fromSelector));
 // Set of map renders in config texts
 const usedRenderers = new Set();
 
+function loadOptions(rawText) {
+  let text = rawText.replace(/^\s*\n+/, '');
+  const paragraphs = text.split(/\n\s*\n/);
+  text = paragraphs[0];
+
+  const evaltext = paragraphs.length > 1 ? paragraphs.slice(1).join("\n\n") : undefined;
+  const optionsObj = jsyaml.load(text) ?? {};
+  if (evaltext) {
+    optionsObj.eval = evaltext;
+  }
+
+  return optionsObj;
+}
+
 // Get config from elements
 async function assignConfig() {
   return Promise.all(fromElements.map(async (element, index) => {
-    let config = jsyaml.load(element.value ?? element.textContent) ?? {};
+    let config = loadOptions(element.value ?? element.textContent)
 
     // If preset is define, apply previous config as prototype
     if (config.hasOwnProperty("preset")) {
@@ -71,7 +85,10 @@ async function assignConfig() {
         // Fetch remote resource as preset
         const response = await fetch(config.preset)
         const text = await response.text()
-        const presetObj = jsyaml.load(text)
+        const presetObj = loadOptions(text)
+        if (presetObj.eval) {
+          config.eval = presetObj.eval + "\n" + config.eval
+        }
         config = Object.assign({}, presetObj, config)
       }
     }
@@ -95,12 +112,7 @@ async function assignConfig() {
    3. Render maps which use this renderer */
 
 async function refreshMap() {
-  try {
-    await assignConfig()
-  } catch {
-    console.log('Fail to parse options')
-    return
-  }
+  await assignConfig()
 
   for (let rendererName of usedRenderers) {
     // TODO handle undefined renderer
