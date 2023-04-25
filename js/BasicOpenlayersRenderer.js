@@ -25,7 +25,7 @@ export default class extends defaultExport {
   })
 
   appendResources(config) {
-    if (config.data && config.data.filter(d => d.type == 'tile').length > 1) {
+    if (this.showLayerSwitcher(config.data)) {
       this.resources.add("https://unpkg.com/ol-layerswitcher@4.1.1/dist/ol-layerswitcher.js")
       this.resources.add("https://unpkg.com/ol-layerswitcher@4.1.1/dist/ol-layerswitcher.css")
     }
@@ -106,7 +106,7 @@ export default class extends defaultExport {
         units: 'metric'
       }))
     }
-    if (config.data.filter(d => d.type == 'tile').length > 1) {
+    if (this.showLayerSwitcher(config.data)) {
       const layerSwitcher = new LayerSwitcher({
         reverse: true,
         groupSelectStyle: 'group'
@@ -208,6 +208,11 @@ export default class extends defaultExport {
         map.addLayer(tileLayer)
       })
     }
+
+    const wmtsData = data.filter(datum => datum.type == 'wmts')[0]
+    if (map, wmtsData) {
+      this.addLayersInWMTS(map, wmtsData)
+    }
   }
 
   addGPXFile(map, gpxUrl) {
@@ -231,6 +236,29 @@ export default class extends defaultExport {
         },
       })
     );
+  }
+
+  addLayersInWMTS(map, wmtsData) {
+    const parser = new ol.format.WMTSCapabilities();
+    fetch(wmtsData.url)
+      .then(function (response) {
+        return response.text();
+      })
+      .then(function (text) {
+        const result = parser.read(text);
+        result.Contents.Layer.forEach(wmtsLayer => {
+          const options = ol.source.WMTS.optionsFromCapabilities(result, {
+            layer: wmtsLayer.Identifier,
+            matrixSet: 'EPSG:3857',
+          });
+          const layer = new ol.layer.Tile({
+            source: new ol.source.WMTS(options),
+            title: wmtsLayer.Title,
+            visible: false,
+          })
+          map.addLayer(layer)
+        })
+      })
   }
 
   definePopup() {

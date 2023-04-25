@@ -4,8 +4,10 @@ aliases:
   Rudymap: https://tile.happyman.idv.tw/map/moi_osm/{z}/{x}/{y}.png
   Happyman_gpx: https://tile.happyman.idv.tw/map/gpxtrack/{z}/{x}/{y}.png
   Happyman_moi: https://tile.happyman.idv.tw/map/moi_osm/{z}/{x}/{y}.png
-  NLSC: http://wmts.nlsc.gov.tw/wmts/PHOTO2/default/GoogleMapsCompatible/{z}/{y}/{x}
+  NLSC_aeril: http://wmts.nlsc.gov.tw/wmts/PHOTO2/default/GoogleMapsCompatible/{z}/{y}/{x}
   NLSC_topo: http://wmts.nlsc.gov.tw/wmts/PHOTO_MIX/default/GoogleMapsCompatible/{z}/{y}/{x}
+  SINICA: https://gis.sinica.edu.tw/tileserver/wmts
+  NLSC: https://wmts.nlsc.gov.tw/wmts 
   Tokyo: [ 139.6917, 35.6895 ]
   Delhi: [ 77.1025, 28.7041 ]
   Shanghai: [ 121.4737, 31.2304 ]

@@ -12,6 +12,7 @@ export default class {
     "updates",
     "XYZ",
     "GPX",
+    "WMTS",
   ]
 
   // Default configuation for map 
@@ -139,6 +140,14 @@ export default class {
       delete options.XYZ
     }
 
+    if (options.WMTS) {
+      options.data.push({
+        type: "wmts",
+        url: options.WMTS,
+      })
+      delete options.WMTS
+    }
+
     if (options.GPX) {
       options.data.push({
         type: "gpx",
@@ -189,6 +198,13 @@ export default class {
     const map = this.createMap(element, element.config);
     element.map = map // Used to check element is already a map container
     this.afterMapCreated(map, element.config);
+  }
+
+  showLayerSwitcher(data) { 
+    const wmtsRecords = data.filter(record => record.type == 'wmts')
+    const tileRecords = data.filter(record => record.type == 'tile')
+
+    return wmtsRecords.length > 0 || tileRecords.length > 1
   }
 }
 
