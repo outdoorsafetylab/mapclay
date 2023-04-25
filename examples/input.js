@@ -141,6 +141,6 @@ async function refresh(alsoRefreshMap) {
 
 // Get current options from textarea
 function getOptions() {
-  var options = jsyaml.load(textArea.value, 'utf8');
+  var options = loadOptions(textArea.value);
   return options ? options : {}
 }

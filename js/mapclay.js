@@ -159,3 +159,4 @@ refreshMap()
 
 export { refreshMap };
 window.refreshMap = refreshMap
+window.loadOptions = loadOptions
