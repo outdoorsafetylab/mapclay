@@ -147,6 +147,7 @@ export default class {
       delete options.GPX
     }
 
+    // Replace aliases into real string
     if (typeof options.center == 'string' && options.aliases.hasOwnProperty(options.center)) {
       options.center = options.aliases[options.center]
     }
@@ -155,9 +156,9 @@ export default class {
         record.center = options.aliases[record.center]
       }
     })
-
     options.data.forEach(record => {
       if (options.aliases.hasOwnProperty(record.url)) {
+        record.title = record.url
         record.url = options.aliases[record.url]
       }
     })

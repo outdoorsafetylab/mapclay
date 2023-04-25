@@ -196,7 +196,7 @@ export default class extends defaultExport {
     if (!styleDatum && tileData.length == 0) {
       let baseLayer = new ol.layer.Tile({
         source: new ol.source.OSM(),
-        title: 'OpenStreetMap'
+        title: 'OSM Carto'
       })
       map.addLayer(baseLayer)
     } else {
