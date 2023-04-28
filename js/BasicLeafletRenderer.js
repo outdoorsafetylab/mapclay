@@ -4,10 +4,10 @@ export default class extends defaultExport {
   id = 'leaflet';
   version = '1.9.3';
 
-  resources = [
+  resources = new Set([
     `https://unpkg.com/leaflet@${this.version}/dist/leaflet.js`,
     `https://unpkg.com/leaflet@${this.version}/dist/leaflet.css`
-  ]
+  ])
 
   supportOptions = this.supportOptions.concat([
     "control.fullscreen",
@@ -24,11 +24,17 @@ export default class extends defaultExport {
     },
   })
 
+  appendResources(config) {
+    if (config.data.filter(datum => datum.type == 'wmts')) {
+      this.resources.add("/js/bundle.js")
+    }
+  }
+
   async importModules(config) {
     if (config.link) {
       await import('https://rawgit.com/MarcChasse/leaflet.Permalink/master/leaflet.permalink.min.js');
     }
-  } 
+  }
 
   createMap(element, config) {
     // If Map Container is initialized, remove it
@@ -106,12 +112,14 @@ export default class extends defaultExport {
     });
   }
 
-  addTileData(map, tileData) {
+  addTileData(map, data) {
     var baseLayers = {}
     var overlayMaps = {}
+    const tileData = data.filter(datum => datum.type == 'tile')
+
     if (tileData.length == 0) {
-      const osmTile = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png'
-      L.tileLayer(osmTile).addTo(map);
+      const osmTile = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+      const layer = L.tileLayer(osmTile).addTo(map);
     } else {
       tileData.forEach((datum, index) => {
         const customTile = datum.url
@@ -123,7 +131,16 @@ export default class extends defaultExport {
         baseLayers[title] = layer
       })
     }
-    var layerControl = L.control.layers(baseLayers, overlayMaps).addTo(map);
+
+    const wmtsData = data.filter(datum => datum.type == 'wmts')[0]
+    if (wmtsData) {
+      this.addLayersInWMTS(map, wmtsData)
+    }
+
+    // Consider move this into setControl()
+    if (this.showLayerSwitcher(data)) {
+      L.control.layers(baseLayers, overlayMaps).addTo(map);
+    }
   }
 
   addGPXFile(map, gpxUrl) {
@@ -153,6 +170,27 @@ export default class extends defaultExport {
     script.onload = () => {
       new L.GPX(gpxUrl, options).addTo(map);
     }
+  }
+
+  addLayersInWMTS(map, record) {
+    // TODO
+    const identifier = 'TM50K_1996'
+    fetch(record.url)
+      .then(function (response) {
+        return response.text();
+      })
+      .then(function (text) {
+        const result = ogcparser.wmts(text)
+        console.log(result)
+        // const result = new DOMParser().parseFromString(text, "text/xml")
+        // const layers = Array.from(result.activeElement.children).filter(ele => ele.tagName == 'Contents')[0].children
+        // for (let i = 0; i < layers.length; i++) {
+        //   console.log(layers[i]);
+        // }
+      })
+//    var wmsLayer = L.tileLayer.wms(record.url, {
+//      layers: identifier,
+ //   }).addTo(map);
   }
 
   addPermalink(map, config) {
