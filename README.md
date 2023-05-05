@@ -11,7 +11,7 @@ Create an HTML file with the following lines:
 
 ```html
 <div class="map"></div>
-<script type="module" src="https://unpkg.com/mapclay@{VERSION}/js/mapclay.js"></script>
+<script type="module" src="https://unpkg.com/mapclay@latest/js/mapclay.js"></script>
 ```
 
 `mapclay.js` simply renders elements with `class="map"`(by default) as web map:
