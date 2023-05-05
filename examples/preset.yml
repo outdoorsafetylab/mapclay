@@ -8,6 +8,8 @@ aliases:
   NLSC_topo: http://wmts.nlsc.gov.tw/wmts/PHOTO_MIX/default/GoogleMapsCompatible/{z}/{y}/{x}
   SINICA: https://gis.sinica.edu.tw/tileserver/wmts
   NLSC: https://wmts.nlsc.gov.tw/wmts 
+  WMTS TAIWAN_TERRAIN: https://osmhacktw.github.io/terrain-rgb/wmts.xml
+  XYZ TAIWAN_TERRAIN:   https://osmhacktw.github.io/terrain-rgb/tiles/{z}/{x}/{y}.png
   Tokyo: [ 139.6917, 35.6895 ]
   Delhi: [ 77.1025, 28.7041 ]
   Shanghai: [ 121.4737, 31.2304 ]
