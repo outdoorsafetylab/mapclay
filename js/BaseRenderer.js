@@ -23,6 +23,7 @@ export default class {
     zoom: 7,
     updates: [],
     data: [],
+    aliases: [],
   }
 
   // Used for animation
@@ -112,8 +113,6 @@ export default class {
   }
 
   handleAliases(options) {
-    if (!options.data) { options.data = [] }
-
     if (options.XYZ) {
       const xyzArray = typeof options.XYZ == 'string'
         ? [ options.XYZ ]
