@@ -1,5 +1,7 @@
 import 'https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js';
 
+const scriptName = 'mapclay.js'
+
 const rendererInfo = Object.freeze({
   openlayers: './BasicOpenlayersRenderer.js', 
   leaflet:    './BasicLeafletRenderer.js',
@@ -40,7 +42,7 @@ function loadResource(url) {
 
 // Get related script tag and its parent element
 const currentScript = Array.from(document.querySelectorAll("script"))
-  .find(script => script.src == import.meta.url);
+  .find(script => script.src.endsWith(scriptName) );
 const parentElement = currentScript.parentElement;
 
 // Use targetSelector to get elements which will render maps
