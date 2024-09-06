@@ -7,11 +7,12 @@
 Specify **CSS selector** for target HTML element by **data attribute** `data-target` (`pre` in this case):
 
 ```html
-<pre></pre>
 <script data-target="pre" src='http://unpkg.com/mapclay@latest/dist/mapclay.js'></script>
+<pre></pre>
 ```
 
 <br>
+
 Or by **query paremeter** `target`:
 
 ```html
@@ -20,7 +21,8 @@ Or by **query paremeter** `target`:
 ```
 
 <br>
-The text content of target element would be parsed as [YAML], So user can specify [options] to configure map.
+
+The text content of target element would be parsed as [YAML](https://nodeca.github.io/js-yaml/), So user can specify [options](#options) to configure map.
 
 ```html
 <pre>
@@ -29,30 +31,28 @@ width: 400px
 height: 50vh
 center: [139.6917,35.6895]
 zoom: 8
+XYZ: https://tile.openstreetmap.jp/styles/osm-bright/512/{z}/{x}/{y}.png
 </pre>
+
 <script src='http://unpkg.com/mapclay@latest/dist/mapclay.js?target=pre'></script>
 ```
 
-_Check [the result][test1] with online markdown editor_
+_Check [the result](https://markdown-it.github.io/#md3=%7B%22source%22%3A%22%60%60%60map%5Cnuse%3A%20Maplibre%5Cnwidth%3A%20400px%5Cnheight%3A%2050vh%5Cncenter%3A%20%5B139.6917%2C35.6895%5D%5Cnzoom%3A%208%5CnXYZ%3A%20https%3A%2F%2Ftile.openstreetmap.jp%2Fstyles%2Fosm-bright%2F512%2F%7Bz%7D%2F%7Bx%7D%2F%7By%7D.png%5Cn%60%60%60%5Cn%5Cn%3Cscript%20src%3D%27http%3A%2F%2Funpkg.com%2Fmapclay%40latest%2Fdist%2Fmapclay.js%3Ftarget%3Dpre%27%3E%3C%2Fscript%3E%22%2C%22defaults%22%3A%7B%22html%22%3Atrue%2C%22xhtmlOut%22%3Afalse%2C%22breaks%22%3Afalse%2C%22langPrefix%22%3A%22%22%2C%22linkify%22%3Atrue%2C%22typographer%22%3Afalse%2C%22_highlight%22%3Afalse%2C%22_strict%22%3Afalse%2C%22_view%22%3A%22html%22%7D%7D) with online markdown editor_
 
 
 <br>
-Of course it can render multiple targets:
+
+All selected target elements would be rendered:
 
 ```html
-<pre>
-use: Leaflet
-</pre>
-<pre>
-use: Maplibre
-</pre>
-<pre>
-use: Openlayers
-</pre>
+<pre>use: Leaflet</pre>
+<pre>use: Maplibre</pre>
+<pre>use: Openlayers</pre>
+
 <script src='http://unpkg.com/mapclay@latest/dist/mapclay.js?target=pre'></script>
 ```
 
-_Check [the result][test2] with online markdown editor_
+_Check [the result](https://markdown-it.github.io/#md3=%7B%22source%22%3A%22%60%60%60%5Cnuse%3A%20Leaflet%5Cn%60%60%60%5Cn%60%60%60%5Cnuse%3A%20Maplibre%5Cn%60%60%60%5Cn%60%60%60%5Cnuse%3A%20Openlayers%5Cn%60%60%60%5Cn%5Cn%3Cscript%20src%3D%27http%3A%2F%2Funpkg.com%2Fmapclay%40latest%2Fdist%2Fmapclay.js%3Ftarget%3Dpre%27%3E%3C%2Fscript%3E%22%2C%22defaults%22%3A%7B%22html%22%3Atrue%2C%22xhtmlOut%22%3Afalse%2C%22breaks%22%3Afalse%2C%22langPrefix%22%3A%22%22%2C%22linkify%22%3Atrue%2C%22typographer%22%3Afalse%2C%22_highlight%22%3Afalse%2C%22_strict%22%3Afalse%2C%22_view%22%3A%22html%22%7D%7D) with online markdown editor_
 
 <br>
 
@@ -81,7 +81,7 @@ If **target** is not given by `<script>` tag, then use API instead:
 
 ### Render by text content
 
-Still, get target element and write `textContent` for options:
+Still, write text content on target element for options:
 
 ```html
 <!-- In html -->
@@ -93,7 +93,7 @@ zoom: 8
 </pre>
 ```
 
-Use `mapclay.renderByTextContent` for this case
+Use `mapclay.renderByTextContent()` for this case
 
 ```js
 // In <script>
@@ -128,20 +128,20 @@ But there are some general optoins come with default renderers:
 
 option|description|value
 ---|---|---|
-id | id of map HTML element | string
-width |  CSS width of map HTML element | css string
-height | CSS height of map HTML element | css string
-center | Center of map camera | array `[lon, lat]`
-zoom | Zoom level for map camera | number `0-22`
+id | id of map HTML element | `String`
+width |  CSS width of map HTML element | `String` for CSS
+height | CSS height of map HTML element | `String` for CSS
+center | Center of map camera | `Array` in [lon, lat]
+zoom | Zoom level for map camera | `Number` `0-22`
 control | Object of control options, supports | `fullscreen`, `scale`
-XYZ | Raster tile URL | URL with {x}, {y} and {z}
-GPX | GPX file path | string, A fetchable resource path
+XYZ | Raster tile URL | `URL` with {x}, {y} and {z}
+GPX | GPX file path | `String` for fetchable resource path
 
 ### Option: `aliases`
 
 **`object` contains entry for each option**
 
-For readability, Specify `aliases` with key-value of aliases for each option:
+For readability, Specify `aliases` with entries in key-value format for each option:
 
 ```yml
 # The following config file...
@@ -158,10 +158,11 @@ aliases:
     Metropolitan area: 10
 ```
 
-To distinguish an alias from a normal string, each alias starts from capitalize char. And if no value is specified in `aliases`, the original value would be applied.
+To distinguish an alias from a normal string, each alias starts from **Uppercase Char**. If no value is specified in `aliases`, the original value would be applied.
 
 ```yml
-center: tokyo  # Starts from lowercase, this is not an alias and also no a valid value for option "center"
+# This is an invalid config file
+center: tokyo  # Starts from lowercase, this is not an alias nor a valid value for option "center"
 GPX: My-track1 # No matched value in aliases, renderer will use "My-track1" as resource path
 aliases:
   center:
@@ -191,10 +192,11 @@ aliases:
 
 **`URL` of other config file**
 
-To reuse options written, you can specify resource path of another config file, and automatically assign options with it.
+To reuse written config, you can use `apply` to specify resource path of another config file. Options in current config file are automatically assigned by it.
 
 ```yml
 apply: https://unpkg.com/mapclay/dist/default.yml
+
 # The following alias come from applied config file
 center: Delhi
 zoom: City
@@ -204,9 +206,9 @@ zoom: City
 
 **`URL` of ES6 module, with Renderer class as default export**
 
-This option specify which [Renderer](#renderer) is used to create map. If it is not specified, `mapclay` will use first entry in `aliases.use`.
+This option specify which [Renderer](#renderer) is used to create a map. If it is not specified, `mapclay` will use first entry in `aliases.use`.
 
-By default, `mapclay.render()` and `mapclay.renderByTextContent()` comes with three hidden aliases for `use`:
+By default, `mapclay.render()` and `mapclay.renderByTextContent()` comes with three hidden aliases for this option:
 
 ```yml
 aliases:
@@ -224,7 +226,46 @@ aliases:
 
 ## Renderer
 
+A Renderer is responsible for create map view in target element. `mapclay.render()` simply create a new child element with class `map-container`, and calls `Renderer.createView()` for a new map.
 
+```js
+// Pesudo code in mapclay.render()
+const renderer = new RendererClass(config)
+renderer.createView(targetElement)
+```
+
+Create a new one if default Renderer Class doesn't fit your use cases. Here is an example of new custom Renderer Class based on default Renderer Class:
+
+```js
+import defaultExport from 'https://unpkg.com/mapclay/dist/renderers/maplibre.mjs'
+
+export default class extends defaultExport {
+  // Override default config in Renderer
+  static defaultConfig = {
+    ...super.defaultConfig,
+    ...{
+      pitch: 60,
+      bearing: 30,
+      style: 'https://tile.openstreetmap.jp/styles/osm-bright/style.json',
+    }
+  )
+
+  // Do something after map is created by parent
+  async createView(target) {
+    const map = await super.createView(target)
+
+    const marker = new maplibregl.Marker()
+      .setLngLat([12.550343, 55.665957])
+      .addTo(map);
+  }
+}
+```
+
+Then put it into option `use` to use this Renderer:
+
+```yml
+use: https://path/to/custom-module-with-renderer.mjs
+```
 
 
 ## More details
@@ -243,7 +284,69 @@ Seems YAML is a superset of JSON, user can still write JSON in textContent of HT
 </pre>
 ```
 
-### Specify renderer
+### Multiple config files
+
+Seems YAML docs are separated by `---`, you can render multiple maps in a single target element by multiple YAML docs:
+
+```yml
+use: Leaflet
+---
+use: Maplibre
+---
+use: Openlayers
+```
+
+_Check [the result](https://markdown-it.github.io/#md3=%7B%22source%22%3A%22%60%60%60%5Cnuse%3A%20Leaflet%5Cn---%5Cnuse%3A%20Maplibre%5Cn---%5Cnuse%3A%20Openlayers%5Cn%60%60%60%5Cn%5Cn%3Cscript%20src%3D%27http%3A%2F%2Funpkg.com%2Fmapclay%40latest%2Fdist%2Fmapclay.js%3Ftarget%3Dpre%27%3E%3C%2Fscript%3E%22%2C%22defaults%22%3A%7B%22html%22%3Atrue%2C%22xhtmlOut%22%3Afalse%2C%22breaks%22%3Afalse%2C%22langPrefix%22%3A%22%22%2C%22linkify%22%3Atrue%2C%22typographer%22%3Afalse%2C%22_highlight%22%3Afalse%2C%22_strict%22%3Afalse%2C%22_view%22%3A%22html%22%7D%7D) with online markdown editor_
+
+
+### Run scripts after map is created
+
+Default Renderers use `eval` options for custom scripts, it simply run `eval(VALUE_OF_OPTION)`.
+
+```
+# Get methods in current Renderer
+use: Openlayers
+eval: "console.log(Object.entries(this))"
+```
+
+```
+# Get View projection from ol map, return EPSG:3857 by default
+use: Openlayers
+eval: console.log(map.getView().getProjection().code)
+```
+
+Though YAML supports multi-lines string by symbol `>` and `|`, but indent really bothers.
+
+To make it simpler, **if YAML doc is parsed as string, it would be treated as value of `eval` of last YAML doc.`
+
+So the following config:
+
+```yml
+use: Leaflet
+eval: |
+  console('This is the first YAML doc')
+  console('with multi-lines')
+  console('string of script')
+---
+use: Openlayers
+eval: console('This is the second YAML doc')
+```
+
+would be equal to this (`|` symbol is important):
+
+```yml
+use: Leaflet
+---
+|
+console('This is the first YAML doc')
+console('with multi-lines')
+console('string of script')
+---
+use: Openlayers
+eval: console('This is the second YAML doc')
+```
+
+### Strictly use a default renderer
 
 By default, `mapclay.render()` and `mapclay.renderByTextContent()` dynamically import ES6 module by `use` value in config file. If you only want to work with a single Renderer, try to replace script URL:
 
@@ -261,6 +364,7 @@ By default, `mapclay.render()` and `mapclay.renderByTextContent()` dynamically i
 
 - MapML: https://maps4html.org/web-map-doc/
 - odyssey.js: http://cartodb.github.io/odyssey.js/
+
 
 [test1]: https://markdown-it.github.io/#md3=%7B%22source%22%3A%22%60%60%60map%5Cncenter%3A%20%5B121%2C%2024%5D%5Cnwidth%3A%20100%25%5CnXYZ%3A%20https%3A%2F%2Ftile.openstreetmap.jp%2Fstyles%2Fosm-bright%2F512%2F%7Bz%7D%2F%7Bx%7D%2F%7By%7D.png%5Cn%60%60%60%5Cn%5Cn%3Cscript%20src%3D%27http%3A%2F%2Flocalhost%3A8080%2Fdist%2Frenderers%2Fopenlayers.js%3Ftarget%3Dpre%27%3E%3C%2Fscript%3E%22%2C%22defaults%22%3A%7B%22html%22%3Atrue%2C%22xhtmlOut%22%3Afalse%2C%22breaks%22%3Afalse%2C%22langPrefix%22%3A%22%22%2C%22linkify%22%3Atrue%2C%22typographer%22%3Afalse%2C%22_highlight%22%3Afalse%2C%22_strict%22%3Afalse%2C%22_view%22%3A%22html%22%7D%7D
 [options]: #options
