@@ -66,6 +66,7 @@ const Renderer = class extends defaultExport {
 
     this.setControl(map, this.config)
     this.setData(map, this.config)
+    this.setExtra(map, this.config)
 
     if (this.config.draw) {
       setTimeout(() => {
