@@ -53,9 +53,9 @@ const fetchConfig = (url) => fetch(url)
   })
   .catch((err) => { throw Error(`Fail to fetch applied config ${url}`, err) })
 
-const applyOtherConfig = (config) => {
+const applyOtherConfig = (configList) => (config) => {
   if (!config.apply) return config
-  const appliedConfig = appliedConfigs[config.apply]
+  const appliedConfig = configList[config.apply]
 
   return { ...(appliedConfig ?? {}), ...config }
 }
@@ -82,9 +82,9 @@ const setValueByAliases = (config) => {
 }
 // }}}
 // Render each map container by config {{{
-const renderMapContainer = async (target, config) => {
+const renderTargetWithConfig = async ([target, config]) => {
 
-  const getRendererClass = async(c) => {
+  const getRendererClass = async (c) => {
     const rendererUrl = c.use ?? Object.values(c.aliases?.use)?.at(0)?.value
     if (!rendererUrl) throw Error(`Renderer URL is not specified ${rendererUrl}`)
 
@@ -99,19 +99,11 @@ const renderMapContainer = async (target, config) => {
   if (!rendererClass) throw Error(`Fail to get renderer class by module ${config.use}`)
 
   const renderer = new rendererClass(config)
+  target.renderer = renderer
+  const map = await renderer.createView(target)
+  target.renderer.map = map
 
-  const mapContainer = document.createElement('div')
-  target.appendChild(mapContainer)
-  mapContainer.id = config.id
-  mapContainer.title = config.id
-  mapContainer.style.setProperty('position', 'relative')
-  mapContainer.classList.add('map-container')
-
-  mapContainer.renderer = renderer
-  const map = await renderer.createView(mapContainer)
-  mapContainer.renderer.map = map
-
-  return mapContainer
+  return target
 }
 // }}}
 // Render target by config {{{
@@ -124,11 +116,9 @@ const renderMapContainer = async (target, config) => {
 const renderWith = (preset) => async (target, configObj) => {
   // Return List of promises about map rendering
   const configListArray = typeof configObj === 'object'
-    ? Array.isArray(configObj)
-      ? configObj
-      : [configObj]
+    ? Array.isArray(configObj) ? configObj : [configObj]
     : null
-  if (!configListArray) throw Error("Invalid configs", configListArray)
+  if (!configListArray) throw Error("Invalid config files", configObj)
   configListArray.forEach(config => Object.assign(config, preset))
 
   // Fetch config files by option "apply"
@@ -142,15 +132,26 @@ const renderWith = (preset) => async (target, configObj) => {
   // Remove children from target container
   Array.from(target.children).forEach(e => e.remove())
 
-  const renderEachConfig = configListArray
-    .map(applyOtherConfig)
+  // Create elements for each config file in array
+  const createContainer = (config) => {
+    const mapContainer = document.createElement('div')
+    target.appendChild(mapContainer)
+    mapContainer.id = config.id
+    mapContainer.title = config.id
+    mapContainer.style.setProperty('position', 'relative')
+    mapContainer.classList.add('map-container')
+    return [mapContainer, config]
+  }
+
+  // List of promises about rendering each config
+  const renderByEachConfig = configListArray
+    .map(applyOtherConfig(appliedConfigs))
     .map(applyDefaultAliases)
     .map(setValueByAliases)
-    .map(async config => renderMapContainer(target, config)
-      .catch(err => console.error('Fail to render map by config', config, err))
-    )
+    .map(createContainer)
+    .map(renderTargetWithConfig)
 
-  return Promise.allSettled(renderEachConfig)
+  return Promise.allSettled(renderByEachConfig)
 }
 // }}}
 // Render target element by textContent {{{
