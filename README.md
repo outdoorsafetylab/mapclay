@@ -1,6 +1,18 @@
 [![npm version](https://badge.fury.io/js/mapclay.svg)](https://badge.fury.io/js/mapclay)
 
+MapClay is a JavaScript library that allows you to create interactive maps using simple YAML or JSON configurations. It supports multiple map rendering engines, including Leaflet, Maplibre, and OpenLayers, making it flexible for various use cases.
+
 ## Quick Start
+
+### Installation
+
+You can include MapClay in your project using npm:
+
+```bash
+npm install mapclay
+```
+
+Or use it directly from a CDN:
 
 ### The minimal use cases
 
@@ -19,16 +31,16 @@ Add script from CDN, and specify **CSS selector** for target HTML element by
 
 <!-- Or... -->
 
-<!-- Target all elements with 'id="map"', selector '#map' in URL encoding is '%23map'
+<!-- Target all elements with 'id="map"', selector '#map' in URL encoding is '%23map' -->
 <div id='map'></div>
 <script src='https://unpkg.com/mapclay@latest/dist/mapclay.js?target=%23map'></script>
 ```
 
 <br>
 
-The text content of target element would be parsed as [YAML](https://nodeca.github.io/js-yaml/), So user can specify [options](#options) to configure map.
+The text content of target element would be parsed as [YAML](https://nodeca.github.io/js-yaml/#yaml=dXNlOiBNYXBsaWJyZQp3aWR0aDogNDAwcHgKaGVpZ2h0OiA1MHZoCmNlbnRlcjogWzEzOS42OTE3LDM1LjY4OTVdCnpvb206IDgKWFlaOiBodHRwczovL3RpbGUub3BlbnN0cmVldG1hcC5qcC9zdHlsZXMvb3NtLWJyaWdodC81MTIve3p9L3t4fS97eX0ucG5n), So user can specify [options](#options) to configure map.
 
-[Try it out](https://markdown-it.github.io/#md3=%7B%22source%22%3A%22%3Cpre%3Euse%3A%20Leaflet%3C%2Fpre%3E%5Cn%3Cpre%3Euse%3A%20Maplibre%3C%2Fpre%3E%5Cn%3Cpre%3Euse%3A%20Openlayers%3C%2Fpre%3E%5Cn%5Cn%3Cscript%20src%3D%27https%3A%2F%2Funpkg.com%2Fmapclay%40latest%2Fdist%2Fmapclay.js%3Ftarget%3Dpre%27%3E%3C%2Fscript%3E%22%2C%22defaults%22%3A%7B%22html%22%3Atrue%2C%22xhtmlOut%22%3Afalse%2C%22breaks%22%3Afalse%2C%22langPrefix%22%3A%22%22%2C%22linkify%22%3Atrue%2C%22typographer%22%3Afalse%2C%22_highlight%22%3Afalse%2C%22_strict%22%3Afalse%2C%22_view%22%3A%22html%22%7D%7D)
+[Try it out](https://markdown-it.github.io/#md3=%7B%22source%22%3A%22%60%60%60map%5Cnuse%3A%20Leaflet%5Cnwidth%3A%20400px%5Cnheight%3A%2050vh%5Cncenter%3A%20%5B139.6917%2C35.6895%5D%5Cnzoom%3A%208%5CnXYZ%3A%20https%3A%2F%2Ftile.openstreetmap.jp%2Fstyles%2Fosm-bright%2F512%2F%7Bz%7D%2F%7Bx%7D%2F%7By%7D.png%5Cn%60%60%60%5Cn%5Cn%3Cscript%20src%3D%27https%3A%2F%2Funpkg.com%2Fmapclay%40latest%2Fdist%2Fmapclay.js%3Ftarget%3Dpre%27%3E%3C%2Fscript%3E%22%2C%22defaults%22%3A%7B%22html%22%3Atrue%2C%22xhtmlOut%22%3Afalse%2C%22breaks%22%3Afalse%2C%22langPrefix%22%3A%22%22%2C%22linkify%22%3Atrue%2C%22typographer%22%3Afalse%2C%22_highlight%22%3Afalse%2C%22_strict%22%3Afalse%2C%22_view%22%3A%22html%22%7D%7D)
 
 ```html
 <pre>
@@ -47,7 +59,7 @@ XYZ: https://tile.openstreetmap.jp/styles/osm-bright/512/{z}/{x}/{y}.png
 
 All selected target elements would be rendered:
 
-[Try it out](https://markdown-it.github.io/#md3=%7B%22source%22%3A%22%60%60%60map%5Cnuse%3A%20Leaflet%5Cnwidth%3A%20400px%5Cnheight%3A%2050vh%5Cncenter%3A%20%5B139.6917%2C35.6895%5D%5Cnzoom%3A%208%5CnXYZ%3A%20https%3A%2F%2Ftile.openstreetmap.jp%2Fstyles%2Fosm-bright%2F512%2F%7Bz%7D%2F%7Bx%7D%2F%7By%7D.png%5Cn%60%60%60%5Cn%5Cn%3Cscript%20src%3D%27https%3A%2F%2Funpkg.com%2Fmapclay%40latest%2Fdist%2Fmapclay.js%3Ftarget%3Dpre%27%3E%3C%2Fscript%3E%22%2C%22defaults%22%3A%7B%22html%22%3Atrue%2C%22xhtmlOut%22%3Afalse%2C%22breaks%22%3Afalse%2C%22langPrefix%22%3A%22%22%2C%22linkify%22%3Atrue%2C%22typographer%22%3Afalse%2C%22_highlight%22%3Afalse%2C%22_strict%22%3Afalse%2C%22_view%22%3A%22html%22%7D%7D)
+[Try it out](https://markdown-it.github.io/#md3=%7B%22source%22%3A%22%3Cpre%3Euse%3A%20Leaflet%3C%2Fpre%3E%5Cn%3Cpre%3Euse%3A%20Maplibre%3C%2Fpre%3E%5Cn%3Cpre%3Euse%3A%20Openlayers%3C%2Fpre%3E%5Cn%5Cn%3Cscript%20src%3D%27https%3A%2F%2Funpkg.com%2Fmapclay%40latest%2Fdist%2Fmapclay.js%3Ftarget%3Dpre%27%3E%3C%2Fscript%3E%22%2C%22defaults%22%3A%7B%22html%22%3Atrue%2C%22xhtmlOut%22%3Afalse%2C%22breaks%22%3Afalse%2C%22langPrefix%22%3A%22%22%2C%22linkify%22%3Atrue%2C%22typographer%22%3Afalse%2C%22_highlight%22%3Afalse%2C%22_strict%22%3Afalse%2C%22_view%22%3A%22html%22%7D%7D)
 
 
 ```html
@@ -139,7 +151,8 @@ width |  CSS width of map HTML element | `String` for CSS
 height | CSS height of map HTML element | `String` for CSS
 center | Center of map camera | `Array` in [lon, lat]
 zoom | Zoom level for map camera | `Number` `0-22`
-control | Object of control options, supports | `fullscreen`, `scale`
+debug | Show tile boundary | `true`
+control | Object of control options, supports | `fullscreen: true`, `scale: true`
 XYZ | Raster tile URL | `URL` with {x}, {y} and {z}
 GPX | GPX file path | `String` for fetchable resource path
 
@@ -147,7 +160,7 @@ GPX | GPX file path | `String` for fetchable resource path
 
 **`object` contains entry for each option**
 
-For readability, Specify `aliases` with entries in key-value format for each option:
+To improve readability. For each option, specify `aliases` with entries in key-value format:
 
 ```yml
 # The following config file...
@@ -168,6 +181,7 @@ To distinguish an alias from a normal string, each alias starts from **Uppercase
 
 ```yml
 # This is an invalid config file
+
 center: tokyo  # Starts from lowercase, this is not an alias nor a valid value for option "center"
 GPX: My-track1 # No matched value in aliases.GPX, renderer will use "My-track1" as resource path
 aliases:
@@ -214,12 +228,22 @@ zoom: City
 
 This option specify which [Renderer](#renderer) is used to create a map. If it is not specified, `mapclay` will use first entry in `aliases.use`.
 
+```yml
+# Use Renderer with Openlayers by resouece path
+use: https://unpkg.com/mapclay/dist/renderers/openlayers.mjs
+```
+
 By default, `mapclay.render()` and `mapclay.renderByTextContent()` comes with three hidden aliases for default Renderers.
 
 #### Default Renderers
 
+Check out the [source code](https://github.com/outdoorsafetylab/mapclay/tree/master/src) for each Renderer.
+
 ```yml
+# Use alias for Renderer in "use" option
+use: Openlayers
 aliases:
+  # The following aliases are hidden by default
   use:
     Leaflet:
       value: renderers/leaflet.mjs,
@@ -234,20 +258,23 @@ aliases:
 
 ## Renderer
 
-A Renderer is responsible for create map view in target element. `mapclay.render()` simply do the followings behind:
+A Renderer is responsible to create map view in target element. `mapclay.render()` simply do the followings behind:
 1. Create a new child element with class `map-container`
 2. Get Renderer by `use` value in current config file
-3. calls `Renderer.createView()` for a new map.
+3. Call `Renderer.createView()` for a new map.
 
 ```js
 // Pesudo code in mapclay.render()
 function render(target, config) {
+  // Add child element
   const child_element = document.createElement('div')
   target.appendChild(child_element)
   target.append(child_element)
 
+  // Get Renderer by config.use
   const RendererClass = (await import(config.use)).default
   const renderer = new RendererClass(config)
+  // Render child element
   renderer.createView(child_element)
 }
 ```
@@ -308,7 +335,7 @@ Since YAML is a [ superset of JSON ](https://yaml.org/spec/1.2.2/#:~:text=supers
 
 Since YAML docs are separated by `---`, you can render multiple maps at once in a single target element by multiple YAML docs.
 
-[Try it out](https://markdown-it.github.io/#md3=%7B%22source%22%3A%22%60%60%60%5Cnuse%3A%20Leaflet%5Cn---%5Cnuse%3A%20Maplibre%5Cn---%5Cnuse%3A%20Openlayers%5Cn%60%60%60%5Cn%5Cn%3Cscript%20src%3D%27https%3A%2F%2Funpkg.com%2Fmapclay%40latest%2Fdist%2Fmapclay.js%3Ftarget%3Dpre%27%3E%3C%2Fscript%3E%22%2C%22defaults%22%3A%7B%22html%22%3Atrue%2C%22xhtmlOut%22%3Afalse%2C%22breaks%22%3Afalse%2C%22langPrefix%22%3A%22%22%2C%22linkify%22%3Atrue%2C%22typographer%22%3Afalse%2C%22_highlight%22%3Afalse%2C%22_strict%22%3Afalse%2C%22_view%22%3A%22html%22%7D%7D) with online markdown editor_
+[Try it out](https://markdown-it.github.io/#md3=%7B%22source%22%3A%22%60%60%60%5Cnuse%3A%20Leaflet%5Cn---%5Cnuse%3A%20Maplibre%5Cn---%5Cnuse%3A%20Openlayers%5Cn%60%60%60%5Cn%5Cn%3Cscript%20src%3D%27https%3A%2F%2Funpkg.com%2Fmapclay%40latest%2Fdist%2Fmapclay.js%3Ftarget%3Dpre%27%3E%3C%2Fscript%3E%22%2C%22defaults%22%3A%7B%22html%22%3Atrue%2C%22xhtmlOut%22%3Afalse%2C%22breaks%22%3Afalse%2C%22langPrefix%22%3A%22%22%2C%22linkify%22%3Atrue%2C%22typographer%22%3Afalse%2C%22_highlight%22%3Afalse%2C%22_strict%22%3Afalse%2C%22_view%22%3A%22html%22%7D%7D)
 
 ```yml
 # These are three valid YAML docs
@@ -324,6 +351,8 @@ use: Openlayers
 
 Default Renderers use `eval` options for custom scripts, it simply run `eval(VALUE_OF_OPTION)`.
 
+[Try it out](https://markdown-it.github.io/#md3=%7B%22source%22%3A%22%60%60%60map%5Cn%23%20Get%20View%20projection%20from%20ol.Map%2C%20it%20returns%20EPSG%3A3857%20by%20default%5Cnuse%3A%20Openlayers%5Cneval%3A%20console.log%28map.getView%28%29.getProjection%28%29.getCode%28%29%29%5Cn%60%60%60%5Cn%5Cn%3Cscript%20src%3D%27https%3A%2F%2Funpkg.com%2Fmapclay%40latest%2Fdist%2Fmapclay.js%3Ftarget%3Dpre%27%3E%3C%2Fscript%3E%22%2C%22defaults%22%3A%7B%22html%22%3Atrue%2C%22xhtmlOut%22%3Afalse%2C%22breaks%22%3Afalse%2C%22langPrefix%22%3A%22%22%2C%22linkify%22%3Atrue%2C%22typographer%22%3Afalse%2C%22_highlight%22%3Afalse%2C%22_strict%22%3Afalse%2C%22_view%22%3A%22html%22%7D%7D)
+
 ```yml
 # Get methods in current Renderer
 use: Openlayers
@@ -333,7 +362,7 @@ eval: console.log(Object.entries(this))
 ```yml
 # Get View projection from ol.Map, it returns EPSG:3857 by default
 use: Openlayers
-eval: console.log(map.getView().getProjection().code)
+eval: console.log(map.getView().getProjection().getCode())
 ```
 
 Though YAML supports multi-lines string by symbol `>` and `|`, but indent really bothers.
@@ -343,22 +372,22 @@ To make it simpler, **if YAML doc is parsed as string, it would be treated as va
 So the following config...
 
 ```yml
-# This YAML doc would be parsed as an JSON object
+# This YAML doc would be parsed as a JSON object
 use: Leaflet
 eval: |
   console('This is the first YAML doc')
   console('with multi-lines')
   console('string of script')
 ---
-# This YAML doc would be parsed as an JSON object
+# This YAML doc would be parsed as a JSON object
 use: Openlayers
 eval: console('This is the second YAML doc')
 ```
 
-would be equal to this (`|` symbol matters):
+Equals to this (`|` symbol matters):
 
 ```yml
-# This YAML doc would be parsed as an JSON object
+# This YAML doc would be parsed as a JSON object
 use: Leaflet
 ---
 # This YAML doc would be parsed as String
@@ -367,20 +396,20 @@ console('This is the first YAML doc')
 console('with multi-lines')
 console('string of script')
 ---
-# This YAML doc would be parsed as an JSON object
+# This YAML doc would be parsed as a JSON object
 use: Openlayers
 eval: console('This is the second YAML doc')
 ```
 
 ### Strictly use a default renderer
 
-By default, `mapclay.render()` and `mapclay.renderByTextContent()` dynamically import ES6 module by option `use`. It takes time and may caused by some problem. If you want to stick to a single Renderer, try to replace script URL with default Renderers:
+By default, `mapclay.render()` and `mapclay.renderByTextContent()` dynamically import ES6 module by option `use`. It takes time and may fails. If you want to stick to a single Renderer, try to replace script URL with default Renderers:
 
 ```html
-<!-- User can specify Renderer by use option -->
+<!-- Specify Renderer by use option -->
 <script src='https://unpkg.com/mapclay/dist/mapclay.js'></script>
 
-<!-- User can only use Renderer comes from the following packages -->
+<!-- Can only use Renderer comes from the following packages -->
 <script src='https://unpkg.com/mapclay/dist/renderers/leaflet.js'></script>
 <script src='https://unpkg.com/mapclay/dist/renderers/maplibre.js'></script>
 <script src='https://unpkg.com/mapclay/dist/renderers/openlayers.js'></script>
@@ -388,9 +417,13 @@ By default, `mapclay.render()` and `mapclay.renderByTextContent()` dynamically i
 
 ## TODOs
 
-- Map Features
+- Features
   - Supports PMTiles from [ Protomaps ](https://protomaps.com/)
   - Management of layer group
+  - Show current Coordinate
+- Style
+  - Crosshair at center of map
+- Tests for a variety of options
 
 ## See Also
 
