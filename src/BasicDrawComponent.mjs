@@ -98,9 +98,6 @@ export const addSimpleSelector = (target, draw) => {
       </optgroup>
     `
 
-  // FIXME Debug only
-  window.draw = draw
-
   draw.start();
   draw.setMode('static');
 
@@ -110,7 +107,8 @@ export const addSimpleSelector = (target, draw) => {
     try {
       draw.addFeatures(JSON.parse(retrievedFeatures))
     } catch (err) {
-      console.error("Fail to drawn features from local storage.", err)
+      console.warn("Fail to drawn features from Local Storage.", err)
+      localStorage.removeItem('terra-draw-data')
     }
   }
 
