@@ -30,12 +30,10 @@ const Renderer = class extends defaultExport {
 
   static defaultConfig = Object.freeze({
     ...super.defaultConfig,
-    ...{
-      proj: "EPSG:4326",
-      control: {
-        fullscreen: false,
-        scale: false
-      }
+    proj: "EPSG:4326",
+    control: {
+      fullscreen: false,
+      scale: false
     }
   })
 
