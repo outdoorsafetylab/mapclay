@@ -1,15 +1,28 @@
 import globals from "globals";
-import pluginJs from "@eslint/js";
-
+import js from "@eslint/js";
+import importPlugin from "eslint-plugin-import";
+import promisePlugin from "eslint-plugin-promise";
+import nodePlugin from "eslint-plugin-node";
 
 export default [
+  js.configs.recommended,
   {
     languageOptions: {
-      globals: globals.browser
+      ecmaVersion: 2022,
+      sourceType: "module",
+      globals: {
+        ...globals.browser,
+        ...globals.node
+      }
+    },
+    plugins: {
+      import: importPlugin,
+      promise: promisePlugin,
+      node: nodePlugin
     },
     rules: {
-      'no-undef': 'off',
+      'no-unused-vars': ['error', { 'varsIgnorePattern': '^_' }],
+      'import/no-unresolved': 'error',
     },
-  },
-  pluginJs.configs.recommended,
+  }
 ];

@@ -16,11 +16,14 @@
     "lint": "npx eslint src"
   },
   "devDependencies": {
+    "eslint": "^9.10.0",
+    "@eslint/js": "^9.10.0",
+    "eslint-plugin-import": "^2.30.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^7.1.0",
     "rollup": "^4.21.0",
     "@rollup/plugin-node-resolve": "^15.2.3",
-    "@rollup/plugin-terser": "^0.4.4",
-    "eslint": "^9.9.1",
-    "@eslint/js": "^9.9.1"
+    "@rollup/plugin-terser": "^0.4.4"
   },
   "dependencies": {
     "js-yaml": "^4.1.0",
