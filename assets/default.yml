@@ -19,10 +19,22 @@ aliases:
     NLSC topo: http://wmts.nlsc.gov.tw/wmts/PHOTO_MIX/default/GoogleMapsCompatible/{z}/{y}/{x}
     TAIWAN_ ERRAIN:   https://osmhacktw.github.io/terrain-rgb/tiles/{z}/{x}/{y}.png
   WMTS:
-    SINICA: https://gis.sinica.edu.tw/tileserver/wmts
     NLSC: https://wmts.nlsc.gov.tw/wmts
-    WMTS TAIWAN_TERRAIN: https://osmhacktw.github.io/terrain-rgb/wmts.xml
-  center:
+    TAIWAN_TERRAIN: https://osmhacktw.github.io/terrain-rgb/wmts.xml
+    TAIPEI_GOV: https://www.historygis.udd.gov.taipei/wmts
+    SINICA: https://gis.sinica.edu.tw/tileserver/wmts
+    SINICA_TAOYUAN: https://gis.sinica.edu.tw/taoyuan/wmts
+    SINICA_TAICHUNG:  https://gis.sinica.edu.tw/taichung/wmts
+    SINICA_CHIAYI:  https://gis.sinica.edu.tw/chiayi/wmts
+    SINICA_HUALIAN:  https://gis.sinica.edu.tw/hualien/wmts
+    SINICA_SHANGHAI: http://gis.sinica.edu.tw/shanghai/wmts
+    SINICA_BEIJING:  http://gis.sinica.edu.tw/beijing/wmts
+    SINICA_WORLD: https://gis.sinica.edu.tw/worldmap/wmts-proxy
+    SINICA_CCTS:  https://gis.sinica.edu.tw/ccts/wmts
+    NCU_REMOTE:  https://data.csrsr.ncu.edu.tw/SP/wmts
+    NCU_REMOTE_TW: https://data.csrsr.ncu.edu.tw/SP_TW_FC/wmts
+    CHIAYI_GOV: https://3dmap.chiayi.gov.tw/wmts/
+  center: 
     Tokyo: [ 139.6917, 35.6895 ]
     Delhi: [ 77.1025, 28.7041 ]
     Shanghai: [ 121.4737, 31.2304 ]
