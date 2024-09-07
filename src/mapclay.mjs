@@ -100,10 +100,6 @@ const renderMapContainer = async (target, config) => {
 
   const renderer = new rendererClass(config)
 
-  // Remove children from target container
-  Array.from(target.children).forEach(e => e.remove())
-  target.innerHTML = ''
-
   const mapContainer = document.createElement('div')
   target.appendChild(mapContainer)
   mapContainer.id = config.id
@@ -142,6 +138,9 @@ const renderWith = (preset) => async (target, configObj) => {
     .map(config => config.apply)
     .map(fetchConfig)
   await Promise.all(getAppliedConfigs)
+
+  // Remove children from target container
+  Array.from(target.children).forEach(e => e.remove())
 
   const renderEachConfig = configListArray
     .map(applyOtherConfig)
