@@ -80,8 +80,9 @@ const Renderer = class extends defaultExport {
       map.addLayer(this.debugLayer());
     }
     if (config.eval) {
-      const func = Function('map, config, L', config.eval).bind(this)
-      func(map, config, L)
+      const evalScript = Function('map, config, L', config.eval)
+        .bind(this)
+      evalScript(map, config, L)
     }
   };
 

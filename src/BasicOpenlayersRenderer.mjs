@@ -8,11 +8,11 @@ import * as control from 'ol/control';
 import * as format from 'ol/format';
 import * as geom from 'ol/geom';
 import * as layer from 'ol/layer';
-import * as olProj4 from 'ol/proj/proj4';
 import * as source from 'ol/source';
 import * as style from 'ol/style';
 import * as proj from 'ol/proj';
 import proj4 from 'proj4'
+import * as olProj4 from 'ol/proj/proj4';
 
 
 const Renderer = class extends defaultExport {
@@ -123,8 +123,20 @@ const Renderer = class extends defaultExport {
       );
     }
     if (config.eval) {
-      const func = Function('map, config, ol', config.eval).bind(this)
-      func(map, config)
+      const evalScript = Function('map, config, ol', config.eval)
+        .bind(globalThis)
+
+      evalScript(map, config, {
+        ...ol,
+        format: format,
+        geom: geom,
+        layer: layer,
+        source: source,
+        style: source,
+        proj: proj,
+        proj4: proj4,
+        olProj4: olProj4
+      })
     }
   };
 

@@ -110,8 +110,9 @@ const Renderer = class extends defaultExport {
       map.showTileBoundaries = true;
     }
     if (config.eval) {
-      const func = Function('map, config', config.eval).bind(this)
-      func(map, config)
+      const evalScript = Function('map, config, maplibregl', config.eval)
+      .bind(this)
+      evalScript(map, config, maplibregl)
     };
   };
 
