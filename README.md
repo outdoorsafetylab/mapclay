@@ -13,7 +13,7 @@ Add script from CDN, and specify **CSS selector** for target HTML element by
 [Try it out](https://markdown-it.github.io/#md3=%7B%22source%22%3A%22%3Cdiv%20id%3D%27map%27%3E%3C%2Fdiv%3E%5Cn%3Cscript%20src%3D%27https%3A%2F%2Funpkg.com%2Fmapclay%40latest%2Fdist%2Fmapclay.js%3Ftarget%3D%2523map%27%3E%3C%2Fscript%3E%5Cn%22%2C%22defaults%22%3A%7B%22html%22%3Atrue%2C%22xhtmlOut%22%3Afalse%2C%22breaks%22%3Afalse%2C%22langPrefix%22%3A%22%22%2C%22linkify%22%3Atrue%2C%22typographer%22%3Afalse%2C%22_highlight%22%3Afalse%2C%22_strict%22%3Afalse%2C%22_view%22%3A%22html%22%7D%7D) with online markdown editor
 
 ```html
-<!-- Target all <pre> elements
+<!-- Target all <pre> elements -->
 <pre></pre>
 <script data-target="pre" src='https://unpkg.com/mapclay@latest/dist/mapclay.js'></script>
 
@@ -28,7 +28,7 @@ Add script from CDN, and specify **CSS selector** for target HTML element by
 
 The text content of target element would be parsed as [YAML](https://nodeca.github.io/js-yaml/), So user can specify [options](#options) to configure map.
 
-[Try it out](https://markdown-it.github.io/#md3=%7B%22source%22%3A%22%60%60%60map%5Cnuse%3A%20Maplibre%5Cnwidth%3A%20400px%5Cnheight%3A%2050vh%5Cncenter%3A%20%5B139.6917%2C35.6895%5D%5Cnzoom%3A%208%5CnXYZ%3A%20https%3A%2F%2Ftile.openstreetmap.jp%2Fstyles%2Fosm-bright%2F512%2F%7Bz%7D%2F%7Bx%7D%2F%7By%7D.png%5Cn%60%60%60%5Cn%5Cn%3Cscript%20src%3D%27http%3A%2F%2Funpkg.com%2Fmapclay%40latest%2Fdist%2Fmapclay.js%3Ftarget%3Dpre%27%3E%3C%2Fscript%3E%22%2C%22defaults%22%3A%7B%22html%22%3Atrue%2C%22xhtmlOut%22%3Afalse%2C%22breaks%22%3Afalse%2C%22langPrefix%22%3A%22%22%2C%22linkify%22%3Atrue%2C%22typographer%22%3Afalse%2C%22_highlight%22%3Afalse%2C%22_strict%22%3Afalse%2C%22_view%22%3A%22html%22%7D%7D)
+[Try it out](https://markdown-it.github.io/#md3=%7B%22source%22%3A%22%3Cpre%3Euse%3A%20Leaflet%3C%2Fpre%3E%5Cn%3Cpre%3Euse%3A%20Maplibre%3C%2Fpre%3E%5Cn%3Cpre%3Euse%3A%20Openlayers%3C%2Fpre%3E%5Cn%5Cn%3Cscript%20src%3D%27https%3A%2F%2Funpkg.com%2Fmapclay%40latest%2Fdist%2Fmapclay.js%3Ftarget%3Dpre%27%3E%3C%2Fscript%3E%22%2C%22defaults%22%3A%7B%22html%22%3Atrue%2C%22xhtmlOut%22%3Afalse%2C%22breaks%22%3Afalse%2C%22langPrefix%22%3A%22%22%2C%22linkify%22%3Atrue%2C%22typographer%22%3Afalse%2C%22_highlight%22%3Afalse%2C%22_strict%22%3Afalse%2C%22_view%22%3A%22html%22%7D%7D)
 
 ```html
 <pre>
@@ -240,7 +240,7 @@ A Renderer is responsible for create map view in target element. `mapclay.render
 3. calls `Renderer.createView()` for a new map.
 
 ```js
-// Pesudo code in mapclay.render(target, config)
+// Pesudo code in mapclay.render()
 function render(target, config) {
   const child_element = document.createElement('div')
   target.appendChild(child_element)
@@ -252,7 +252,7 @@ function render(target, config) {
 }
 ```
 
-Create a new one if [default Renderers](#default-renderers) doesn't fit your need. Here is an short example about creating a new custom Renderer Class, which is based on default Renderer Class:
+Create a new one if [default Renderers](#default-renderers) doesn't fit your need. Here is a short example about creating a new custom Renderer Class, which is based on default Renderer `Maplibre`:
 
 ```js
 import defaultExport from 'https://unpkg.com/mapclay/dist/renderers/maplibre.mjs'
@@ -266,7 +266,7 @@ export default class extends defaultExport {
     style: 'https://tile.openstreetmap.jp/styles/osm-bright/style.json',
   )
 
-  // Override method createView
+  // Override method createView()
   async createView(target) {
     // Do something after map is created by parent
     const map = await super.createView(target)
@@ -306,7 +306,7 @@ Since YAML is a [ superset of JSON ](https://yaml.org/spec/1.2.2/#:~:text=supers
 
 ### Multiple config files
 
-Since YAML docs are separated by `---`, you can render multiple maps at onece in a single target element by multiple YAML docs.
+Since YAML docs are separated by `---`, you can render multiple maps at once in a single target element by multiple YAML docs.
 
 [Try it out](https://markdown-it.github.io/#md3=%7B%22source%22%3A%22%60%60%60%5Cnuse%3A%20Leaflet%5Cn---%5Cnuse%3A%20Maplibre%5Cn---%5Cnuse%3A%20Openlayers%5Cn%60%60%60%5Cn%5Cn%3Cscript%20src%3D%27https%3A%2F%2Funpkg.com%2Fmapclay%40latest%2Fdist%2Fmapclay.js%3Ftarget%3Dpre%27%3E%3C%2Fscript%3E%22%2C%22defaults%22%3A%7B%22html%22%3Atrue%2C%22xhtmlOut%22%3Afalse%2C%22breaks%22%3Afalse%2C%22langPrefix%22%3A%22%22%2C%22linkify%22%3Atrue%2C%22typographer%22%3Afalse%2C%22_highlight%22%3Afalse%2C%22_strict%22%3Afalse%2C%22_view%22%3A%22html%22%7D%7D) with online markdown editor_
 
