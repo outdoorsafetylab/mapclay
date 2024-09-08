@@ -31,6 +31,7 @@ const Renderer = class extends defaultExport {
     this.setExtra(map, this.config)
 
     if (this.config.draw) {
+      // FIXME No feature displayed
       const adapter = new TerraDrawLeafletAdapter({ lib: L, map })
       this.setDrawComponent(adapter)
     }

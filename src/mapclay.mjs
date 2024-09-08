@@ -100,8 +100,8 @@ const renderTargetWithConfig = async ([target, config]) => {
 
   const renderer = new rendererClass(config)
   target.renderer = renderer
-  const map = await renderer.createView(target)
-  target.renderer.map = map
+  // TODO Refactor this method by view created and callback
+  await renderer.createView(target)
 
   return target
 }
@@ -129,6 +129,7 @@ const renderWith = (preset) => async (target, configObj) => {
     .map(fetchConfig)
   await Promise.all(getAppliedConfigs)
 
+  // TODO call remove methods in renderer for each rendered element
   // Remove children from target container
   Array.from(target.children).forEach(e => e.remove())
 
