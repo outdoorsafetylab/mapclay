@@ -8,7 +8,7 @@ export const loadCSS = (url) => {
   Object.assign(link, {
     rel: 'stylesheet',
     href: url,
-    onerror: () => console.error('Fail to load stylesheet:', url)
+    onerror: () => console.warn('Fail to load stylesheet:', url)
   })
   document.head.appendChild(link);
 }
