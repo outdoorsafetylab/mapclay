@@ -153,8 +153,9 @@ export default class {
   }
 
   setDrawComponent = (adapter) => {
-    const draw = BasicDrawComponent(adapter)
+    const draw = BasicDrawComponent(adapter, this.target.id)
     addSimpleSelector(this.target, draw)
+    return draw
   }
 
   // Add GIS data

@@ -9,8 +9,11 @@ import {
 } from "terra-draw";
 
 // ref: https://github.com/JamesLMilner/terra-draw/blob/main/guides/4.MODES.md#selection-mode
-export const BasicDrawComponent = (adapter) => new TerraDraw({
+export const BasicDrawComponent = (adapter, id = null) => new TerraDraw({
   adapter: adapter,
+  idStrategy: {
+    getId: () => id ? `${id}-${Date.now()}` : Date.now()
+  },
   modes: [
     new TerraDrawSelectMode({
       modename: 'modify',
@@ -102,13 +105,14 @@ export const addSimpleSelector = (target, draw) => {
   draw.setMode('static');
 
   // Resume drawn features
-  const retrievedFeatures = localStorage.getItem('terra-draw-data');
+  const storageId = target.id ? `terra-draw-data-${target.id}` : 'terra-draw-data'
+  const retrievedFeatures = localStorage.getItem(storageId);
   if (retrievedFeatures) {
     try {
       draw.addFeatures(JSON.parse(retrievedFeatures))
     } catch (err) {
       console.warn("Fail to drawn features from Local Storage.", err)
-      localStorage.removeItem('terra-draw-data')
+      localStorage.removeItem(storageId)
     }
   }
 
@@ -131,7 +135,7 @@ export const addSimpleSelector = (target, draw) => {
         cursorHolder.style.cursor = "not-allowed"
         break;
       case 'clear':
-        localStorage.removeItem('terra-draw-data')
+        localStorage.removeItem(storageId)
         selector.value = 'nothing'
         selector.onchange()
         draw.clear()
@@ -148,9 +152,9 @@ export const addSimpleSelector = (target, draw) => {
   draw.on("select", () => {
   });
   draw.on("change", () => {
-    localStorage.setItem('terra-draw-data', JSON.stringify(draw.getSnapshot()));
+    localStorage.setItem(storageId, JSON.stringify(draw.getSnapshot()));
   });
-  draw.on("finish", (_, context) => {
+  draw.on("finish", (id, context) => {
     if (context.mode != 'point' && context.action == 'draw') {
       selector.value = 'nothing'
       selector.onchange()
