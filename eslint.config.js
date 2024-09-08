@@ -18,11 +18,19 @@ export default [
     plugins: {
       import: importPlugin,
       promise: promisePlugin,
-      node: nodePlugin
+      node: nodePlugin,
     },
     rules: {
       'no-unused-vars': ['error', { 'varsIgnorePattern': '^_' }],
       'import/no-unresolved': 'error',
+      'no-console': ["error", { allow: ["info", "warn", "error"] }],
+      'eqeqeq': ['error', 'always'],
+      // 'curly': ['warn', 'multi'],
+      'prefer-const': 'error',
+      'no-var': 'error',
+      'promise/catch-or-return': 'error',
+      'array-callback-return': 'error',
+      'no-unexpected-multiline': 'warn'
     },
   }
 ];
