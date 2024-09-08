@@ -12,11 +12,13 @@ You can include MapClay in your project using npm:
 npm install mapclay
 ```
 
-Or use it directly from a CDN:
+OR use it directly from a CDN. The following examples will go by this way:
+
+```html
+<script src='https://unpkg.com/mapclay@latest/dist/mapclay.js'></script>
+```
 
 ### The minimal use cases
-
-The following use cases are valid in modern browsers:
 
 Add script from CDN, and specify **CSS selector** for target HTML element by
 - **data attribute** `data-target`
