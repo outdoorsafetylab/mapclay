@@ -7,7 +7,6 @@ loadCSS('https://unpkg.com/leaflet@1.9.4/dist/leaflet.css')
 
 const Renderer = class extends defaultExport {
   id = 'leaflet';
-  version = '1.9.4';
 
   static validOptions = super.validOptions.concat([
   ])

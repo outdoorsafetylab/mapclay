@@ -206,9 +206,8 @@ const Renderer = class extends defaultExport {
           url: gpxUrl,
           format: new format.GPX(),
         }),
-        style: function() {
-          return style['MultiLineString'];
-        },
+        style: () => style['MultiLineString'],
+
       })
     );
 
@@ -242,9 +241,7 @@ function flyTo(map, status, done) {
   let called = false;
   function callback(complete) {
     --parts;
-    if (called) {
-      return;
-    }
+    if (called) return
     if (parts === 0 || !complete) {
       called = true;
       done(complete);

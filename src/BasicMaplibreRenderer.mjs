@@ -76,7 +76,7 @@ const Renderer = class extends defaultExport {
           // FIXME
           if (this.config.draw) {
             // Create Terra Draw
-            const adapter = new TerraDrawMapLibreGLAdapter({map, maplibregl})
+            const adapter = new TerraDrawMapLibreGLAdapter({ map, maplibregl })
             this.setDrawComponent(adapter)
           }
           this.setControl(map, this.config);
@@ -111,7 +111,7 @@ const Renderer = class extends defaultExport {
     }
     if (config.eval) {
       const evalScript = Function('map, config, maplibregl', config.eval)
-      .bind(this)
+        .bind(this)
       evalScript(map, config, maplibregl)
     };
   };
@@ -158,12 +158,13 @@ const Renderer = class extends defaultExport {
       }
     })
 
-    if (!Object.prototype.hasOwnProperty.call(this.config,'center')) {
+    if (!Object.prototype.hasOwnProperty.call(this.config, 'center')) {
       const data = await map.getSource(gpxSourceName).getData()
       const coordinates = data.features[0].geometry.coordinates
-      const bounds = coordinates.reduce((bounds, coord) => {
-        return bounds.extend(coord);
-      }, new maplibregl.LngLatBounds(coordinates[0], coordinates[0]));
+      const bounds = coordinates.reduce(
+        (bounds, coord) => bounds.extend(coord),
+        new maplibregl.LngLatBounds(coordinates[0], coordinates[0])
+      );
       map.fitBounds(bounds, {
         padding: 20
       });
