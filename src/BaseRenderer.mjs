@@ -4,7 +4,7 @@ import { BasicDrawComponent, addSimpleSelector } from './BasicDrawComponent'
 export const loadCSS = (url) => {
   if (document.head.querySelector(`link[href="${url}"]`)) return
 
-  let link = document.createElement('link');
+  const link = document.createElement('link');
   Object.assign(link, {
     rel: 'stylesheet',
     href: url,
@@ -95,7 +95,7 @@ export default class {
       desc: "Set true to show tile boundary",
       example: "true",
       example_desc: "",
-      isValid: (value) => value == 'true'
+      isValid: (value) => value === 'true'
     }),
     new MapOption({
       name: "XYZ",
@@ -125,7 +125,7 @@ export default class {
       desc: "Draw Something on map",
       example: "true",
       example_desc: "Enable Draw Tools",
-      isValid: (value) => value == 'true'
+      isValid: (value) => value === 'true'
     })
   ])
   // }}}
@@ -161,11 +161,11 @@ export default class {
   // Add GIS data
   setData(map, config) {
     // Tile
-    this.addTileData(map, config.data.filter(d => d.type == 'tile'));
+    this.addTileData(map, config.data.filter(d => d.type === 'tile'));
 
     // Set GPX file
-    const gpxData = config.data.filter(datum => datum.type == 'gpx')
-    if (gpxData.length != 0) {
+    const gpxData = config.data.filter(datum => datum.type === 'gpx')
+    if (gpxData.length !== 0) {
       gpxData.forEach(datum => {
         this.addGPXFile(map, datum.url)
       })
@@ -194,20 +194,20 @@ export default class {
 
   setOptionAliases(config) {
     if (config.XYZ) {
-      const xyzArray = typeof config.XYZ == 'string'
+      const xyzArray = typeof config.XYZ === 'string'
         ? [config.XYZ]
         : config.XYZ
       xyzArray.forEach((record) => {
         let obj;
         let url
-        if (typeof record == 'string') {
+        if (typeof record === 'string') {
           url = new URL(record)
           obj = {
             type: "tile",
             url: record,
             title: `${url.host}${url.pathname.split('%7B')[0]}`,
           }
-        } else if (typeof record == 'object') {
+        } else if (typeof record === 'object') {
           url = new URL(record.url)
           obj = {
             type: "tile",
@@ -239,7 +239,7 @@ export default class {
     }
 
     // Replace aliases into real string
-    if (typeof config.center == 'string' && Object.prototype.hasOwnProperty.call(config.aliases, config.center)) {
+    if (typeof config.center === 'string' && Object.prototype.hasOwnProperty.call(config.aliases, config.center)) {
       config.center = config.aliases[config.center]
     }
     config.data?.forEach(record => {
@@ -251,8 +251,8 @@ export default class {
   }
 
   showLayerSwitcher(data) {
-    const wmtsRecords = data.filter(record => record.type == 'wmts')
-    const tileRecords = data.filter(record => record.type == 'tile')
+    const wmtsRecords = data.filter(record => record.type === 'wmts')
+    const tileRecords = data.filter(record => record.type === 'tile')
 
     return wmtsRecords.length > 0 || tileRecords.length > 1
   }

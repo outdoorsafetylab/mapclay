@@ -25,7 +25,7 @@ const applyDefaultAliases = (config) => {
 // }}}
 // Parse yaml content with raw text {{{
 const parseConfigsFromYamlText = (configText) => {
-  let configList = []
+  const configList = []
   yamlLoadAll(
     configText,
     (result) => {
@@ -66,7 +66,7 @@ const setValueByAliases = (config) => {
 
   Object.entries(config)
     .filter(([option, value]) =>
-      option != 'aliases' &&
+      option !== 'aliases' &&
       typeof value === 'string' &&
       value.match(/^[A-Z]/)
     )

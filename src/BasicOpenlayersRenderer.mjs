@@ -66,7 +66,7 @@ const Renderer = class extends defaultExport {
     this.setData(map, this.config)
 
     return new Promise((resolve,) => {
-      map.on('rendercomplete', (e) => {
+      map.on('rendercomplete', () => {
         resolve(map)
       })
     }).then(() => {
@@ -104,11 +104,11 @@ const Renderer = class extends defaultExport {
 
   // Configure controls
   setControl(map, config) {
-    if (config.control.fullscreen == true) {
+    if (config.control.fullscreen === true) {
       map.addControl(new control.FullScreen());
     }
     // TODO Add more options by config
-    if (config.control.scale == true) {
+    if (config.control.scale === true) {
       map.addControl(new control.ScaleLine({
         units: 'metric'
       }))
@@ -117,7 +117,7 @@ const Renderer = class extends defaultExport {
 
   // Configure extra stuff
   setExtra(map, config) {
-    if (config.debug == true) {
+    if (config.debug === true) {
       map.addLayer(
         new layer.Tile({
           source: new source.TileDebug(),
@@ -166,17 +166,17 @@ const Renderer = class extends defaultExport {
     `.trim();
 
   addTileData(map, data) {
-    const styleDatum = data.filter(datum => datum.type == 'style')[0]
-    const tileData = data.filter(datum => datum.type == 'tile')
-    if (!styleDatum && tileData.length == 0) {
-      let baseLayer = new layer.Tile({
+    const styleDatum = data.filter(datum => datum.type === 'style')[0]
+    const tileData = data.filter(datum => datum.type === 'tile')
+    if (!styleDatum && tileData.length === 0) {
+      const baseLayer = new layer.Tile({
         source: new source.OSM(),
         title: 'OSM Carto'
       })
       map.addLayer(baseLayer)
     } else {
       tileData.forEach(datum => {
-        let tileLayer = new layer.Tile({
+        const tileLayer = new layer.Tile({
           source: new source.XYZ({ url: datum.url }),
           title: datum.title ? datum.title : "Anonymous"
         })
@@ -185,7 +185,7 @@ const Renderer = class extends defaultExport {
     }
 
     // TODO Layers for WMTS
-    const wmtsData = data.filter(datum => datum.type == 'wmts')[0]
+    const wmtsData = data.filter(datum => datum.type === 'wmts')[0]
     if (map, wmtsData) {
       // this.addLayersInWMTS(map, wmtsData)
     }

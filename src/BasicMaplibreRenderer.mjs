@@ -31,7 +31,7 @@ const Renderer = class extends defaultExport {
       desc: "Syn map's position with the hash fragment of the page's URL",
       example: "true",
       example_desc: "Add hash for page URL",
-      isValid: (value) => value == 'true'
+      isValid: (value) => value === 'true'
     }),
     new MapOption({
       name: "style",
@@ -55,8 +55,8 @@ const Renderer = class extends defaultExport {
   async createView(target) {
     super.createView(target)
 
-    const tileData = this.config.data.filter(datum => datum.type == 'tile');
-    const style = tileData.length != 0
+    const tileData = this.config.data.filter(datum => datum.type === 'tile');
+    const style = tileData.length !== 0
       ? { version: 8, sources: {}, layers: [], }
       : this.config.style
 
@@ -93,11 +93,11 @@ const Renderer = class extends defaultExport {
 
   // Configure controls
   setControl(map, config) {
-    if (config.control.fullscreen == true) {
+    if (config.control.fullscreen === true) {
       map.addControl(new maplibregl.FullscreenControl());
     }
-    if (config.control.scale == true) {
-      let scale = new maplibregl.ScaleControl({
+    if (config.control.scale === true) {
+      const scale = new maplibregl.ScaleControl({
         unit: 'metric'
       });
       map.addControl(scale);
@@ -106,7 +106,7 @@ const Renderer = class extends defaultExport {
 
   // Configure extra stuff
   setExtra(map, config) {
-    if (config.debug == true) {
+    if (config.debug === true) {
       map.showTileBoundaries = true;
     }
     if (config.eval) {
@@ -118,7 +118,7 @@ const Renderer = class extends defaultExport {
 
   addMarkers(map, markers) {
     markers.forEach(config => {
-      let marker = new maplibregl.Marker()
+      const marker = new maplibregl.Marker()
         .setLngLat(config.xy)
         .addTo(map);
       marker.getElement().classList.add('marker')

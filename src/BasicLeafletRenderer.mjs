@@ -42,12 +42,12 @@ const Renderer = class extends defaultExport {
   // Configure controls
   setControl(map, config) {
     if (config.control.fullscreen) {
-      let css = document.createElement('link');
+      const css = document.createElement('link');
       css.rel = 'stylesheet';
       css.href = 'https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css';
       document.body.append(css);
 
-      let script = document.createElement('script');
+      const script = document.createElement('script');
       script.src = "https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js";
       document.body.append(script);
       script.onload = () => {
@@ -76,7 +76,7 @@ const Renderer = class extends defaultExport {
 
   // Configure extra stuff
   setExtra(map, config) {
-    if (config.debug == true) {
+    if (config.debug === true) {
       map.addLayer(this.debugLayer());
     }
     if (config.eval) {
@@ -87,7 +87,7 @@ const Renderer = class extends defaultExport {
   };
 
   addMarkers(map, markers) {
-    var markerIcon = L.icon({
+    const markerIcon = L.icon({
       iconUrl: `https://unpkg.com/leaflet@${this.version}/dist/images/marker-icon.png`,
       iconRetinaUrl: `https://unpkg.com/leaflet@${this.version}/dist/images/marker-icon-2x.png`,
       shadowUrl: `https://unpkg.com/leaflet@${this.version}/dist/images/marker-shadow.png`,
@@ -98,8 +98,8 @@ const Renderer = class extends defaultExport {
       shadowSize: [41, 41]
     })
     markers.forEach(config => {
-      let xy = Array.from(config.xy).reverse()
-      let marker = L.marker(xy, { icon: markerIcon })
+      const xy = Array.from(config.xy).reverse()
+      const marker = L.marker(xy, { icon: markerIcon })
         .addTo(map)
         .bindPopup(config.message)
       marker.getElement().classList.add('marker')
@@ -108,9 +108,9 @@ const Renderer = class extends defaultExport {
   }
 
   addTileData(map, tileData) {
-    var baseLayers = {}
-    var overlayMaps = {}
-    if (tileData.length == 0) {
+    const baseLayers = {}
+    const overlayMaps = {}
+    if (tileData.length === 0) {
       const osmTile = 'https://b.tile.openstreetmap.org/{z}/{x}/{y}.png'
       L.tileLayer(osmTile).addTo(map);
     } else {
@@ -118,7 +118,7 @@ const Renderer = class extends defaultExport {
         const customTile = datum.url
         const layer = L.tileLayer(customTile);
         const title = datum.title ? datum.title : `Anonymous_${index}`
-        if (index == 0) {
+        if (index === 0) {
           layer.addTo(map)
         }
         baseLayers[title] = layer
@@ -128,11 +128,11 @@ const Renderer = class extends defaultExport {
   }
 
   addGPXFile(map, gpxUrl) {
-    let script = document.createElement('script');
+    const script = document.createElement('script');
     script.src = "https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.7.0/gpx.min.js";
     document.body.append(script);
 
-    let options = {
+    const options = {
       gpx_options: {
         joinTrackSegments: false
       },
@@ -157,7 +157,7 @@ const Renderer = class extends defaultExport {
   }
 
   updateCamera(options, animation) {
-    let latLon = L.latLng(options.center[1], options.center[0])
+    const latLon = L.latLng(options.center[1], options.center[0])
     if (animation) {
       this.map.flyTo(latLon, options.zoom);
     } else {

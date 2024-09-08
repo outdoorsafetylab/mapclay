@@ -155,19 +155,19 @@ export const addSimpleSelector = (target, draw) => {
     localStorage.setItem(storageId, JSON.stringify(draw.getSnapshot()));
   });
   draw.on("finish", (id, context) => {
-    if (context.mode != 'point' && context.action == 'draw') {
+    if (context.mode !== 'point' && context.action === 'draw') {
       selector.value = 'nothing'
       selector.onchange()
     }
   });
   target.children[0].onclick = (event) => {
-    if (selector.value == 'delete') {
+    if (selector.value === 'delete') {
       const features = draw.getFeaturesAtPointerEvent(event, {
         pointerDistance: 40,
       });
       if (features.length > 0) {
         draw.removeFeatures([features[0].id])
-        if (draw.getSnapshot.length == 0) {
+        if (draw.getSnapshot.length === 0) {
           selector.value = 'nothing'
           selector.onchange()
         }
