@@ -64,10 +64,13 @@ const Renderer = class extends defaultExport {
 
     this.setControl(map, this.config)
     this.setData(map, this.config)
-    this.setExtra(map, this.config)
 
-    if (this.config.draw) {
-      setTimeout(() => {
+    return new Promise((resolve,) => {
+      map.on('rendercomplete', (e) => {
+        resolve(map)
+      })
+    }).then(() => {
+      if (this.config.draw) {
         const adapter = new TerraDrawOpenLayersAdapter({
           lib: {
             Circle: geom.Circle,
@@ -82,11 +85,10 @@ const Renderer = class extends defaultExport {
           },
           map
         })
-        this.setDrawComponent(adapter)
-      }, 100)
-    }
-
-    return map;
+        this.draw = this.setDrawComponent(adapter)
+      }
+      this.setExtra(map, this.config)
+    })
   };
 
   handleAliases(options) {
@@ -123,8 +125,7 @@ const Renderer = class extends defaultExport {
       );
     }
     if (config.eval) {
-      const evalScript = Function('map, config, ol', config.eval)
-        .bind(globalThis)
+      const evalScript = Function('map, config, ol', config.eval).bind(this)
 
       evalScript(map, config, {
         ...ol,
