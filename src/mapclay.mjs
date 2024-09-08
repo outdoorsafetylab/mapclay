@@ -89,7 +89,7 @@ const renderTargetWithConfig = async ([target, config]) => {
     if (!rendererUrl) throw Error(`Renderer URL is not specified ${rendererUrl}`)
 
     return (await import(rendererUrl).catch((err) => {
-      throw Error(`Fail to import renderer by URL ${rendererUrl}`, err)
+      throw Error(`Fail to import renderer by URL ${rendererUrl}: ${err}`)
     })).default
   }
 
