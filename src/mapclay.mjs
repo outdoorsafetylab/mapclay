@@ -24,7 +24,7 @@ const applyDefaultAliases = (config) => {
 }
 // }}}
 // Parse yaml content with raw text {{{
-const parseConfigsFromText = (configText) => {
+const parseConfigsFromYamlText = (configText) => {
   let configList = []
   yamlLoadAll(
     configText,
@@ -155,8 +155,9 @@ const renderWith = (preset) => async (target, configObj) => {
 }
 // }}}
 // Render target element by textContent {{{
-const renderByTextContentWith = (preset) => async (target) => {
-  const configList = parseConfigsFromText(target.textContent)
+const renderByYamlTextWith = (preset) => async (target, text = null) => {
+  const yamlText = text ?? target.textContent
+  const configList = parseConfigsFromYamlText(yamlText)
   return renderWith(preset)(target, configList)
 }
 // }}}
@@ -169,25 +170,25 @@ const renderByScriptTargetWith = (preset) => async () => {
 
   if (!cssSelector || !containers) return
 
-  containers.forEach(renderByTextContentWith(preset))
+  containers.forEach(renderByYamlTextWith(preset))
 }
 // }}}
 
 const render = renderWith(null)
-const renderByTextContent = renderByTextContentWith(null)
+const renderByYamlText = renderByYamlTextWith(null)
 const renderByScriptTarget = renderByScriptTargetWith(null)
 
 if (document.currentScript) {
-  globalThis.mapclay = { render, renderByTextContent }
+  globalThis.mapclay = { render, renderByTextContent: renderByYamlText }
 }
 
 export {
   defaultAliasesForRenderer,
-  parseConfigsFromText,
+  parseConfigsFromYamlText as parseConfigsFromText,
   render,
   renderWith,
-  renderByTextContent,
-  renderByTextContentWith,
+  renderByYamlText,
+  renderByYamlTextWith,
   renderByScriptTarget,
   renderByScriptTargetWith,
 }

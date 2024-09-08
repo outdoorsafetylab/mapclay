@@ -110,12 +110,12 @@ zoom: 8
 </pre>
 ```
 
-Use `mapclay.renderByTextContent()` for this case
+Use `mapclay.renderByYamlText()` for this case
 
 ```js
 // In <script>
 const target = document.querySelector('#map')
-mapclay.renderByTextContent(target)
+mapclay.renderByYamlText(target, target.textContent)
 ```
 
 ### Render by config object
@@ -233,7 +233,7 @@ This option specify which [Renderer](#renderer) is used to create a map. If it i
 use: https://unpkg.com/mapclay/dist/renderers/openlayers.mjs
 ```
 
-By default, `mapclay.render()` and `mapclay.renderByTextContent()` comes with three hidden aliases for default Renderers.
+By default, `mapclay.render()` and `mapclay.renderByYamlText()` comes with three hidden aliases for default Renderers.
 
 #### Default Renderers
 
@@ -403,7 +403,7 @@ eval: console('This is the second YAML doc')
 
 ### Strictly use a default renderer
 
-By default, `mapclay.render()` and `mapclay.renderByTextContent()` dynamically import ES6 module by option `use`. It takes time and may fails. If you want to stick to a single Renderer, try to replace script URL with default Renderers:
+By default, `mapclay.render()` and `mapclay.renderByYamlText()` dynamically import ES6 module by option `use`. It takes time and may fails. If you want to stick to a single Renderer, try to replace script URL with default Renderers:
 
 ```html
 <!-- Specify Renderer by use option -->

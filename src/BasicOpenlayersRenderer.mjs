@@ -1,5 +1,5 @@
 import defaultExport, { MapOption, loadCSS } from './BaseRenderer';
-import { renderWith, renderByTextContentWith, renderByScriptTargetWith } from './mapclay';
+import { renderWith, renderByYamlTextWith, renderByScriptTargetWith } from './mapclay';
 import { TerraDrawOpenLayersAdapter } from 'terra-draw'
 loadCSS('https://cdn.jsdelivr.net/npm/ol@10.1.0/ol.css')
 
@@ -275,12 +275,10 @@ function flyTo(map, status, done) {
 
 
 const render = renderWith({ use: Renderer })
-const renderByTextContent = renderByTextContentWith({ use: Renderer })
+const renderByYamlText = renderByYamlTextWith({ use: Renderer })
 const renderByScriptTarget = renderByScriptTargetWith({ use: Renderer })
 
-if (document.currentScript) {
-  globalThis.mapclay = { render, renderByTextContent }
-}
+globalThis.mapclay = { render, renderByYamlText }
 
-export { render, renderByTextContent, renderByScriptTarget }
+export { render, renderByYamlText, renderByScriptTarget }
 export default Renderer
