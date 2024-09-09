@@ -132,6 +132,7 @@ const renderWith = (preset) => async (target, configObj) => {
   // TODO call remove methods in renderer for each rendered element
   // Remove children from target container
   Array.from(target.children).forEach(e => e.remove())
+  target.innerHTML = ''
 
   // Create elements for each config file in array
   const createContainer = (config) => {
