@@ -138,8 +138,10 @@ const renderWith = (preset) => async (target, configObj) => {
   const createContainer = (config) => {
     const mapContainer = document.createElement('div')
     target.appendChild(mapContainer)
-    mapContainer.id = config.id
-    mapContainer.title = config.id
+    if (config.id) {
+      mapContainer.id = config.id
+      mapContainer.title = config.id
+    }
     mapContainer.style.setProperty('position', 'relative')
     mapContainer.classList.add('map-container')
     return [mapContainer, config]
