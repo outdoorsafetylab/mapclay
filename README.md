@@ -386,21 +386,24 @@ use: Openlayers
 eval: console('This is the second YAML doc')
 ```
 
-Equals to this (`|` symbol matters):
+Equals to this... (`;` at end of line matters):
+
+[Try it out](https://markdown-it.github.io/#md3=%7B%22source%22%3A%22%60%60%60map%5Cnuse%3A%20Leaflet%5Cnwidth%3A%20400px%5Cnheight%3A%2050vh%5Cncenter%3A%20%5B139.6917%2C35.6895%5D%5Cnzoom%3A%208%5CnXYZ%3A%20https%3A%2F%2Ftile.openstreetmap.jp%2Fstyles%2Fosm-bright%2F512%2F%7Bz%7D%2F%7Bx%7D%2F%7By%7D.png%5Cn%60%60%60%5Cn%5Cn%3Cscript%20src%3D%27https%3A%2F%2Funpkg.com%2Fmapclay%40latest%2Fdist%2Fmapclay.js%3Ftarget%3Dpre%27%3E%3C%2Fscript%3E%22%2C%22defaults%22%3A%7B%22html%22%3Atrue%2C%22xhtmlOut%22%3Afalse%2C%22breaks%22%3Afalse%2C%22langPrefix%22%3A%22%22%2C%22linkify%22%3Atrue%2C%22typographer%22%3Afalse%2C%22_highlight%22%3Afalse%2C%22_strict%22%3Afalse%2C%22_view%22%3A%22html%22%7D%7D)
 
 ```yml
 # This YAML doc would be parsed as a JSON object
 use: Leaflet
 ---
 # This YAML doc would be parsed as String
-|
-console('This is the first YAML doc')
-console('with multi-lines')
-console('string of script')
+console('This is the first YAML doc');
+console('with multi-lines');
+console('string of script');
 ---
 # This YAML doc would be parsed as a JSON object
 use: Openlayers
-eval: console('This is the second YAML doc')
+---
+# This YAML doc would be parsed as String
+console('This is the second YAML doc');
 ```
 
 ### Strictly use a default renderer
