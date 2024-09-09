@@ -112,12 +112,12 @@ zoom: 8
 </pre>
 ```
 
-Use `mapclay.renderByYamlText()` for this case
+Use `mapclay.renderByYaml()` for this case
 
 ```js
 // In <script>
 const target = document.querySelector('#map')
-mapclay.renderByYamlText(target, target.textContent)
+mapclay.renderByYaml(target, target.textContent)
 ```
 
 ### Render by config object
@@ -235,7 +235,7 @@ This option specify which [Renderer](#renderer) is used to create a map. If it i
 use: https://unpkg.com/mapclay/dist/renderers/openlayers.mjs
 ```
 
-By default, `mapclay.render()` and `mapclay.renderByYamlText()` comes with three hidden aliases for default Renderers.
+By default, `mapclay.render()` and `mapclay.renderByYaml()` comes with three hidden aliases for default Renderers.
 
 #### Default Renderers
 
@@ -388,7 +388,7 @@ eval: console('This is the second YAML doc')
 
 Equals to this... (`;` at end of line matters):
 
-[Try it out](https://markdown-it.github.io/#md3=%7B%22source%22%3A%22%60%60%60map%5Cnuse%3A%20Leaflet%5Cnwidth%3A%20400px%5Cnheight%3A%2050vh%5Cncenter%3A%20%5B139.6917%2C35.6895%5D%5Cnzoom%3A%208%5CnXYZ%3A%20https%3A%2F%2Ftile.openstreetmap.jp%2Fstyles%2Fosm-bright%2F512%2F%7Bz%7D%2F%7Bx%7D%2F%7By%7D.png%5Cn%60%60%60%5Cn%5Cn%3Cscript%20src%3D%27https%3A%2F%2Funpkg.com%2Fmapclay%40latest%2Fdist%2Fmapclay.js%3Ftarget%3Dpre%27%3E%3C%2Fscript%3E%22%2C%22defaults%22%3A%7B%22html%22%3Atrue%2C%22xhtmlOut%22%3Afalse%2C%22breaks%22%3Afalse%2C%22langPrefix%22%3A%22%22%2C%22linkify%22%3Atrue%2C%22typographer%22%3Afalse%2C%22_highlight%22%3Afalse%2C%22_strict%22%3Afalse%2C%22_view%22%3A%22html%22%7D%7D)
+[Try it out](https://markdown-it.github.io/#md3=%7B%22source%22%3A%22%60%60%60%5Cn%23%20This%20YAML%20doc%20would%20be%20parsed%20as%20a%20JSON%20object%5Cnuse%3A%20Leaflet%5Cn---%5Cn%23%20This%20YAML%20doc%20would%20be%20parsed%20as%20String%5Cnconsole%28%27This%20is%20the%20first%20YAML%20doc%27%29%3B%5Cnconsole%28%27with%20multi-lines%27%29%3B%5Cnconsole%28%27string%20of%20script%27%29%3B%5Cn---%5Cn%23%20This%20YAML%20doc%20would%20be%20parsed%20as%20a%20JSON%20object%5Cnuse%3A%20Maplibre%5Cn---%5Cn%23%20This%20YAML%20doc%20would%20be%20parsed%20as%20String%5Cnconsole%28%27This%20is%20the%20second%20YAML%20doc%27%29%3B%5Cn%60%60%60%5Cn%5Cn%3Cscript%20src%3D%27https%3A%2F%2Funpkg.com%2Fmapclay%40latest%2Fdist%2Fmapclay.js%3Ftarget%3Dpre%27%3E%3C%2Fscript%3E%5Cn%22%2C%22defaults%22%3A%7B%22html%22%3Atrue%2C%22xhtmlOut%22%3Afalse%2C%22breaks%22%3Afalse%2C%22langPrefix%22%3A%22language-%22%2C%22linkify%22%3Atrue%2C%22typographer%22%3Atrue%2C%22_highlight%22%3Atrue%2C%22_strict%22%3Afalse%2C%22_view%22%3A%22html%22%7D%7D)
 
 ```yml
 # This YAML doc would be parsed as a JSON object
@@ -400,7 +400,7 @@ console('with multi-lines');
 console('string of script');
 ---
 # This YAML doc would be parsed as a JSON object
-use: Openlayers
+use: Maplibre
 ---
 # This YAML doc would be parsed as String
 console('This is the second YAML doc');
@@ -408,7 +408,7 @@ console('This is the second YAML doc');
 
 ### Strictly use a default renderer
 
-By default, `mapclay.render()` and `mapclay.renderByYamlText()` dynamically import ES6 module by option `use`. It takes time and may fails. If you want to stick to a single Renderer, try to replace script URL with default Renderers:
+By default, `mapclay.render()` and `mapclay.renderByYaml()` dynamically import ES6 module by option `use`. It takes time and may fails. If you want to stick to a single Renderer, try to replace script URL with default Renderers:
 
 ```html
 <!-- Specify Renderer by use option -->
