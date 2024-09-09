@@ -126,7 +126,14 @@ export default class {
       example: "true",
       example_desc: "Enable Draw Tools",
       isValid: (value) => value === 'true'
-    })
+    }),
+    new MapOption({
+      name: "eval",
+      desc: "Custom Script",
+      example: "console.log('this', this)",
+      example_desc: "Print Renderer info",
+      isValid: () => true
+    }),
   ])
   // }}}
   // Default configuation for map {{{
