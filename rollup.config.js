@@ -16,17 +16,6 @@ const generalPlugins = [
   production && terser(),
 ]
 
-const insertAutoRenderFunc = (input) => ({
-  name: 'auto-render',
-  transform(code, id) {
-    if (id.endsWith(input)) {
-      console.log('input', input)
-      return `${code}\n\nrenderByScriptTarget()`;
-    }
-    return null;
-  }
-})
-
 const outputForMain = [
   {
     dir: 'dist/',
@@ -39,6 +28,7 @@ const outputForMain = [
     file: `dist/mapclay.js`,
     exports: "named",
     esModule: false,
+    outro: "renderByScriptTarget()",
   },
 ]
 
@@ -54,6 +44,7 @@ const outputForRenderer = (name) => [
     format: 'umd',
     file: `dist/renderers/${name}.js`,
     exports: "named",
+    outro: "renderByScriptTarget()",
   },
 ]
 
@@ -61,33 +52,20 @@ export default [
   {
     input: 'src/mapclay.mjs',
     output: outputForMain,
-    plugins: [
-      ...generalPlugins,
-      insertAutoRenderFunc('src/mapclay.mjs')
-    ],
-  },
+    plugins: [ ...generalPlugins, ], },
   {
     input: 'src/BasicLeafletRenderer.mjs',
     output: outputForRenderer('leaflet'),
-    plugins: [
-      ...generalPlugins,
-      insertAutoRenderFunc('src/BasicLeafletRenderer.mjs')
-    ],
+    plugins: [ ...generalPlugins, ],
   },
   {
     input: 'src/BasicMaplibreRenderer.mjs',
     output: outputForRenderer('maplibre'),
-    plugins: [
-      ...generalPlugins,
-      insertAutoRenderFunc('src/BasicMaplibreRenderer.mjs')
-    ],
+    plugins: [ ...generalPlugins, ],
   },
   {
     input: 'src/BasicOpenlayersRenderer.mjs',
     output: outputForRenderer('openlayers'),
-    plugins: [
-      ...generalPlugins,
-      insertAutoRenderFunc('src/BasicOpenlayersRenderer.mjs')
-    ],
+    plugins: [ ...generalPlugins, ],
   },
 ].map(c => ({ ...general, ...c }))
