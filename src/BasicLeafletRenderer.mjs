@@ -1,5 +1,5 @@
 import defaultExport, { loadCSS } from './BaseRenderer';
-import { renderWith, renderByYamlTextWith, renderByScriptTargetWith } from './mapclay.mjs';
+import { renderWith, renderByYamlWith, renderByScriptTargetWith } from './mapclay.mjs';
 import * as L from 'leaflet/dist/leaflet-src.esm'
 import { TerraDrawLeafletAdapter } from 'terra-draw'
 loadCSS('https://unpkg.com/leaflet@1.9.4/dist/leaflet.css')
@@ -168,10 +168,10 @@ const Renderer = class extends defaultExport {
 
 
 const render = renderWith({ use: Renderer })
-const renderByYamlText = renderByYamlTextWith({ use: Renderer })
+const renderByYaml = renderByYamlWith({ use: Renderer })
 const renderByScriptTarget = renderByScriptTargetWith({ use: Renderer })
 
-globalThis.mapclay = { render, renderByYamlText }
+globalThis.mapclay = { render, renderByYaml }
 
-export { render, renderByYamlText, renderByScriptTarget }
+export { render, renderByYaml, renderByScriptTarget }
 export default Renderer

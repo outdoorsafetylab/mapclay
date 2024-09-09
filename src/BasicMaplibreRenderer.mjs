@@ -1,5 +1,5 @@
 import defaultExport, { MapOption, loadCSS } from './BaseRenderer'
-import { renderWith, renderByYamlTextWith, renderByScriptTargetWith } from './mapclay.mjs';
+import { renderWith, renderByYamlWith, renderByScriptTargetWith } from './mapclay.mjs';
 import "maplibre-gl"
 import { addProtocols } from 'maplibre-gl-vector-text-protocol'
 import { TerraDrawMapLibreGLAdapter } from 'terra-draw'
@@ -186,10 +186,10 @@ const Renderer = class extends defaultExport {
 
 
 const render = renderWith({ use: Renderer })
-const renderByYamlText = renderByYamlTextWith({ use: Renderer })
+const renderByYaml = renderByYamlWith({ use: Renderer })
 const renderByScriptTarget = renderByScriptTargetWith({ use: Renderer })
 
-globalThis.mapclay = { render, renderByYamlText }
+globalThis.mapclay = { render, renderByYaml }
 
-export { render, renderByYamlText, renderByScriptTarget }
+export { render, renderByYaml, renderByScriptTarget }
 export default Renderer
