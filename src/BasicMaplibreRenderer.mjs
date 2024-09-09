@@ -65,7 +65,7 @@ const Renderer = class extends defaultExport {
       style: style,
       center: this.config.center,
       zoom: this.config.zoom,
-      pitch: this.config.bearing,
+      pitch: this.config.pitch,
       bearing: this.config.bearing,
       hash: this.config.link,
     });
