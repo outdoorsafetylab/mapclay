@@ -81,7 +81,7 @@ export const addSimpleSelector = (target, draw) => {
   const selector = document.createElement('select')
   target.appendChild(selector)
   selector.name = 'Draw'
-  selector.style = 'position: absolute; top: 0.5rem; right: 0.5rem; z-index: 500;'
+  selector.style = 'position: absolute; top: 0.5rem; right: 0.5rem; z-index: 5;'
   selector.innerHTML = `
       <option class="bold-option" value="nothing">Draw Something</option>
       <optgroup label="Edit Features">
