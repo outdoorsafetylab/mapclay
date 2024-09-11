@@ -12,7 +12,8 @@ import {
 export const BasicDrawComponent = (adapter, id = null) => new TerraDraw({
   adapter: adapter,
   idStrategy: {
-    getId: () => id ? `${id}-${Date.now()}` : Date.now()
+    isValidId: (id) => typeof id === "number" && Number.isInteger(id),
+    getId: () => Date.now()
   },
   modes: [
     new TerraDrawSelectMode({
@@ -111,7 +112,7 @@ export const addSimpleSelector = (target, draw) => {
     try {
       draw.addFeatures(JSON.parse(retrievedFeatures))
     } catch (err) {
-      console.warn("Fail to drawn features from Local Storage.", err)
+      console.warn("Fail to drawn features from Local Storage.", retrievedFeatures, err)
       localStorage.removeItem(storageId)
     }
   }
