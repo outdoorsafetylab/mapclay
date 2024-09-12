@@ -9,12 +9,14 @@ import {
 } from "terra-draw";
 
 // ref: https://github.com/JamesLMilner/terra-draw/blob/main/guides/4.MODES.md#selection-mode
-export const BasicDrawComponent = (adapter, id = null) => new TerraDraw({
+export const BasicDrawComponent = (adapter) => new TerraDraw({
   adapter: adapter,
-  idStrategy: {
-    isValidId: (id) => typeof id === "number" && Number.isInteger(id),
-    getId: () => Date.now()
-  },
+  // FIXME Custom id strategy causes problem about draw/modify features
+  // Should check it carefully
+  // idStrategy: {
+  //   isValidId: (id) => typeof id === "number" && Number.isInteger(id),
+  //   getId: () => Date.now()
+  // },
   modes: [
     new TerraDrawSelectMode({
       modename: 'modify',

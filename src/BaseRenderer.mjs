@@ -160,7 +160,7 @@ export default class {
   }
 
   setDrawComponent = (adapter) => {
-    const draw = BasicDrawComponent(adapter, this.target.id)
+    const draw = BasicDrawComponent(adapter)
     addSimpleSelector(this.target, draw)
     return draw
   }
