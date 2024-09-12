@@ -28,13 +28,13 @@ const Renderer = class extends defaultExport {
 
     this.setControl(map, this.config)
     this.setData(map, this.config)
-    this.setExtra(map, this.config)
 
     if (this.config.draw) {
       // FIXME No feature displayed
       const adapter = new TerraDrawLeafletAdapter({ lib: L, map })
       this.setDrawComponent(adapter)
     }
+    this.setExtra(map, this.config)
     return map
   };
 
@@ -80,9 +80,7 @@ const Renderer = class extends defaultExport {
       map.addLayer(this.debugLayer());
     }
     if (config.eval) {
-      const evalScript = Function('map, config, L', config.eval)
-        .bind(this)
-      evalScript(map, config, L)
+      this.evalScript(config.eval, [["map", map], ["L", L]])
     }
   };
 

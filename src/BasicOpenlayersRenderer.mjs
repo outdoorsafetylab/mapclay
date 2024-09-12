@@ -125,19 +125,21 @@ const Renderer = class extends defaultExport {
       );
     }
     if (config.eval) {
-      const evalScript = Function('map, config, ol', config.eval).bind(this)
-
-      evalScript(map, config, {
-        ...ol,
-        format: format,
-        geom: geom,
-        layer: layer,
-        source: source,
-        style: source,
-        proj: proj,
-        proj4: proj4,
-        olProj4: olProj4
-      })
+      this.evalScript(config.eval, [
+        ["foo", "bar"],
+        ["map", map],
+        ["ol", {
+          ...ol,
+          format: format,
+          geom: geom,
+          layer: layer,
+          source: source,
+          style: source,
+          proj: proj,
+          proj4: proj4,
+          olProj4: olProj4
+        }]
+      ])
     }
   };
 

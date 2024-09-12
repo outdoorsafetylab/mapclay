@@ -263,4 +263,34 @@ export default class {
 
     return wmtsRecords.length > 0 || tileRecords.length > 1
   }
+
+  propsForEval() {
+    let currentPrototype = this;
+    let props = [];
+    let entries = [];
+    while (currentPrototype !== Object.prototype) {
+      props = props.concat(Object.getOwnPropertyNames(currentPrototype));
+      entries = entries.concat(Object.entries(currentPrototype))
+      currentPrototype = Object.getPrototypeOf(currentPrototype);
+    }
+    return props
+  }
+
+  evalScript(script, entries = []) {
+    const props = this.propsForEval()
+    const extraArgNames = entries.map(([key, _]) => key)
+    const args = [
+      ...props.map(prop => this[prop]),
+      ...entries.map(([_, value]) => value)
+    ]
+    const func = Function([...props, ...extraArgNames], script)
+      .bind(this, ...args)
+
+    try {
+      return func()
+    } catch (err) {
+      console.warn("Fail to run custom script:", err)
+      return null
+    }
+  }
 }
