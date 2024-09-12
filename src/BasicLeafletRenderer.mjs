@@ -9,9 +9,6 @@ const Renderer = class extends defaultExport {
   id = 'leaflet';
   version = '1.9.4';
 
-  static validOptions = super.validOptions.concat([
-  ])
-
   async createView(target) {
     super.createView(target)
 
