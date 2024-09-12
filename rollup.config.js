@@ -52,7 +52,8 @@ export default [
   {
     input: 'src/mapclay.mjs',
     output: outputForMain,
-    plugins: [ ...generalPlugins, ], },
+    plugins: [ ...generalPlugins, ],
+  },
   {
     input: 'src/BasicLeafletRenderer.mjs',
     output: outputForRenderer('leaflet'),
