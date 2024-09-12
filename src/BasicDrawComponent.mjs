@@ -6,6 +6,7 @@ import {
   TerraDrawPolygonMode,
   TerraDrawCircleMode,
   TerraDrawRectangleMode,
+  TerraDrawRenderMode,
 } from "terra-draw";
 
 // ref: https://github.com/JamesLMilner/terra-draw/blob/main/guides/4.MODES.md#selection-mode
@@ -15,28 +16,9 @@ export const BasicDrawComponent = (adapter, options = {}) => new TerraDraw({
     new TerraDrawSelectMode({
       modename: 'modify',
       flags: {
-        point: {
+        render: {
           feature: {
-            coordinates: {
-              midpoints: true,
-              draggable: true,
-              deletable: true,
-              validation: () => true
-            },
-          },
-        },
-        linestring: {
-          feature: {
-            coordinates: {
-              midpoints: true,
-              draggable: true,
-              deletable: true,
-              validation: () => true
-            },
-          },
-        },
-        polygon: {
-          feature: {
+            // draggable: true,
             coordinates: {
               midpoints: true,
               draggable: true,
@@ -47,31 +29,23 @@ export const BasicDrawComponent = (adapter, options = {}) => new TerraDraw({
         },
       },
     }),
-    new TerraDrawPointMode({
-      styles: {
-        pointColor: "red",
-      },
-    }),
-    new TerraDrawLineStringMode({
-      styles: {
-        // Fill colour (a string containing a 6 digit Hex color)
-        fillColor: "#00FFFF",
-
-        // Fill opacity (0 - 1)
-        fillOpacity: 0.7,
-
-        // Outline colour (Hex color)
-        outlineColor: "#00FF00",
-
-        //Outline width (Integer)
-        outlineWidth: 2,
-      },
-    }),
-    // TODO More than triangle
+    new TerraDrawPointMode(),
+    new TerraDrawLineStringMode(),
     new TerraDrawPolygonMode(),
     new TerraDrawCircleMode(),
     new TerraDrawRectangleMode(),
-  ]
+    new TerraDrawRenderMode({
+      modeName: "render",
+      // TODO More styles by feature properties
+      styles: {
+        pointColor: "red",
+        pointOutlineWidth: "2",
+        lineStringColor: "red",
+        polygonFillColor: "red",
+        polygonFillOpacity: "0",
+      }
+    }),
+  ],
   ...options,
 })
 
@@ -100,16 +74,18 @@ export const addSimpleSelector = (target, draw, options = {}) => {
     `
 
   draw.start();
-  draw.setMode('static');
+  draw.setMode('render');
 
   // Resume drawn features
   const storageId = target.id ? `terra-draw-data-${target.id}` : 'terra-draw-data'
-  const retrievedFeatures = localStorage.getItem(storageId);
-  if (retrievedFeatures) {
+  const featureData = localStorage.getItem(storageId);
+  if (featureData) {
     try {
-      draw.addFeatures(JSON.parse(retrievedFeatures))
+      const features = JSON.parse(featureData)
+      features.forEach(f => f.properties = { mode: "render" });
+      draw.addFeatures(features)
     } catch (err) {
-      console.warn("Fail to drawn features from Local Storage.", retrievedFeatures, err)
+      console.warn("Fail to drawn features from Local Storage.", featureData, err)
       localStorage.removeItem(storageId)
     }
   }
@@ -122,14 +98,14 @@ export const addSimpleSelector = (target, draw, options = {}) => {
 
     switch (selector.value) {
       case 'nothing':
-        draw.setMode("static");
+        draw.setMode("render");
         selector.children[0].textContent = 'Draw Something'
         break;
       case 'modify':
         draw.setMode("select");
         break;
       case 'delete':
-        draw.setMode('static');
+        draw.setMode('render');
         cursorHolder.style.cursor = "not-allowed"
         break;
       case 'clear':
@@ -147,27 +123,34 @@ export const addSimpleSelector = (target, draw, options = {}) => {
     }
   }
 
-  draw.on("select", () => {
-  });
   draw.on("change", () => {
     const idFilter = options.idFilter ?? (() => true)
     const features = draw.getSnapshot().filter(idFilter)
     localStorage.setItem(storageId, JSON.stringify(features));
   });
   draw.on("finish", (id, context) => {
+    if (context.action === 'draw') {
+      const feature = draw.getSnapshot().find(f => f.id == id)
+      if (feature) {
+        draw.removeFeatures([id])
+        feature.properties.mode = "render"
+        draw.addFeatures([feature])
+      }
+    }
+
     if (context.mode !== 'point' && context.action === 'draw') {
       selector.value = 'nothing'
       selector.onchange()
     }
   });
-  target.children[0].onclick = (event) => {
+  document.onclick = (event) => {
     if (selector.value === 'delete') {
       const features = draw.getFeaturesAtPointerEvent(event, {
         pointerDistance: 40,
       });
       if (features.length > 0) {
         draw.removeFeatures([features[0].id])
-        if (draw.getSnapshot.length === 0) {
+        if (draw.getSnapshot().length === 0) {
           selector.value = 'nothing'
           selector.onchange()
         }
