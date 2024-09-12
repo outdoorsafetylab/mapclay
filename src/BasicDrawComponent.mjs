@@ -9,14 +9,8 @@ import {
 } from "terra-draw";
 
 // ref: https://github.com/JamesLMilner/terra-draw/blob/main/guides/4.MODES.md#selection-mode
-export const BasicDrawComponent = (adapter) => new TerraDraw({
+export const BasicDrawComponent = (adapter, options = {}) => new TerraDraw({
   adapter: adapter,
-  // FIXME Custom id strategy causes problem about draw/modify features
-  // Should check it carefully
-  // idStrategy: {
-  //   isValidId: (id) => typeof id === "number" && Number.isInteger(id),
-  //   getId: () => Date.now()
-  // },
   modes: [
     new TerraDrawSelectMode({
       modename: 'modify',
@@ -78,9 +72,10 @@ export const BasicDrawComponent = (adapter) => new TerraDraw({
     new TerraDrawCircleMode(),
     new TerraDrawRectangleMode(),
   ]
+  ...options,
 })
 
-export const addSimpleSelector = (target, draw) => {
+export const addSimpleSelector = (target, draw, options = {}) => {
   const selector = document.createElement('select')
   target.appendChild(selector)
   selector.name = 'Draw'
@@ -155,7 +150,9 @@ export const addSimpleSelector = (target, draw) => {
   draw.on("select", () => {
   });
   draw.on("change", () => {
-    localStorage.setItem(storageId, JSON.stringify(draw.getSnapshot()));
+    const idFilter = options.idFilter ?? (() => true)
+    const features = draw.getSnapshot().filter(idFilter)
+    localStorage.setItem(storageId, JSON.stringify(features));
   });
   draw.on("finish", (id, context) => {
     if (context.mode !== 'point' && context.action === 'draw') {

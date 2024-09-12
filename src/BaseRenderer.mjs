@@ -160,8 +160,23 @@ export default class {
   }
 
   setDrawComponent = (adapter) => {
-    const draw = BasicDrawComponent(adapter)
-    addSimpleSelector(this.target, draw)
+    const idPrefix = this.target?.id ? this.target.id + '-' : ""
+    const options = {
+      idStrategy: {
+        isValidId: (_) => true,
+        getId: (function() {
+          let id = idPrefix + window.crypto.randomUUID()
+          return function() {
+            id = idPrefix + window.crypto.randomUUID()
+            return id;
+          };
+        })()
+      }
+    }
+    const draw = BasicDrawComponent(adapter, options)
+    addSimpleSelector(this.target, draw, {
+      idFilter: (feature) => feature.id.startsWith(idPrefix)
+    });
     return draw
   }
 
