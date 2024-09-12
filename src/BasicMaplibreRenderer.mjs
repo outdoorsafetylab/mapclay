@@ -45,7 +45,7 @@ const Renderer = class extends defaultExport {
   // Default Config {{{
   static defaultConfig = Object.freeze({
     ...super.defaultConfig,
-    pitch: 90,
+    pitch: 0,
     bearing: 0,
     style: 'https://demotiles.maplibre.org/style.json',
     link: false,
