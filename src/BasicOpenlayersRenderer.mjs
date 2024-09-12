@@ -146,7 +146,7 @@ const Renderer = class extends defaultExport {
   // Apply vector layer for markers onto map
   addMarkers = (map, markers) => markers.forEach(marker => {
     const element = document.createElement('div')
-    element.innerHTML = this.defaultMarkerSvg
+    element.innerHTML = this.svgForMarker
     element.title = marker.title
     element.classList.add('marker')
 
@@ -159,13 +159,6 @@ const Renderer = class extends defaultExport {
     })
     map.addOverlay(overlay)
   })
-
-  defaultMarkerSvg = `
-    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="30px" height="30px" viewBox="0 0 30 30" enable-background="new 0 0 30 30">
-      <path fill="#156BB1" d="M22.906,10.438c0,4.367-6.281,14.312-7.906,17.031c-1.719-2.75-7.906-12.665-7.906-17.031S10.634,2.531,15,2.531S22.906,6.071,22.906,10.438z"/>
-      <circle fill="#FFFFFF" cx="15" cy="10.677" r="3.291"/>
-    </svg>
-    `.trim();
 
   addTileData(map, data) {
     const styleDatum = data.filter(datum => datum.type === 'style')[0]
