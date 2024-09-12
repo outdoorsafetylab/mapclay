@@ -426,6 +426,8 @@ By default, `mapclay.render()` and `mapclay.renderByYaml()` dynamically import E
   - Supports PMTiles from [ Protomaps ](https://protomaps.com/)
   - Management of layer group
   - Show current Coordinate
+  - More aliases
+    - XYZ: https://github.com/leaflet-extras/leaflet-providers
 - Style
   - Crosshair at center of map
 - Tests for a variety of options
