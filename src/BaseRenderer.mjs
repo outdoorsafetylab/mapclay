@@ -116,8 +116,8 @@ export default class {
     new MapOption({
       name: "WMTS",
       desc: "URL of WMTS document",
-      example: "https://www.topografix.com/fells_loop.gpx",
-      example_desc: "Example from topografix",
+      example: "https://gis.sinica.edu.tw/tileserver/wmts",
+      example_desc: "SINICA Taiwan",
       isValid: (value) => URL.parse(value)
     }),
     new MapOption({
