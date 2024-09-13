@@ -41,8 +41,10 @@ export const BasicDrawComponent = (adapter, options = {}) => new TerraDraw({
         pointColor: "red",
         pointOutlineWidth: "2",
         lineStringColor: "red",
-        polygonFillColor: "red",
+        lineStringWidth: "2",
         polygonFillOpacity: "0",
+        polygonOutlineColor: "red",
+        polygonOutlineWidth: "2",
       }
     }),
   ],

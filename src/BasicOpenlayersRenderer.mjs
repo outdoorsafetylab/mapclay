@@ -62,6 +62,8 @@ const Renderer = class extends defaultExport {
       }),
     });
 
+    this.setCursor(map)
+
     this.setControl(map, this.config)
     this.setData(map, this.config)
 
@@ -90,6 +92,16 @@ const Renderer = class extends defaultExport {
       this.setExtra(map, this.config)
     })
   };
+
+  setCursor(map) {
+    map.getViewport().style.cursor = "grab";
+    map.on('pointerdrag', (_) => {
+      map.getViewport().style.cursor = "grabbing";
+    });
+    map.on('pointerup', () => {
+      map.getViewport().style.cursor = "grab";
+    });
+  }
 
   handleAliases(options) {
     super.handleAliases(options)
