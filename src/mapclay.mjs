@@ -30,16 +30,18 @@ const parseConfigsFromYaml = (configText) => {
     configText,
     (result) => {
       if (typeof result === 'object' && !Array.isArray(result)) {
-        configList.push(result)
-      } else if (typeof result === 'string') {
+        configList.push(result ?? {})
+      } else {
         if (configList.length > 0) {
-          configList.at(-1).eval = result
+          configList.at(-1).eval = result.toString()
         }
       }
     }
   )
 
-  return configList.length > 0 ? configList : [{}]
+  if (configList.length == 0) throw Error('Not a valid config file')
+
+  return configList
 }
 // }}}
 // Get config from other file by 'apply' {{{
