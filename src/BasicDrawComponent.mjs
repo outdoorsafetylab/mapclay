@@ -126,9 +126,6 @@ export const addSimpleSelector = (target, draw, options = {}) => {
   }
 
   draw.on("change", () => {
-    const idFilter = options.idFilter ?? (() => true)
-    const features = draw.getSnapshot().filter(idFilter)
-    localStorage.setItem(storageId, JSON.stringify(features));
   });
   draw.on("finish", (id, context) => {
     if (context.action === 'draw') {
@@ -139,6 +136,10 @@ export const addSimpleSelector = (target, draw, options = {}) => {
         draw.addFeatures([feature])
       }
     }
+
+    const idFilter = options.idFilter ?? (() => true)
+    const features = draw.getSnapshot().filter(idFilter)
+    localStorage.setItem(storageId, JSON.stringify(features));
 
     if (context.mode !== 'point' && context.action === 'draw') {
       selector.value = 'nothing'
