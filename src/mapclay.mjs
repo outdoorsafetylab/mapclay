@@ -39,7 +39,7 @@ const parseConfigsFromYaml = (configText) => {
     }
   )
 
-  if (configList.length == 0) throw Error('Not a valid config file')
+  if (configList.length === 0) throw Error('Not a valid config file')
 
   return configList
 }

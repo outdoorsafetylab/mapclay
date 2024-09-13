@@ -129,7 +129,7 @@ export const addSimpleSelector = (target, draw, options = {}) => {
   });
   draw.on("finish", (id, context) => {
     if (context.action === 'draw') {
-      const feature = draw.getSnapshot().find(f => f.id == id)
+      const feature = draw.getSnapshot().find(feature => feature.id === id)
       if (feature) {
         draw.removeFeatures([id])
         feature.properties.mode = "render"
