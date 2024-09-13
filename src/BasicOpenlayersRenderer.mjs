@@ -142,14 +142,15 @@ const Renderer = class extends defaultExport {
         ["map", map],
         ["ol", {
           ...ol,
-          format: format,
-          geom: geom,
-          layer: layer,
-          source: source,
-          style: source,
-          proj: proj,
-          proj4: proj4,
-          olProj4: olProj4
+          control,
+          format,
+          geom,
+          layer,
+          source,
+          style,
+          proj,
+          proj4,
+          olProj4,
         }]
       ])
     }
