@@ -116,7 +116,7 @@ const renderTargetWithConfig = async ([target, config]) => {
  * @returns {Promise} - Promise of rendering map(s) on target element
  */
 const renderWith = (preset) => async (target, configObj) => {
-  // Return List of promises about map rendering
+  // Get list of config file, no matter argument is Array or Object
   const configListArray = typeof configObj === 'object'
     ? Array.isArray(configObj) ? configObj : [configObj]
     : null

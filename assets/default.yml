@@ -34,7 +34,7 @@ aliases:
     NCU_REMOTE:  https://data.csrsr.ncu.edu.tw/SP/wmts
     NCU_REMOTE_TW: https://data.csrsr.ncu.edu.tw/SP_TW_FC/wmts
     CHIAYI_GOV: https://3dmap.chiayi.gov.tw/wmts/
-  center: 
+  center:
     Tokyo: [ 139.6917, 35.6895 ]
     Delhi: [ 77.1025, 28.7041 ]
     Shanghai: [ 121.4737, 31.2304 ]
