@@ -12,34 +12,35 @@ const Renderer = class extends defaultExport {
   async createView(target) {
     super.createView(target)
 
-    const map = L.map(target)
+    this.map = L.map(target)
       .setView(
         this.config.center.reverse(),
         this.config.zoom
       )
-    this.map = map
 
     // Update map by element size
     const resizeObserver = new ResizeObserver(() => {
-      map.invalidateSize();
+      this.map.invalidateSize();
     });
     resizeObserver.observe(target);
 
-    this.setControl(map, this.config)
-    this.setData(map, this.config)
+    this.setControl()
+    this.setData()
 
     if (this.config.draw) {
       // FIXME No feature displayed
-      const adapter = new TerraDrawLeafletAdapter({ lib: L, map })
+      const adapter = new TerraDrawLeafletAdapter({ lib: L, map: this.map })
       this.setDrawComponent(adapter)
     }
-    this.setExtra(map, this.config)
-    return map
+    this.setExtra()
+    return this.map
   };
 
   // FIXME
   // Configure controls
-  setControl(map, config) {
+  setControl() {
+    const map = this.map
+    const config = this.config
     if (config.control.fullscreen) {
       const css = document.createElement('link');
       css.rel = 'stylesheet';
@@ -74,7 +75,9 @@ const Renderer = class extends defaultExport {
   }
 
   // Configure extra stuff
-  setExtra(map, config) {
+  setExtra() {
+    const map = this.map
+    const config = this.config
     if (config.debug === true) {
       map.addLayer(this.debugLayer());
     }
@@ -104,7 +107,8 @@ const Renderer = class extends defaultExport {
     });
   }
 
-  addTileData(map, tileData) {
+  addTileData(tileData) {
+    const map = this.map
     const baseLayers = {}
     const overlayMaps = {}
     if (tileData.length === 0) {
@@ -124,7 +128,8 @@ const Renderer = class extends defaultExport {
     }
   }
 
-  addGPXFile(map, gpxUrl) {
+  addGPXFile(gpxUrl) {
+    const map = this.map
     const script = document.createElement('script');
     script.src = "https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.7.0/gpx.min.js";
     document.body.append(script);

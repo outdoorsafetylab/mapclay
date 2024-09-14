@@ -60,7 +60,7 @@ const Renderer = class extends defaultExport {
       ? { version: 8, sources: {}, layers: [], }
       : this.config.style
 
-    const map = new maplibregl.Map({
+    this.map = new maplibregl.Map({
       container: target,
       style: style,
       center: this.config.center,
@@ -69,21 +69,20 @@ const Renderer = class extends defaultExport {
       bearing: this.config.bearing,
       hash: this.config.link,
     });
-    this.map = map
 
     return new Promise((resolve, reject) => {
-      map.on('load', () => {
+      this.map.on('load', () => {
         try {
           // FIXME
           if (this.config.draw) {
             // Create Terra Draw
-            const adapter = new TerraDrawMapLibreGLAdapter({ map, maplibregl })
+            const adapter = new TerraDrawMapLibreGLAdapter({ map: this.map, maplibregl })
             this.setDrawComponent(adapter)
           }
-          this.setControl(map, this.config);
-          this.setData(map, this.config)
-          this.setExtra(map, this.config);
-          resolve(map)
+          this.setControl();
+          this.setData()
+          this.setExtra();
+          resolve(this.map)
         } catch (err) {
           reject(err)
         }
@@ -93,7 +92,9 @@ const Renderer = class extends defaultExport {
   // }}}
 
   // Configure controls
-  setControl(map, config) {
+  setControl() {
+    const map = this.map
+    const config = this.config
     if (config.control.fullscreen === true) {
       map.addControl(new maplibregl.FullscreenControl());
     }
@@ -106,7 +107,9 @@ const Renderer = class extends defaultExport {
   };
 
   // Configure extra stuff
-  setExtra(map, config) {
+  setExtra() {
+    const map = this.map
+    const config = this.config
     if (config.debug === true) {
       map.showTileBoundaries = true;
     }
@@ -125,7 +128,8 @@ const Renderer = class extends defaultExport {
     });
   }
 
-  addTileData(map, tileData) {
+  addTileData(tileData) {
+    const map = this.map
     const style = map.getStyle();
     tileData.forEach((datum, index) => {
       const source = datum.name ? datum.name : index.toString()
@@ -136,7 +140,8 @@ const Renderer = class extends defaultExport {
   }
 
   // FIXME
-  addGPXFile = async (map, gpxUrl) => {
+  addGPXFile = async (gpxUrl) => {
+    const map = this.map
     addProtocols(maplibregl);
 
     const gpxSourceName = 'gpx';

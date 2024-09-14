@@ -53,7 +53,7 @@ const Renderer = class extends defaultExport {
     proj.setUserProjection(projection);
 
     // Set basemap and camera
-    const map = new ol.Map({
+    this.map = new ol.Map({
       target: target,
       view: new ol.View({
         constrainResolution: true,
@@ -61,16 +61,14 @@ const Renderer = class extends defaultExport {
         zoom: this.config.zoom,
       }),
     });
-    this.map = map
 
-    this.setCursor(map)
-
-    this.setControl(map, this.config)
-    this.setData(map, this.config)
+    this.setCursor()
+    this.setControl()
+    this.setData()
 
     return new Promise((resolve,) => {
-      map.on('rendercomplete', () => {
-        resolve(map)
+      this.map.on('rendercomplete', () => {
+        resolve(this.map)
       })
     }).then(() => {
       if (this.config.draw) {
@@ -86,15 +84,16 @@ const Renderer = class extends defaultExport {
             getUserProjection: proj.getUserProjection,
             CircleStyle: style.Circle,
           },
-          map
+          map: this.map
         })
         this.draw = this.setDrawComponent(adapter)
       }
-      this.setExtra(map, this.config)
+      this.setExtra()
     })
   };
 
-  setCursor(map) {
+  setCursor() {
+    const map = this.map
     map.getViewport().style.cursor = "grab";
     map.on('pointerdrag', (_) => {
       map.getViewport().style.cursor = "grabbing";
@@ -116,7 +115,9 @@ const Renderer = class extends defaultExport {
   }
 
   // Configure controls
-  setControl(map, config) {
+  setControl() {
+    const map = this.map
+    const config = this.config
     if (config.control.fullscreen === true) {
       map.addControl(new control.FullScreen());
     }
@@ -129,7 +130,9 @@ const Renderer = class extends defaultExport {
   };
 
   // Configure extra stuff
-  setExtra(map, config) {
+  setExtra() {
+    const map = this.map
+    const config = this.config
     if (config.debug === true) {
       map.addLayer(
         new layer.Tile({
@@ -174,7 +177,8 @@ const Renderer = class extends defaultExport {
     this.map.addOverlay(overlay)
   })
 
-  addTileData(map, data) {
+  addTileData(data) {
+    const map = this.map
     const styleDatum = data.filter(datum => datum.type === 'style')[0]
     const tileData = data.filter(datum => datum.type === 'tile')
     if (!styleDatum && tileData.length === 0) {
@@ -195,12 +199,13 @@ const Renderer = class extends defaultExport {
 
     // TODO Layers for WMTS
     const wmtsData = data.filter(datum => datum.type === 'wmts')[0]
-    if (map, wmtsData) {
+    if (wmtsData) {
       // this.addLayersInWMTS(map, wmtsData)
     }
   }
 
-  addGPXFile(map, gpxUrl) {
+  addGPXFile(gpxUrl) {
+    const map = this.map
     const style = {
       'MultiLineString': new style.Style({
         stroke: new style.Stroke({
@@ -226,7 +231,8 @@ const Renderer = class extends defaultExport {
     }
   }
 
-  updateCamera(map, options, useAnimation) {
+  updateCamera(options, useAnimation) {
+    const map = this.map
     const view = map.getView();
     if (useAnimation) {
       flyTo(map, { center: options.center, zoom: options.zoom })

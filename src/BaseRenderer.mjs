@@ -34,7 +34,18 @@ export default class {
       config,
       structuredClone(this.constructor.defaultConfig)
     )
-    this.setOptionAliases(this.config)
+    this.setOptionAliases()
+  }
+
+  get map() {
+    if (this._map === undefined) {
+      throw Error("map is not set in current Renderer")
+    }
+    return this._map;
+  }
+
+  set map(value) {
+    this._map = value;
   }
 
   // Valid Options {{{
@@ -181,20 +192,22 @@ export default class {
   }
 
   // Add GIS data
-  setData(map, config) {
+  setData() {
+    const map = this.map
+    const config = this.config
     // Tile
-    this.addTileData(map, config.data.filter(d => d.type === 'tile'));
+    this.addTileData(config.data.filter(record => record.type === 'tile'));
 
     // Set GPX file
-    const gpxData = config.data.filter(datum => datum.type === 'gpx')
+    const gpxData = config.data.filter(record => record.type === 'gpx')
     if (gpxData.length !== 0) {
-      gpxData.forEach(datum => {
-        this.addGPXFile(map, datum.url)
+      gpxData.forEach(record => {
+        this.addGPXFile(record.url)
       })
     }
 
     if (config.markers) {
-      this.addMarkers(map, config.markers)
+      this.addMarkers(config.markers)
     }
   };
 
@@ -214,7 +227,8 @@ export default class {
   // Import GPX files
   addGPXFile() { };
 
-  setOptionAliases(config) {
+  setOptionAliases() {
+    const config = this.config
     if (config.XYZ) {
       const xyzArray = typeof config.XYZ === 'string'
         ? [config.XYZ]
