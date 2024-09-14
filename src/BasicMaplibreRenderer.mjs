@@ -69,6 +69,7 @@ const Renderer = class extends defaultExport {
       bearing: this.config.bearing,
       hash: this.config.link,
     });
+    this.map = map
 
     return new Promise((resolve, reject) => {
       map.on('load', () => {
@@ -114,11 +115,11 @@ const Renderer = class extends defaultExport {
     };
   };
 
-  addMarkers(map, markers) {
+  addMarkers(markers) {
     markers.forEach(config => {
       const marker = new maplibregl.Marker()
         .setLngLat(config.xy)
-        .addTo(map);
+        .addTo(this.map);
       marker.getElement().classList.add('marker')
       marker.getElement().title = config.title
     });

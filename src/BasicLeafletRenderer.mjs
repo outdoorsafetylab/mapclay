@@ -17,6 +17,7 @@ const Renderer = class extends defaultExport {
         this.config.center.reverse(),
         this.config.zoom
       )
+    this.map = map
 
     // Update map by element size
     const resizeObserver = new ResizeObserver(() => {
@@ -82,7 +83,7 @@ const Renderer = class extends defaultExport {
     }
   };
 
-  addMarkers(map, markers) {
+  addMarkers(markers) {
     const markerIcon = L.icon({
       iconUrl: `https://unpkg.com/leaflet@${this.version}/dist/images/marker-icon.png`,
       iconRetinaUrl: `https://unpkg.com/leaflet@${this.version}/dist/images/marker-icon-2x.png`,
@@ -96,7 +97,7 @@ const Renderer = class extends defaultExport {
     markers.forEach(config => {
       const xy = Array.from(config.xy).reverse()
       const marker = L.marker(xy, { icon: markerIcon })
-        .addTo(map)
+        .addTo(this.map)
         .bindPopup(config.message)
       marker.getElement().classList.add('marker')
       marker.getElement().title = config.title

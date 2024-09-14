@@ -61,6 +61,7 @@ const Renderer = class extends defaultExport {
         zoom: this.config.zoom,
       }),
     });
+    this.map = map
 
     this.setCursor(map)
 
@@ -157,7 +158,7 @@ const Renderer = class extends defaultExport {
   };
 
   // Apply vector layer for markers onto map
-  addMarkers = (map, markers) => markers.forEach(marker => {
+  addMarkers = (markers) => markers.forEach(marker => {
     const element = document.createElement('div')
     element.innerHTML = this.svgForMarker
     element.title = marker.title
@@ -170,7 +171,7 @@ const Renderer = class extends defaultExport {
       anchor: [0.5, 1],
       stopEvent: false,
     })
-    map.addOverlay(overlay)
+    this.map.addOverlay(overlay)
   })
 
   addTileData(map, data) {
