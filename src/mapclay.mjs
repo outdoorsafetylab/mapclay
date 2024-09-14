@@ -115,13 +115,13 @@ const renderTargetWithConfig = async ([target, config]) => {
  * @param {Object} options - Valid optoins: "rendererList" (list of renderer info) and "renderer" (Class for renderer)
  * @returns {Promise} - Promise of rendering map(s) on target element
  */
-const renderWith = (preset) => async (target, configObj) => {
+const renderWith = (converter) => async (target, configObj) => {
   // Get list of config file, no matter argument is Array or Object
+  converter = converter ?? (config => config)
   const configListArray = typeof configObj === 'object'
-    ? Array.isArray(configObj) ? configObj : [configObj]
+    ? Array.isArray(configObj) ? configObj.map(converter) : [configObj].map(converter)
     : null
   if (!configListArray) throw Error("Invalid config files", configObj)
-  configListArray.forEach(config => Object.assign(config, preset))
 
   // Fetch config files by option "apply"
   configListArray.forEach(setValueByAliases)
@@ -161,14 +161,14 @@ const renderWith = (preset) => async (target, configObj) => {
 }
 // }}}
 // Render target element by textContent {{{
-const renderByYamlWith = (preset) => async (target, text = null) => {
+const renderByYamlWith = (converter = null) => async (target, text = null) => {
   const yamlText = text ?? target.textContent
   const configList = parseConfigsFromYaml(yamlText)
-  return renderWith(preset)(target, configList)
+  return renderWith(converter)(target, configList)
 }
 // }}}
 // Render target by <script> tag only {{{
-const renderByScriptTargetWith = (preset) => async () => {
+const renderByScriptTargetWith = (converter = null) => async () => {
   const script = document.currentScript
   const cssSelector = script?.getAttribute('data-target')
     ?? URL.parse(script?.src)?.searchParams?.get("target")
@@ -176,7 +176,7 @@ const renderByScriptTargetWith = (preset) => async () => {
 
   if (!cssSelector || !containers) return
 
-  containers.forEach(target => renderByYamlWith(preset)(target))
+  containers.forEach(target => renderByYamlWith(converter)(target))
 }
 // }}}
 

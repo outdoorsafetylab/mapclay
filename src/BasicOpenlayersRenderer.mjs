@@ -281,9 +281,10 @@ function flyTo(map, status, done) {
 }
 
 
-const render = renderWith({ use: Renderer })
-const renderByYaml = renderByYamlWith({ use: Renderer })
-const renderByScriptTarget = renderByScriptTargetWith({ use: Renderer })
+const converter = config => ({ ...config, use: Renderer })
+const render = renderWith(converter)
+const renderByYaml = renderByYamlWith(converter)
+const renderByScriptTarget = renderByScriptTargetWith(converter)
 
 globalThis.mapclay = { render, renderByYaml }
 
