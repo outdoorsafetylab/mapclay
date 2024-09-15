@@ -423,11 +423,13 @@ By default, `mapclay.render()` and `mapclay.renderByYaml()` dynamically import E
 ## TODOs
 
 - Features
-  - Supports PMTiles from [ Protomaps ](https://protomaps.com/)
+  - Sync map cameras
+  - UI components for camera reset
   - Management of layer group
-  - Show current Coordinate
+  - Show current Coordinates
   - More aliases
     - XYZ: https://github.com/leaflet-extras/leaflet-providers
+  - Supports PMTiles from [ Protomaps ](https://protomaps.com/)
 - Style
   - Crosshair at center of map
 - Tests for a variety of options
