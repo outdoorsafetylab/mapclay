@@ -186,6 +186,13 @@ const Renderer = class extends defaultExport {
       this.map.setZoom(options.zoom)
     }
   }
+
+  project([lng, lat]) {
+    return this.map.project([lng, lat])
+  };
+  unproject([x, y]) {
+    return this.map.unproject([x, y])
+  };
 }
 
 

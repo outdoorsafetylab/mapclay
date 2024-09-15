@@ -166,6 +166,14 @@ const Renderer = class extends defaultExport {
       this.map.setView(latLon, options.zoom);
     }
   }
+
+  project([lng, lat]) {
+    return this.map.latLngToLayerPoint([lat, lng])
+  };
+  unproject([x, y]) {
+    const latLng = this.map.layerPointToLatLng([x, y])
+    return [latLng.lng, latLng.lat]
+  };
 }
 
 

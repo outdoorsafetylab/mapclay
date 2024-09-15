@@ -244,6 +244,14 @@ const Renderer = class extends defaultExport {
       })
     }
   }
+
+  // FIXME Beaware of user projection in ol/proj
+  project([x, y]) {
+    return this.map.getPixelFromCoordinate([x, y])
+  };
+  unproject([x, y]) {
+    return this.map.getCoordinateFromPixel([x, y])
+  };
 }
 
 // Pan map to a specific location

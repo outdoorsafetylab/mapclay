@@ -220,6 +220,10 @@ export default class {
   // Update camera, like center or zoom level
   updateCamera() { };
 
+  // Pixel <-> Coordinates
+  project() { throw Error('not implemented')};
+  unproject() { throw Error('not implemented')};
+
   // Import GPX files
   addTileData() { };
 
