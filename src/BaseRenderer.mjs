@@ -193,7 +193,6 @@ export default class {
 
   // Add GIS data
   setData() {
-    const map = this.map
     const config = this.config
     // Tile
     this.addTileData(config.data.filter(record => record.type === 'tile'));
