@@ -85,7 +85,7 @@ export default class {
         // TODO xy value other than WGS84
         try {
           const [x, y] = JSON.parse(value)
-          return !isNaN(x) && !isNaN(y) && x <= 180 && x >= -180 && y <= 90 && y >= -90
+          return !isNaN(x) && !isNaN(y)
         } catch {
           return false
         }
