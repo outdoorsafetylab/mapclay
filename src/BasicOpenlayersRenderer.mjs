@@ -85,10 +85,13 @@ const Renderer = class extends defaultExport {
             VectorLayer: layer.Vector,
             VectorSource: source.Vector,
             Stroke: style.Stroke,
-            getUserProjection: proj.getUserProjection,
             CircleStyle: style.Circle,
+            getUserProjection: proj.getUserProjection,
+            fromLonLat: proj.fromLonLat,
+            toLonLat: proj.toLonLat
           },
-          map: this.map
+          map: this.map,
+          coordinatePrecision: 9,
         })
         this.draw = this.setDrawComponent(adapter)
       }
