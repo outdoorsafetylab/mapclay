@@ -37,6 +37,13 @@ export default class {
     this.setOptionAliases()
   }
 
+  validateOption(option, value) {
+    const isValid = this.constructor.validOptions.find(opt => opt == option)?.isValid
+    if (!isValid) throw Error(`Cannot find inValid method for option ${option}`)
+
+    return isValid(value)
+  }
+
   get map() {
     if (this._map === undefined) {
       throw Error("map is not set in current Renderer")
