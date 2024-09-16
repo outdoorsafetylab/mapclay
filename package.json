@@ -1,7 +1,7 @@
 {
   "name": "mapclay",
   "description": "Create interactive maps by simple options",
-  "version": "0.6.4",
+  "version": "0.6.5",
   "license": "MIT",
   "type": "module",
   "main": "dist/mapclay.mjs",
