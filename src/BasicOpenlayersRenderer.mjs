@@ -24,7 +24,7 @@ const Renderer = class extends defaultExport {
       desc: "Projection of map view",
       example: "EPSG:3826",
       example_desc: "Taiwan TM2",
-      isValid: () => true
+      isValid: (value) => value?.toString()?.match(/^EPSG:\d+$|^\d+$/) ? true : false
     }),
   ])
 
@@ -37,20 +37,24 @@ const Renderer = class extends defaultExport {
     }
   })
 
-  static includedProjections = ['EPSG:4326', "EPSG:3857"]
-
   async createView(target) {
     super.createView(target)
 
-    // TODO Consider apply cursor style same to maplibre or leaflet
-    // That is: grab for normal grabbing for updating camera
-
-    const projection = this.config.proj
-    if (projection && !this.constructor.includedProjections.includes(projection)) {
-      olProj4.register(proj4);
-      await olProj4.fromEPSGCode(projection)
-    }
-    proj.setUserProjection(projection);
+    // Set projection
+    proj4.defs("EPSG:3826", "+proj=tmerc +lat_0=0 +lon_0=121 +k=0.9999 +x_0=250000 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs")
+    olProj4.register(proj4);
+    const defaultProjection = this.constructor.defaultConfig.proj
+    const projString = this.validateOption('proj', this.config.proj)
+      ? this.config.proj
+      : (() => {
+        console.warn(`Invalid projection: ${this.config.proj}, set ${defaultProjection} instead`)
+        return defaultProjection
+      })()
+    const projection = await olProj4.fromEPSGCode(projString)
+      .catch(() => {
+        console.warn(`Fail to retrieve projection ${projString}, Use ${defaultProjection} instead`)
+      })
+    proj.setUserProjection(projection)
 
     // Set basemap and camera
     this.map = new ol.Map({

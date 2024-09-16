@@ -60,7 +60,7 @@ export default class {
     new MapOption({
       name: "id",
       desc: "id of map HTML element",
-      isValid: (value) => value.match(/\w+/)
+      isValid: (value) => value?.match(/\w+/) ? true : false
     }),
     new MapOption({
       name: "width",
