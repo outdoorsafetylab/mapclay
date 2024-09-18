@@ -38,7 +38,7 @@ export default class {
   }
 
   validateOption(option, value) {
-    const isValid = this.constructor.validOptions.find(opt => opt == option)?.isValid
+    const isValid = this.constructor.validOptions.find(opt => opt.valueOf() === option)?.isValid
     if (!isValid) throw Error(`Cannot find inValid method for option ${option}`)
 
     return isValid(value)
