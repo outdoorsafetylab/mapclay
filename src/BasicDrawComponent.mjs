@@ -39,12 +39,13 @@ export const BasicDrawComponent = (adapter, options = {}) => new TerraDraw({
       // TODO More styles by feature properties
       styles: {
         pointColor: "red",
-        pointOutlineWidth: "2",
+        pointOutlineWidth: 2,
         lineStringColor: "red",
-        lineStringWidth: "2",
-        polygonFillOpacity: "0",
+        lineStringWidth: 2,
+        polygonFillColor: "#00FFFF",
+        polygonFillOpacity: 0,
         polygonOutlineColor: "red",
-        polygonOutlineWidth: "2",
+        polygonOutlineWidth: 2,
       }
     }),
   ],
