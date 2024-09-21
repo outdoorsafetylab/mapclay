@@ -2,7 +2,7 @@ import { load as yamlLoad, loadAll as yamlLoadAll } from 'js-yaml';
 
 // Renderer list for quick start {{{
 const dir = new URL('./', import.meta.url)
-const defaultAliasesForRenderer = Object.freeze({
+const defaultAliases = Object.freeze({
   "use": {
     "Leaflet": {
       value: dir + 'renderers/leaflet.mjs',
@@ -19,7 +19,7 @@ const defaultAliasesForRenderer = Object.freeze({
   }
 });
 const applyDefaultAliases = (config) => {
-  config.aliases = { ...defaultAliasesForRenderer, ...(config.aliases ?? {}) }
+  config.aliases = { ...defaultAliases, ...(config.aliases ?? {}) }
   return config
 }
 // }}}
@@ -152,7 +152,6 @@ const renderWith = (converter) => async (target, configObj) => {
   // List of promises about rendering each config
   const renderByEachConfig = configListArray
     .map(applyOtherConfig(appliedConfigs))
-    .map(applyDefaultAliases)
     .map(setValueByAliases)
     .map(createContainer)
     .map(renderTargetWithConfig)
@@ -180,16 +179,16 @@ const renderByScriptTargetWith = (converter = null) => async () => {
 }
 // }}}
 
-const render = renderWith(null)
-const renderByYaml = renderByYamlWith(null)
-const renderByScriptTarget = renderByScriptTargetWith(null)
+const render = renderWith(applyDefaultAliases)
+const renderByYaml = renderByYamlWith(applyDefaultAliases)
+const renderByScriptTarget = renderByScriptTargetWith(applyDefaultAliases)
 
 if (document.currentScript) {
   globalThis.mapclay = { render, renderByYaml }
 }
 
 export {
-  defaultAliasesForRenderer,
+  defaultAliases,
   parseConfigsFromYaml,
   render,
   renderWith,
