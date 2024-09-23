@@ -48,19 +48,18 @@ const parseConfigsFromYaml = (configText) => {
 const appliedConfigs = {}
 
 const fetchConfig = (url) => fetch(url)
-  .then(res => res.text())
-  .then(text => {
-    const config = yamlLoad(text)
-    appliedConfigs[url] = config
+  .then(response => {
+    if (response.status !== 200) throw Error()
+    return response.text()
   })
+  .then(text => appliedConfigs[url] = yamlLoad(text))
   .catch((err) => { throw Error(`Fail to fetch applied config ${url}`, err) })
 
-const applyOtherConfig = (configList) => (config) => {
-  if (!config.apply) return config
-  const appliedConfig = configList[config.apply]
+const applyOtherConfig = (config) => ({
+  ...(appliedConfigs[config.apply] ?? {}),
+  ...config
+})
 
-  return { ...(appliedConfig ?? {}), ...config }
-}
 // }}}
 // Set option value by aliases {{{
 const setValueByAliases = (config) => {
@@ -84,7 +83,16 @@ const setValueByAliases = (config) => {
 }
 // }}}
 // Render each map container by config {{{
-const renderTargetWithConfig = async ([target, config]) => {
+const renderTargetWithConfig = async (target, config) => {
+  if (config.apply) {
+    try {
+      await fetchConfig(config.apply)
+    } catch (err) {
+      console.warn(err)
+    }
+    config = applyOtherConfig(config)
+  }
+  setValueByAliases(config)
 
   const getRendererClass = async (c) => {
     const rendererUrl = c.use ?? Object.values(c.aliases?.use)?.at(0)?.value
@@ -105,7 +113,7 @@ const renderTargetWithConfig = async ([target, config]) => {
   // TODO Refactor this method by view created and callback
   await renderer.createView(target)
 
-  return target
+  return
 }
 // }}}
 // Render target by config {{{
@@ -115,7 +123,7 @@ const renderTargetWithConfig = async ([target, config]) => {
  * @param {Object} options - Valid optoins: "rendererList" (list of renderer info) and "renderer" (Class for renderer)
  * @returns {Promise} - Promise of rendering map(s) on target element
  */
-const renderWith = (converter) => async (target, configObj) => {
+const renderWith = (converter) => (target, configObj) => {
   // Get list of config file, no matter argument is Array or Object
   converter = converter ?? (config => config)
   const configListArray = typeof configObj === 'object'
@@ -125,11 +133,6 @@ const renderWith = (converter) => async (target, configObj) => {
 
   // Fetch config files by option "apply"
   configListArray.forEach(setValueByAliases)
-  const getAppliedConfigs = configListArray
-    .filter(config => config.apply)
-    .map(config => config.apply)
-    .map(fetchConfig)
-  await Promise.all(getAppliedConfigs)
 
   // TODO call remove methods in renderer for each rendered element
   // Remove children from target container
@@ -146,17 +149,17 @@ const renderWith = (converter) => async (target, configObj) => {
     }
     mapContainer.style.setProperty('position', 'relative')
     mapContainer.classList.add('map-container')
-    return [mapContainer, config]
+    return { target: mapContainer, config }
   }
 
   // List of promises about rendering each config
-  const renderByEachConfig = configListArray
-    .map(applyOtherConfig(appliedConfigs))
+  return configListArray
     .map(setValueByAliases)
     .map(createContainer)
-    .map(renderTargetWithConfig)
-
-  return Promise.allSettled(renderByEachConfig)
+    .map(pair => {
+      const { target, config } = pair
+      return { target, promise: renderTargetWithConfig(target, config) }
+    })
 }
 // }}}
 // Render target element by textContent {{{
