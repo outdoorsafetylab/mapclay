@@ -83,6 +83,14 @@ const setValueByAliases = (config) => {
 // }}}
 // Render each map container by config {{{
 const renderTargetWithConfig = async (target, config) => {
+  // render by method in option
+  if (config.render) {
+    config.render(target)
+    return
+  }
+
+  // In case config.apply is using alias
+  setValueByAliases(config)
   if (config.apply) {
     try {
       fetchConfig(config.apply)
@@ -123,42 +131,46 @@ const renderTargetWithConfig = async (target, config) => {
  * @param {Object} options - Valid optoins: "rendererList" (list of renderer info) and "renderer" (Class for renderer)
  * @returns {Promise} - Promise of rendering map(s) on target element
  */
-const renderWith = (converter) => (target, configObj) => {
+const renderWith = (converter) => (element, configObj) => {
   // Get list of config file, no matter argument is Array or Object
   converter = converter ?? (config => config)
   const configListArray = typeof configObj === 'object'
     ? Array.isArray(configObj) ? configObj.map(converter) : [configObj].map(converter)
     : null
-  if (!configListArray) throw Error("Invalid config files", configObj)
+  if (!configListArray) throw Error(`Invalid config files: ${configObj}`)
 
-  // Fetch config files by option "apply"
-  configListArray.forEach(setValueByAliases)
-
-  // TODO call remove methods in renderer for each rendered element
-  // Remove children from target container
-  Array.from(target.children).forEach(e => e.remove())
-  target.innerHTML = ''
+  // Remove elements not related to maps
+  const idList = configListArray.map(c => c.id).filter(c => c)
+  Array.from(element.children)
+    .filter(e => !idList.includes(e.id))
+    .forEach(e => e.remove())
 
   // Create elements for each config file in array
   const createContainer = (config) => {
-    const mapContainer = document.createElement('div')
-    target.appendChild(mapContainer)
+    const elementWithSameId = document.getElementById(config.id)
+    const target = elementWithSameId
+      ? elementWithSameId
+      : document.createElement('div')
     if (config.id) {
-      mapContainer.id = config.id
-      mapContainer.title = config.id
+      target.id = config.id
+      target.title = config.id
     }
-    mapContainer.style.setProperty('position', 'relative')
-    mapContainer.classList.add('map-container')
-    return { target: mapContainer, config }
+    target.style.position = 'relative'
+    target.classList.add('map-container')
+    element.append(target)
+    return { target, config }
   }
 
   // List of promises about rendering each config
   return configListArray
-    .map(setValueByAliases)
     .map(createContainer)
     .map(pair => {
       const { target, config } = pair
-      return { target, promise: renderTargetWithConfig(target, config) }
+      return {
+        target,
+        config: JSON.parse(JSON.stringify(config)),
+        promise: renderTargetWithConfig(target, config)
+      }
     })
 }
 // }}}
