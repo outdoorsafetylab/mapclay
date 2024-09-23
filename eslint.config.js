@@ -21,16 +21,19 @@ export default [
       node: nodePlugin,
     },
     rules: {
-      'no-unused-vars': ['warn', { 'varsIgnorePattern': '^_', "argsIgnorePattern": "^_" }],
+      'no-unused-vars': ['warn', {
+        'varsIgnorePattern': '^_',
+        "argsIgnorePattern": "^_",
+        "caughtErrorsIgnorePattern": "^ignore|_",
+      }],
       'import/no-unresolved': 'error',
       'no-console': ["error", { allow: ["info", "warn", "error"] }],
       'eqeqeq': ['error', 'always'],
       // 'curly': ['warn', 'multi'],
       'prefer-const': 'error',
       'no-var': 'error',
-      'promise/catch-or-return': 'error',
       'array-callback-return': 'error',
-      'no-unexpected-multiline': 'warn'
+      'no-unexpected-multiline': 'warn',
     },
   }
 ];
