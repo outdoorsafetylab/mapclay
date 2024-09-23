@@ -47,18 +47,17 @@ const parseConfigsFromYaml = (configText) => {
 // Get config from other file by 'apply' {{{
 const appliedConfigs = {}
 
-const fetchConfig = (url) => fetch(url)
-  .then(response => {
-    if (response.status !== 200) throw Error()
-    return response.text()
-  })
-  .then(text => appliedConfigs[url] = yamlLoad(text))
-  .catch((err) => { throw Error(`Fail to fetch applied config ${url}`, err) })
+const fetchConfig = async (url) => {
+  if (appliedConfigs[url]) return
 
-const applyOtherConfig = (config) => ({
-  ...(appliedConfigs[config.apply] ?? {}),
-  ...config
-})
+  appliedConfigs[url] = fetch(url)
+    .then(response => {
+      if (response.status !== 200) throw Error()
+      return response.text()
+    })
+    .then(text => yamlLoad(text))
+    .catch((err) => { throw Error(`Fail to fetch applied config ${url}`, err) })
+}
 
 // }}}
 // Set option value by aliases {{{
@@ -86,11 +85,12 @@ const setValueByAliases = (config) => {
 const renderTargetWithConfig = async (target, config) => {
   if (config.apply) {
     try {
-      await fetchConfig(config.apply)
+      fetchConfig(config.apply)
+      const preset = await appliedConfigs[config.apply]
+      config = { ...preset, ...config }
     } catch (err) {
       console.warn(err)
     }
-    config = applyOtherConfig(config)
   }
   setValueByAliases(config)
 
