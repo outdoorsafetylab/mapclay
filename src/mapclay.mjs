@@ -82,13 +82,17 @@ const setValueByAliases = (config) => {
 }
 // }}}
 // Render each map container by config {{{
-const renderTargetWithConfig = async (target, config) => {
-  // render by method in option
-  if (config.render) {
-    config.render(target)
-    return
-  }
+const isClass = (C) => typeof C === "function" && C.prototype !== undefined
+const getRendererClass = async (config) => {
+  const rendererUrl = config.use ?? Object.values(config.aliases?.use)?.at(0)?.value
+  if (!rendererUrl) throw Error(`Renderer URL is not specified ${rendererUrl}`)
 
+  return (await import(rendererUrl).catch((err) => {
+    throw Error(`Fail to import renderer by URL ${rendererUrl}: ${err}`)
+  })).default
+}
+
+const renderTargetWithConfig = async (target, config) => {
   // In case config.apply is using alias
   setValueByAliases(config)
   if (config.apply) {
@@ -102,26 +106,50 @@ const renderTargetWithConfig = async (target, config) => {
   }
   setValueByAliases(config)
 
-  const getRendererClass = async (c) => {
-    const rendererUrl = c.use ?? Object.values(c.aliases?.use)?.at(0)?.value
-    if (!rendererUrl) throw Error(`Renderer URL is not specified ${rendererUrl}`)
-
-    return (await import(rendererUrl).catch((err) => {
-      throw Error(`Fail to import renderer by URL ${rendererUrl}: ${err}`)
-    })).default
-  }
-
-  const rendererClass = typeof config.use === 'function'
+  // Get renderer
+  const rendererClass = isClass(config.use)
     ? config.use
     : await getRendererClass(config)
   if (!rendererClass) throw Error(`Fail to get renderer class by module ${config.use}`)
+  const renderer = new rendererClass()
 
-  const renderer = new rendererClass(config)
+  Object.entries(config)
+    .forEach(([key, value]) => renderer[key] = value)
+
+  // Run functions
+  renderer.target = target
+  renderer.results = []
   target.renderer = renderer
-  // TODO Refactor this method by view created and callback
-  await renderer.createView(target)
+  // TODO Save passed arguments for each function
+  return renderer.run.reduce((acc, func) => acc
+    .then(() => {
+      // If dependencies not success, just skip this function
+      if (func.depends) {
+        const dependentResult = renderer.results
+          .findLast(res => res.func === func.depends)
+          ?.state
+        if (['skip', 'fail'].includes(dependentResult)) {
+          return { state: 'skip' }
+        }
+      }
 
-  return
+      // Run function binding with renderer
+      return func.valueOf().bind(renderer)(renderer)
+    })
+    // Save non-fail result
+    .then((result) => renderer.results.push({
+      func: func.valueOf(),
+      state: result.state ? result.state : 'success',
+      result
+    }))
+    // Save fail result
+    .catch(err => renderer.results.push({
+      func: func.valueOf(),
+      state: 'fail',
+      result: err,
+    })),
+    Promise.resolve()
+  )
 }
 // }}}
 // Render target by config {{{
