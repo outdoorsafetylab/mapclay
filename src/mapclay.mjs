@@ -92,6 +92,13 @@ const getRendererClass = async (config) => {
   })).default
 }
 
+/**
+ * renderTargetWithConfig.
+ *
+ * @param {HTMLElement} target -- target element for map view
+ * @param {Object} config -- options for map configuration
+ * @return {Object} renderer -- object responsible for rendering, check property "result" for details
+ */
 const renderTargetWithConfig = async (target, config) => {
   // In case config.apply is using alias
   setValueByAliases(config)
@@ -117,11 +124,10 @@ const renderTargetWithConfig = async (target, config) => {
     .forEach(([key, value]) => renderer[key] = value)
 
   // Run functions
-  renderer.target = target
   renderer.results = []
   target.renderer = renderer
   // TODO Save passed arguments for each function
-  return renderer.run.reduce((acc, func) => acc
+  renderer.run.reduce((acc, func) => acc
     .then(() => {
       // If dependencies not success, just skip this function
       if (func.depends) {
@@ -150,6 +156,8 @@ const renderTargetWithConfig = async (target, config) => {
     })),
     Promise.resolve()
   )
+
+  return renderer
 }
 // }}}
 // Render target by config {{{
