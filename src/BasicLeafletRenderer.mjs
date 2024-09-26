@@ -8,15 +8,11 @@ loadCSS('https://unpkg.com/leaflet@1.9.4/dist/leaflet.css')
 const Renderer = class extends defaultExport {
   id = 'leaflet';
   version = '1.9.4';
+  L = L;
 
-  async createView(target) {
-    super.createView(target)
-
+  addMap({ target, center, zoom }) {
     this.map = L.map(target)
-      .setView(
-        this.config.center.reverse(),
-        this.config.zoom
-      )
+      .setView(center.reverse(), zoom)
 
     // Update map by element size
     const resizeObserver = new ResizeObserver(() => {
@@ -24,24 +20,16 @@ const Renderer = class extends defaultExport {
     });
     resizeObserver.observe(target);
 
-    this.setControl()
-    this.setData()
-
-    if (this.config.draw) {
-      // FIXME No feature displayed
-      const adapter = new TerraDrawLeafletAdapter({ lib: L, map: this.map })
-      this.setDrawComponent(adapter)
-    }
-    this.setExtra()
     return this.map
   };
 
-  // FIXME
-  // Configure controls
-  setControl() {
-    const map = this.map
-    const config = this.config
-    if (config.control.fullscreen) {
+  getTerraDrawAdapter({ L, map }) {
+    this.terraDrawAdapter = new TerraDrawLeafletAdapter({ lib: L, map })
+    return this.getTerraDrawAdapter
+  }
+
+  setControl({ map, control }) {
+    if (control.fullscreen) {
       const css = document.createElement('link');
       css.rel = 'stylesheet';
       css.href = 'https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css';
@@ -54,7 +42,7 @@ const Renderer = class extends defaultExport {
         map.addControl(new L.Control.Fullscreen());
       }
     }
-    if (config.control.scale) {
+    if (control.scale) {
       L.control.scale().addTo(map);
     }
   };
@@ -75,13 +63,12 @@ const Renderer = class extends defaultExport {
   }
 
   // Configure extra stuff
-  setExtra() {
-    const map = this.map
-    const config = this.config
-    if (config.debug === true) {
+  setExtra(config) {
+    const { map, debug } = config
+    if (debug === true) {
       map.addLayer(this.debugLayer());
     }
-    if (config.eval) {
+    if (eval) {
       this.evalScript(config.eval, [["map", map], ["L", L]])
     }
   };
@@ -107,8 +94,8 @@ const Renderer = class extends defaultExport {
     });
   }
 
-  addTileData(tileData) {
-    const map = this.map
+  addTileData({ map, data }) {
+    const tileData = data.filter(d => d.type === 'tile')
     const baseLayers = {}
     const overlayMaps = {}
     if (tileData.length === 0) {
@@ -128,8 +115,10 @@ const Renderer = class extends defaultExport {
     }
   }
 
-  addGPXFile(gpxUrl) {
-    const map = this.map
+  addGPXFile({ map, data }) {
+    const gpxUrl = data.find(record => record.type === 'gpx')
+    if (!gpxUrl) return
+
     const script = document.createElement('script');
     script.src = "https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.7.0/gpx.min.js";
     document.body.append(script);

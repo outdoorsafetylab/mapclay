@@ -169,6 +169,7 @@ const renderWith = (converter) => (element, configObj) => {
 
   // Remove elements not related to maps
   const idList = configListArray.map(c => c.id).filter(c => c)
+  element.innerText = ''
   Array.from(element.children)
     .filter(e => !idList.includes(e.id))
     .forEach(e => e.remove())

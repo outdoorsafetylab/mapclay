@@ -5,10 +5,13 @@ import { addProtocols } from 'maplibre-gl-vector-text-protocol'
 import { TerraDrawMapLibreGLAdapter } from 'terra-draw'
 loadCSS('https://unpkg.com/maplibre-gl@4.5.2/dist/maplibre-gl.css')
 
-const maplibregl = window.maplibregl
-
 const Renderer = class extends defaultExport {
   id = 'maplibre';
+  pitch = 0
+  bearing = 0
+  style = 'https://demotiles.maplibre.org/style.json'
+  link = false
+  maplibregl = window.maplibregl
 
   // Options {{{
   static validOptions = this.validOptions.concat([
@@ -42,63 +45,43 @@ const Renderer = class extends defaultExport {
     })
   ])
   // }}}
-  // Default Config {{{
-  static defaultConfig = Object.freeze({
-    ...super.defaultConfig,
-    pitch: 0,
-    bearing: 0,
-    style: 'https://demotiles.maplibre.org/style.json',
-    link: false,
-  })
-  // }}}
-  // Map Creation {{{
-  async createView(target) {
-    super.createView(target)
 
-    const tileData = this.config.data.filter(datum => datum.type === 'tile');
-    const style = tileData.length !== 0
+  async addMap({ maplibregl, target, style, data, center, zoom, pitch, bearing, link }) {
+    const tileData = data.filter(d => d.type === 'tile');
+    const maplibreStyle = tileData.length !== 0
       ? { version: 8, sources: {}, layers: [], }
-      : this.config.style
+      : style
 
     this.map = new maplibregl.Map({
       container: target,
-      style: style,
-      center: this.config.center,
-      zoom: this.config.zoom,
-      pitch: this.config.pitch,
-      bearing: this.config.bearing,
-      hash: this.config.link,
+      style: maplibreStyle,
+      center,
+      zoom,
+      pitch,
+      bearing,
+      hash: link,
     });
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve, _) => {
       this.map.on('load', () => {
-        try {
-          // FIXME
-          if (this.config.draw) {
-            // Create Terra Draw
-            const adapter = new TerraDrawMapLibreGLAdapter({ map: this.map, maplibregl })
-            this.setDrawComponent(adapter)
-          }
-          this.setControl();
-          this.setData()
-          this.setExtra();
-          resolve(this.map)
-        } catch (err) {
-          reject(err)
-        }
+        resolve(this.map)
       })
     })
   };
-  // }}}
+
+  getTerraDrawAdapter({ maplibregl, map, draw }) {
+    if (!draw) return { state: 'skip' }
+
+    this.terraDrawAdapter = new TerraDrawMapLibreGLAdapter({ map, maplibregl })
+    return this.terraDrawAdapter
+  }
 
   // Configure controls
-  setControl() {
-    const map = this.map
-    const config = this.config
-    if (config.control.fullscreen === true) {
+  setControl({ maplibregl, map, control }) {
+    if (control.fullscreen === true) {
       map.addControl(new maplibregl.FullscreenControl());
     }
-    if (config.control.scale === true) {
+    if (control.scale === true) {
       const scale = new maplibregl.ScaleControl({
         unit: 'metric'
       });
@@ -107,10 +90,9 @@ const Renderer = class extends defaultExport {
   };
 
   // Configure extra stuff
-  setExtra() {
-    const map = this.map
-    const config = this.config
-    if (config.debug === true) {
+  setExtra(config) {
+    const { map, debug } = config
+    if (debug === true) {
       map.showTileBoundaries = true;
     }
     if (config.eval) {
@@ -118,7 +100,7 @@ const Renderer = class extends defaultExport {
     };
   };
 
-  addMarkers(markers) {
+  addMarkers(maplibregl, markers) {
     markers.forEach(config => {
       const marker = new maplibregl.Marker()
         .setLngLat(config.xy)
@@ -128,8 +110,8 @@ const Renderer = class extends defaultExport {
     });
   }
 
-  addTileData(tileData) {
-    const map = this.map
+  addTileData({ map, data }) {
+    const tileData = data.filter(d => d.type === 'tile')
     const style = map.getStyle();
     tileData.forEach((datum, index) => {
       const source = datum.name ? datum.name : index.toString()
@@ -139,9 +121,10 @@ const Renderer = class extends defaultExport {
     map.setStyle(style)
   }
 
-  // FIXME
-  addGPXFile = async (gpxUrl) => {
-    const map = this.map
+  async addGPXFile({ maplibregl, map, data }) {
+    const gpxUrl = data.find(record => record.type === 'gpx')
+    if (!gpxUrl) return { state: 'skip' }
+
     addProtocols(maplibregl);
 
     const gpxSourceName = 'gpx';
@@ -162,7 +145,7 @@ const Renderer = class extends defaultExport {
       }
     })
 
-    if (!Object.prototype.hasOwnProperty.call(this.config, 'center')) {
+    if (!Object.prototype.hasOwnProperty.call(this, 'center')) {
       const data = await map.getSource(gpxSourceName).getData()
       const coordinates = data.features[0].geometry.coordinates
       const bounds = coordinates.reduce(

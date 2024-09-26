@@ -17,90 +17,95 @@ import * as olProj4 from 'ol/proj/proj4';
 
 const Renderer = class extends defaultExport {
   id = 'openlayers'
+  crs = "EPSG:4326"
+  control = {
+    fullscreen: false,
+    scale: false
+  }
+  ol = {
+    ...ol,
+    control,
+    format,
+    geom,
+    layer,
+    source,
+    style,
+    proj: {...proj, proj4: olProj4},
+  }
+  proj4 = proj4
+
+  get run() {
+    return [
+      this.setCoordinateSystem,
+      ...super.run,
+      this.setCursor
+    ]
+  }
 
   static validOptions = super.validOptions.concat([
     new MapOption({
-      name: "proj",
-      desc: "Projection of map view",
+      name: "crs",
+      desc: "Coordinate Reference System",
       example: "EPSG:3826",
       example_desc: "Taiwan TM2",
       isValid: (value) => value?.toString()?.match(/^EPSG:\d+$|^\d+$/) ? true : false
     }),
   ])
 
-  static defaultConfig = Object.freeze({
-    ...super.defaultConfig,
-    proj: "EPSG:4326",
-    control: {
-      fullscreen: false,
-      scale: false
-    }
-  })
-
-  async createView(target) {
-    super.createView(target)
-
+  async setCoordinateSystem({ proj4, ol, crs }) {
     // Set projection
     proj4.defs("EPSG:3826", "+proj=tmerc +lat_0=0 +lon_0=121 +k=0.9999 +x_0=250000 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs")
-    olProj4.register(proj4);
-    const defaultProjection = this.constructor.defaultConfig.proj
-    const projString = this.validateOption('proj', this.config.proj)
-      ? this.config.proj
+    ol.proj.proj4.register(proj4);
+    const crsString = this.validateOption('crs', crs)
+      ? crs
       : (() => {
-        console.warn(`Invalid projection: ${this.config.proj}, set ${defaultProjection} instead`)
-        return defaultProjection
+        console.warn(`Invalid Coordinate System: ${crs}, set "EPSG:4326" instead`)
+        return crs
       })()
-    const projection = await olProj4.fromEPSGCode(projString)
+    const projection = await ol.proj.proj4.fromEPSGCode(crsString)
       .catch(() => {
-        console.warn(`Fail to retrieve projection ${projString}, Use ${defaultProjection} instead`)
+        console.warn(`Fail to retrieve Coordinate System ${crsString}, Use ${crs} instead`)
       })
-    proj.setUserProjection(projection)
+    ol.proj.setUserProjection(projection)
+    return ol.proj.getUserProjection()
+  }
 
+  async addMap({ target, center, zoom }) {
     // Set basemap and camera
     this.map = new ol.Map({
-      target: target,
+      target,
       view: new ol.View({
         constrainResolution: true,
-        center: this.config.center,
-        zoom: this.config.zoom,
+        center,
+        zoom,
       }),
     });
 
-    this.setCursor()
-    this.setControl()
-    this.setData()
-
-    return new Promise((resolve,) => {
-      this.map.on('rendercomplete', () => {
-        resolve(this.map)
-      })
-    }).then(() => {
-      if (this.config.draw) {
-        const adapter = new TerraDrawOpenLayersAdapter({
-          lib: {
-            Circle: geom.Circle,
-            Feature: ol.Feature,
-            GeoJSON: format.GeoJSON,
-            Style: style.Style,
-            VectorLayer: layer.Vector,
-            VectorSource: source.Vector,
-            Stroke: style.Stroke,
-            CircleStyle: style.Circle,
-            getUserProjection: proj.getUserProjection,
-            fromLonLat: proj.fromLonLat,
-            toLonLat: proj.toLonLat
-          },
-          map: this.map,
-          coordinatePrecision: 9,
-        })
-        this.draw = this.setDrawComponent(adapter)
-      }
-      this.setExtra()
-    })
+    return this.map
   };
 
-  setCursor() {
-    const map = this.map
+  getTerraDrawAdapter({ map, ol, draw }) {
+    if (!draw) return { state: 'skip' }
+
+    this.terraDrawAdapter = new TerraDrawOpenLayersAdapter({
+      lib: {
+        Feature: ol.Feature,
+        GeoJSON: ol.format.GeoJSON,
+        Style: ol.style.Style,
+        VectorLayer: ol.layer.Vector,
+        VectorSource: ol.source.Vector,
+        Stroke: ol.style.Stroke,
+        Circle: ol.style.Circle,
+        Fill: ol.style.Fill,
+        getUserProjection: ol.proj.getUserProjection,
+      },
+      map: map,
+      coordinatePrecision: 9,
+    })
+    return this.terraDrawAdapter
+  }
+
+  setCursor({ map }) {
     map.getViewport().style.cursor = "grab";
     map.on('pointerdrag', (_) => {
       map.getViewport().style.cursor = "grabbing";
@@ -110,33 +115,29 @@ const Renderer = class extends defaultExport {
     });
   }
 
-  handleAliases(options) {
-    super.handleAliases(options)
-    if (options.STYLE) {
-      options.data.push({
+  setOptionsAliases(config) {
+    super.handleAliases(config)
+    if (config.STYLE) {
+      config.data.push({
         type: "style",
-        url: options.STYLE
+        url: config.STYLE
       })
-      delete options.STYLE
+      delete config.STYLE
     }
   }
 
-  // Configure controls
-  setControl() {
-    const map = this.map
-    const config = this.config
-    if (config.control.fullscreen === true) {
-      map.addControl(new control.FullScreen());
+  setControl({ map, control, ol }) {
+    if (control.fullscreen === true) {
+      map.addControl(new ol.control.FullScreen());
     }
     // TODO Add more options by config
-    if (config.control.scale === true) {
-      map.addControl(new control.ScaleLine({
+    if (control.scale === true) {
+      map.addControl(new ol.control.ScaleLine({
         units: 'metric'
       }))
     }
   };
 
-  // Configure extra stuff
   setExtra() {
     const map = this.map
     const config = this.config
@@ -168,26 +169,27 @@ const Renderer = class extends defaultExport {
   };
 
   // Apply vector layer for markers onto map
-  addMarkers = (markers) => markers.forEach(marker => {
-    const element = document.createElement('div')
-    element.innerHTML = this.svgForMarker
-    element.title = marker.title
-    element.classList.add('marker')
+  addMarkers(markers) {
+    markers.forEach(marker => {
+      const element = document.createElement('div')
+      element.innerHTML = this.svgForMarker
+      element.title = marker.title
+      element.classList.add('marker')
 
-    const overlay = new ol.Overlay({
-      element: element,
-      position: marker.xy,
-      positioning: 'bottom-center',
-      anchor: [0.5, 1],
-      stopEvent: false,
+      const overlay = new ol.Overlay({
+        element: element,
+        position: marker.xy,
+        positioning: 'bottom-center',
+        anchor: [0.5, 1],
+        stopEvent: false,
+      })
+      this.map.addOverlay(overlay)
     })
-    this.map.addOverlay(overlay)
-  })
+  }
 
-  addTileData(data) {
-    const map = this.map
-    const styleDatum = data.filter(datum => datum.type === 'style')[0]
-    const tileData = data.filter(datum => datum.type === 'tile')
+  async addTileData({ map, data }) {
+    const tileData = data.filter(record => record.type === 'tile')
+    const styleDatum = tileData.filter(datum => datum.type === 'style')[0]
     if (!styleDatum && tileData.length === 0) {
       const baseLayer = new layer.Tile({
         source: new source.OSM(),
@@ -205,17 +207,25 @@ const Renderer = class extends defaultExport {
     }
 
     // TODO Layers for WMTS
-    const wmtsData = data.filter(datum => datum.type === 'wmts')[0]
+    const wmtsData = tileData.filter(datum => datum.type === 'wmts')[0]
     if (wmtsData) {
       // this.addLayersInWMTS(map, wmtsData)
     }
+
+    return new Promise((resolve,) => {
+      map.on('rendercomplete', () => {
+        resolve(map)
+      })
+    })
   }
 
-  addGPXFile(gpxUrl) {
-    const map = this.map
+  addGPXFile({ map, ol, data }) {
+    const gpxUrl = data.filter(record => record.type === 'gpx')
+    if (!gpxUrl) return
+
     const style = {
-      'MultiLineString': new style.Style({
-        stroke: new style.Stroke({
+      'MultiLineString': new ol.style.Style({
+        stroke: new ol.style.Stroke({
           color: 'red',
           width: 3,
         })
@@ -223,19 +233,19 @@ const Renderer = class extends defaultExport {
     };
 
     map.addLayer(
-      new layer.Vector({
-        source: new source.Vector({
+      new ol.layer.Vector({
+        source: new ol.source.Vector({
           url: gpxUrl,
-          format: new format.GPX(),
+          format: new ol.format.GPX(),
         }),
         style: () => style['MultiLineString'],
 
       })
     );
 
-    if (Object.prototype.hasOwnProperty.call(this.config, 'center')) {
-      this.flyTo(map, { center: [10, 10], zoom: 10 })
-    }
+    // if (Object.prototype.hasOwnProperty.call(this.config, 'center')) {
+    //   this.flyTo(map, { center: [10, 10], zoom: 10 })
+    // }
   }
 
   updateCamera(options, useAnimation) {
