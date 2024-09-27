@@ -1,22 +1,25 @@
-import { load as yamlLoad, loadAll as yamlLoadAll } from 'js-yaml';
+import { load as yamlLoad, loadAll as yamlLoadAll } from "js-yaml";
 
 // Renderer list for quick start {{{
-const dir = new URL('./', import.meta.url)
+const dir = new URL("./", import.meta.url);
 const defaultAliases = Object.freeze({
-  "use": {
-    "Leaflet": {
-      value: dir + 'renderers/leaflet.mjs',
-      description: 'Leaflet is the leading open-source JavaScript library for mobile-friendly interactive maps. It has all the mapping features most developers ever need.',
+  use: {
+    Leaflet: {
+      value: dir + "renderers/leaflet.mjs",
+      description:
+        "Leaflet is the leading open-source JavaScript library for mobile-friendly interactive maps. It has all the mapping features most developers ever need.",
     },
-    "Maplibre": {
-      value: dir + 'renderers/maplibre.mjs',
-      description: 'MapLibre GL JS is a TypeScript library that uses WebGL to render interactive maps from vector tiles in a browser. The customization of the map comply with the MapLibre Style Spec.',
+    Maplibre: {
+      value: dir + "renderers/maplibre.mjs",
+      description:
+        "MapLibre GL JS is a TypeScript library that uses WebGL to render interactive maps from vector tiles in a browser. The customization of the map comply with the MapLibre Style Spec.",
     },
-    "Openlayers": {
-      value: dir + 'renderers/openlayers.mjs',
-      description: 'OpenLayers makes it easy to put a dynamic map in any web page. It can display map tiles, vector data and markers loaded from any source. OpenLayers has been developed to further the use of geographic information of all kinds.',
+    Openlayers: {
+      value: dir + "renderers/openlayers.mjs",
+      description:
+        "OpenLayers makes it easy to put a dynamic map in any web page. It can display map tiles, vector data and markers loaded from any source. OpenLayers has been developed to further the use of geographic information of all kinds.",
     },
-  }
+  },
 });
 /**
  * just a single default converter for config
@@ -25,9 +28,9 @@ const defaultAliases = Object.freeze({
  * @return {Object} config -- config patched
  */
 const applyDefaultAliases = (config) => {
-  config.aliases = { ...defaultAliases, ...(config.aliases ?? {}) }
-  return config
-}
+  config.aliases = { ...defaultAliases, ...(config.aliases ?? {}) };
+  return config;
+};
 // }}}
 // Parse yaml content with raw text {{{
 /**
@@ -37,27 +40,24 @@ const applyDefaultAliases = (config) => {
  * @return {Object[]} -- List of config for rendering
  */
 const parseConfigsFromYaml = (configText) => {
-  const configList = []
-  yamlLoadAll(
-    configText,
-    (result) => {
-      if (typeof result === 'object' && !Array.isArray(result)) {
-        configList.push(result ?? {})
-      } else {
-        if (configList.length > 0) {
-          configList.at(-1).eval = result.toString()
-        }
+  const configList = [];
+  yamlLoadAll(configText, (result) => {
+    if (typeof result === "object" && !Array.isArray(result)) {
+      configList.push(result ?? {});
+    } else {
+      if (configList.length > 0) {
+        configList.at(-1).eval = result.toString();
       }
     }
-  )
+  });
 
-  if (configList.length === 0) throw Error('Not a valid config file')
+  if (configList.length === 0) throw Error("Not a valid config file");
 
-  return configList
-}
+  return configList;
+};
 // }}}
 // Get config from other file by 'apply' {{{
-const appliedConfigs = {}
+const appliedConfigs = {};
 
 /**
  * fetch remote config file and save it for cache
@@ -65,16 +65,18 @@ const appliedConfigs = {}
  * @param {String} url -- url for remote config file
  */
 const fetchConfig = async (url) => {
-  if (!url || appliedConfigs[url]) return
+  if (!url || appliedConfigs[url]) return;
 
   appliedConfigs[url] = fetch(url)
-    .then(response => {
-      if (response.status !== 200) throw Error()
-      return response.text()
+    .then((response) => {
+      if (response.status !== 200) throw Error();
+      return response.text();
     })
-    .then(text => yamlLoad(text))
-    .catch(err => { throw Error(`Fail to fetch applied config ${url}`, err) })
-}
+    .then((text) => yamlLoad(text))
+    .catch((err) => {
+      throw Error(`Fail to fetch applied config ${url}`, err);
+    });
+};
 
 // }}}
 // Set option value by aliases {{{
@@ -86,24 +88,26 @@ const fetchConfig = async (url) => {
  * @return {Object} patched config
  */
 const setValueByAliases = (config) => {
-  if (!config.aliases) return config
+  if (!config.aliases) return config;
 
   Object.entries(config)
-    .filter(([option, value]) =>
-      option !== 'aliases' &&
-      typeof value === 'string' &&
-      value.match(/^[A-Z]/)
+    .filter(
+      ([option, value]) =>
+        option !== "aliases" &&
+        typeof value === "string" &&
+        value.match(/^[A-Z]/),
     )
     .forEach(([key, alias]) => {
-      const aliasResult = config.aliases?.[key]?.[alias]
-      const aliasValue = typeof aliasResult === 'object' && !Array.isArray(aliasResult)
-        ? aliasResult.value
-        : aliasResult
-      if (aliasValue) config[key] = aliasValue
-    })
+      const aliasResult = config.aliases?.[key]?.[alias];
+      const aliasValue =
+        typeof aliasResult === "object" && !Array.isArray(aliasResult)
+          ? aliasResult.value
+          : aliasResult;
+      if (aliasValue) config[key] = aliasValue;
+    });
 
-  return config
-}
+  return config;
+};
 // }}}
 // Render each map container by config {{{
 
@@ -115,13 +119,13 @@ const setValueByAliases = (config) => {
  */
 const applyOtherConfig = async (config) => {
   if (config.apply) {
-    await fetchConfig(config.apply)
-    const preset = appliedConfigs[config.apply]
-    config = { ...preset, ...config }
-    setValueByAliases(config)
+    await fetchConfig(config.apply);
+    const preset = appliedConfigs[config.apply];
+    config = { ...preset, ...config };
+    setValueByAliases(config);
   }
-  return config
-}
+  return config;
+};
 
 /**
  * prepareRenderer.
@@ -130,26 +134,25 @@ const applyOtherConfig = async (config) => {
  * @return {Promise} -- resolve renderer used for rendering an HTMLElement
  */
 const prepareRenderer = async (config) => {
-  let renderer
+  let renderer;
   if (!config.use) {
-    renderer = config
+    renderer = config;
   } else {
     renderer = config.use.steps
       ? config.use
-      : new (await import(config.use)).default()
+      : new (await import(config.use)).default();
 
-    Object.entries(config)
-      .forEach(([key, value]) => renderer[key] = value)
+    Object.entries(config).forEach(([key, value]) => (renderer[key] = value));
   }
 
-  return renderer
-}
+  return renderer;
+};
 
 // TODO health check
 const healthCheck = (renderer) => {
-  if (!renderer.steps) throw Error('not health')
-  return renderer
-}
+  if (!renderer.steps) throw Error("not health");
+  return renderer;
+};
 
 /**
  * runBySteps.
@@ -158,40 +161,47 @@ const healthCheck = (renderer) => {
  *   run them one by one and store result into property "results"
  * @return {Promise} -- chanined promises of function calls
  */
-const runBySteps = (renderer) => renderer.steps
-  .reduce((acc, func) => acc
-    .then(() => {
-      if (renderer.results.at(-1).state === 'stop') {
-        return { state: 'stop' }
-      }
-      // If dependencies not success, just skip this function
-      if (func.depends) {
-        const dependentResult = renderer.results
-          .findLast(res => res.func === func.depends)
-          ?.state
-        if (['skip', 'fail'].includes(dependentResult)) {
-          return { state: 'skip' }
-        }
-      }
+const runBySteps = (renderer) =>
+  renderer.steps
+    .reduce(
+      (acc, func) =>
+        acc
+          .then(() => {
+            if (renderer.results.at(-1).state === "stop") {
+              return { state: "stop" };
+            }
+            // If dependencies not success, just skip this function
+            if (func.depends) {
+              const dependentResult = renderer.results.findLast(
+                (res) => res.func === func.depends,
+              )?.state;
+              if (["skip", "fail"].includes(dependentResult)) {
+                return { state: "skip" };
+              }
+            }
 
-      // Run function binding with renderer
-      return func.valueOf().bind(renderer)(renderer)
-    })
-    // Save non-fail result
-    .then((result) => renderer.results.push({
-      func: func.valueOf(),
-      state: result.state ? result.state : 'success',
-      result
-    }))
-    // Save fail result
-    .catch(err => renderer.results.push({
-      func: func.valueOf(),
-      state: 'fail',
-      result: err,
-    })),
-    Promise.resolve()
-  )
-  .then(() => renderer)
+            // Run function binding with renderer
+            return func.valueOf().bind(renderer)(renderer);
+          })
+          // Save non-fail result
+          .then((result) =>
+            renderer.results.push({
+              func: func.valueOf(),
+              state: result.state ? result.state : "success",
+              result,
+            }),
+          )
+          // Save fail result
+          .catch((err) =>
+            renderer.results.push({
+              func: func.valueOf(),
+              state: "fail",
+              result: err,
+            }),
+          ),
+      Promise.resolve(),
+    )
+    .then(() => renderer);
 
 /**
  * renderTargetWithConfig.
@@ -203,37 +213,32 @@ const runBySteps = (renderer) => renderer.steps
  */
 const renderWithConfig = async (config) => {
   // Store raw config string into target element, used to compare configs are the same
-  config.target.mapclayConfig = JSON.stringify(
-    config,
-    (k, v) => k === 'target' ? undefined : v
-  )
+  config.target.mapclayConfig = JSON.stringify(config, (k, v) =>
+    k === "target" ? undefined : v,
+  );
 
   // Prepare for rendering
-  config.results = []
-  setValueByAliases(config)
+  config.results = [];
+  setValueByAliases(config);
 
-  const preRender = [
-    applyOtherConfig,
-    prepareRenderer,
-    healthCheck,
-  ].reduce(
-    (acc, step) => acc
-      .then(async (value) => {
-        if (value.results.at(-1)?.state === 'stop') return value
+  const preRender = [applyOtherConfig, prepareRenderer, healthCheck].reduce(
+    (acc, step) =>
+      acc.then(async (value) => {
+        if (value.results.at(-1)?.state === "stop") return value;
         try {
-          const result = await step(value)
-          value.results.push({ func: step, state: 'success', result: result, })
-          return result
+          const result = await step(value);
+          value.results.push({ func: step, state: "success", result: result });
+          return result;
         } catch (err) {
-          value.results.push({ func: step, state: 'stop', result: err, })
-          return value
+          value.results.push({ func: step, state: "stop", result: err });
+          return value;
         }
       }),
-    Promise.resolve(config)
-  )
+    Promise.resolve(config),
+  );
 
-  return preRender.then(renderer => runBySteps(renderer))
-}
+  return preRender.then((renderer) => runBySteps(renderer));
+};
 // }}}
 // Render target by config {{{
 /**
@@ -244,64 +249,72 @@ const renderWithConfig = async (config) => {
  */
 const renderWith = (converter) => (element, configObj) => {
   // Get list of config file, no matter argument is Array or Object
-  converter = converter ?? (config => config)
-  const configListArray = typeof configObj === 'object'
-    ? Array.isArray(configObj) ? configObj.map(converter) : [configObj].map(converter)
-    : null
-  if (!configListArray) throw Error(`Invalid config files: ${configObj}`)
+  converter = converter ?? ((config) => config);
+  const configListArray =
+    typeof configObj === "object"
+      ? Array.isArray(configObj)
+        ? configObj.map(converter)
+        : [configObj].map(converter)
+      : null;
+  if (!configListArray) throw Error(`Invalid config files: ${configObj}`);
 
   // Remove child elements but matches id in configList
-  element.innerHTML = ''
+  element.innerHTML = "";
 
   // Create elements for each config file in array
   const createContainer = (config) => {
     if (!config.target || !(config.target instanceof HTMLElement)) {
-      const target = document.createElement('div')
+      const target = document.createElement("div");
       if (config.id) {
-        target.id = config.id
-        target.title = config.id
+        target.id = config.id;
+        target.title = config.id;
       }
-      target.classList.add('mapclay')
-      config.target = target
+      target.classList.add("mapclay");
+      config.target = target;
     }
-    element.append(config.target)
+    element.append(config.target);
 
-    return config
-  }
+    return config;
+  };
 
   // List of promises about rendering each config
   return configListArray
     .map(createContainer)
-    .filter(config => config.render !== false)
-    .map(renderWithConfig)
-}
+    .filter((config) => config.render !== false)
+    .map(renderWithConfig);
+};
 // }}}
 // Render target element by textContent {{{
-const renderByYamlWith = (converter = null) => async (target, text = null) => {
-  const yamlText = text ?? target.textContent
-  const configList = parseConfigsFromYaml(yamlText)
-  return renderWith(converter)(target, configList)
-}
+const renderByYamlWith =
+  (converter = null) =>
+  async (target, text = null) => {
+    const yamlText = text ?? target.textContent;
+    const configList = parseConfigsFromYaml(yamlText);
+    return renderWith(converter)(target, configList);
+  };
 // }}}
 // Render target by <script> tag only {{{
-const renderByScriptTargetWith = (converter = null) => async () => {
-  const script = document.currentScript
-  const cssSelector = script?.getAttribute('data-target')
-    ?? URL.parse(script?.src)?.searchParams?.get("target")
-  const containers = document.querySelectorAll(cssSelector)
+const renderByScriptTargetWith =
+  (converter = null) =>
+  async () => {
+    const script = document.currentScript;
+    const cssSelector =
+      script?.getAttribute("data-target") ??
+      URL.parse(script?.src)?.searchParams?.get("target");
+    const containers = document.querySelectorAll(cssSelector);
 
-  if (!cssSelector || !containers) return
+    if (!cssSelector || !containers) return;
 
-  containers.forEach(target => renderByYamlWith(converter)(target))
-}
+    containers.forEach((target) => renderByYamlWith(converter)(target));
+  };
 // }}}
 
-const render = renderWith(applyDefaultAliases)
-const renderByYaml = renderByYamlWith(applyDefaultAliases)
-const renderByScriptTarget = renderByScriptTargetWith(applyDefaultAliases)
+const render = renderWith(applyDefaultAliases);
+const renderByYaml = renderByYamlWith(applyDefaultAliases);
+const renderByScriptTarget = renderByScriptTargetWith(applyDefaultAliases);
 
 if (document.currentScript) {
-  globalThis.mapclay = { render, renderByYaml }
+  globalThis.mapclay = { render, renderByYaml };
 }
 
 export {
@@ -313,4 +326,4 @@ export {
   renderByYamlWith,
   renderByScriptTarget,
   renderByScriptTargetWith,
-}
+};

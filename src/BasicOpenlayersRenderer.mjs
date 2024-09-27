@@ -1,27 +1,30 @@
-import defaultExport, { MapOption, loadCSS } from './BaseRenderer';
-import { renderWith, renderByYamlWith, renderByScriptTargetWith } from './mapclay';
-import { TerraDrawOpenLayersAdapter } from 'terra-draw'
-loadCSS('https://cdn.jsdelivr.net/npm/ol@10.1.0/ol.css')
+import defaultExport, { MapOption, loadCSS } from "./BaseRenderer";
+import {
+  renderWith,
+  renderByYamlWith,
+  renderByScriptTargetWith,
+} from "./mapclay";
+import { TerraDrawOpenLayersAdapter } from "terra-draw";
+loadCSS("https://cdn.jsdelivr.net/npm/ol@10.1.0/ol.css");
 
-import * as ol from 'ol'
-import * as control from 'ol/control';
-import * as format from 'ol/format';
-import * as geom from 'ol/geom';
-import * as layer from 'ol/layer';
-import * as source from 'ol/source';
-import * as style from 'ol/style';
-import * as proj from 'ol/proj';
-import proj4 from 'proj4'
-import * as olProj4 from 'ol/proj/proj4';
-
+import * as ol from "ol";
+import * as control from "ol/control";
+import * as format from "ol/format";
+import * as geom from "ol/geom";
+import * as layer from "ol/layer";
+import * as source from "ol/source";
+import * as style from "ol/style";
+import * as proj from "ol/proj";
+import proj4 from "proj4";
+import * as olProj4 from "ol/proj/proj4";
 
 const Renderer = class extends defaultExport {
-  id = 'openlayers'
-  crs = "EPSG:4326"
+  id = "openlayers";
+  crs = "EPSG:4326";
   control = {
     fullscreen: false,
-    scale: false
-  }
+    scale: false,
+  };
   ol = {
     ...ol,
     control,
@@ -30,16 +33,12 @@ const Renderer = class extends defaultExport {
     layer,
     source,
     style,
-    proj: {...proj, proj4: olProj4},
-  }
-  proj4 = proj4
+    proj: { ...proj, proj4: olProj4 },
+  };
+  proj4 = proj4;
 
   get steps() {
-    return [
-      this.setCoordinateSystem,
-      ...super.steps,
-      this.setCursor
-    ]
+    return [this.setCoordinateSystem, ...super.steps, this.setCursor];
   }
 
   static validOptions = super.validOptions.concat([
@@ -48,26 +47,33 @@ const Renderer = class extends defaultExport {
       desc: "Coordinate Reference System",
       example: "EPSG:3826",
       example_desc: "Taiwan TM2",
-      isValid: (value) => value?.toString()?.match(/^EPSG:\d+$|^\d+$/) ? true : false
+      isValid: (value) =>
+        value?.toString()?.match(/^EPSG:\d+$|^\d+$/) ? true : false,
     }),
-  ])
+  ]);
 
   async setCoordinateSystem({ proj4, ol, crs }) {
     // Set projection
-    proj4.defs("EPSG:3826", "+proj=tmerc +lat_0=0 +lon_0=121 +k=0.9999 +x_0=250000 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs")
+    proj4.defs(
+      "EPSG:3826",
+      "+proj=tmerc +lat_0=0 +lon_0=121 +k=0.9999 +x_0=250000 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs",
+    );
     ol.proj.proj4.register(proj4);
-    const crsString = this.validateOption('crs', crs)
+    const crsString = this.validateOption("crs", crs)
       ? crs
       : (() => {
-        console.warn(`Invalid Coordinate System: ${crs}, set "EPSG:4326" instead`)
-        return crs
-      })()
-    const projection = await ol.proj.proj4.fromEPSGCode(crsString)
-      .catch(() => {
-        console.warn(`Fail to retrieve Coordinate System ${crsString}, Use ${crs} instead`)
-      })
-    ol.proj.setUserProjection(projection)
-    return ol.proj.getUserProjection()
+        console.warn(
+          `Invalid Coordinate System: ${crs}, set "EPSG:4326" instead`,
+        );
+        return crs;
+      })();
+    const projection = await ol.proj.proj4.fromEPSGCode(crsString).catch(() => {
+      console.warn(
+        `Fail to retrieve Coordinate System ${crsString}, Use ${crs} instead`,
+      );
+    });
+    ol.proj.setUserProjection(projection);
+    return ol.proj.getUserProjection();
   }
 
   async addMap({ target, center, zoom }) {
@@ -81,11 +87,11 @@ const Renderer = class extends defaultExport {
       }),
     });
 
-    return this.map
-  };
+    return this.map;
+  }
 
   getTerraDrawAdapter({ map, ol, draw }) {
-    if (!draw) return { state: 'skip' }
+    if (!draw) return { state: "skip" };
 
     this.terraDrawAdapter = new TerraDrawOpenLayersAdapter({
       lib: {
@@ -101,28 +107,28 @@ const Renderer = class extends defaultExport {
       },
       map: map,
       coordinatePrecision: 9,
-    })
-    return this.terraDrawAdapter
+    });
+    return this.terraDrawAdapter;
   }
 
   setCursor({ map }) {
     map.getViewport().style.cursor = "grab";
-    map.on('pointerdrag', (_) => {
+    map.on("pointerdrag", (_) => {
       map.getViewport().style.cursor = "grabbing";
     });
-    map.on('pointerup', () => {
+    map.on("pointerup", () => {
       map.getViewport().style.cursor = "grab";
     });
   }
 
   setOptionsAliases(config) {
-    super.handleAliases(config)
+    super.handleAliases(config);
     if (config.STYLE) {
       config.data.push({
         type: "style",
-        url: config.STYLE
-      })
-      delete config.STYLE
+        url: config.STYLE,
+      });
+      delete config.STYLE;
     }
   }
 
@@ -132,104 +138,109 @@ const Renderer = class extends defaultExport {
     }
     // TODO Add more options by config
     if (control.scale === true) {
-      map.addControl(new ol.control.ScaleLine({
-        units: 'metric'
-      }))
+      map.addControl(
+        new ol.control.ScaleLine({
+          units: "metric",
+        }),
+      );
     }
-  };
+  }
 
   setExtra() {
-    const map = this.map
-    const config = this.config
+    const map = this.map;
+    const config = this.config;
     if (config.debug === true) {
       map.addLayer(
         new layer.Tile({
           source: new source.TileDebug(),
-        })
+        }),
       );
     }
     if (config.eval) {
       this.evalScript(config.eval, [
         ["foo", "bar"],
         ["map", map],
-        ["ol", {
-          ...ol,
-          control,
-          format,
-          geom,
-          layer,
-          source,
-          style,
-          proj,
-          proj4,
-          olProj4,
-        }]
-      ])
+        [
+          "ol",
+          {
+            ...ol,
+            control,
+            format,
+            geom,
+            layer,
+            source,
+            style,
+            proj,
+            proj4,
+            olProj4,
+          },
+        ],
+      ]);
     }
-  };
+  }
 
   // Apply vector layer for markers onto map
   addMarkers(markers) {
-    markers.forEach(marker => {
-      const element = document.createElement('div')
-      element.innerHTML = this.svgForMarker
-      element.title = marker.title
-      element.classList.add('marker')
+    markers.forEach((marker) => {
+      const element = document.createElement("div");
+      element.innerHTML = this.svgForMarker;
+      element.title = marker.title;
+      element.classList.add("marker");
 
       const overlay = new ol.Overlay({
         element: element,
         position: marker.xy,
-        positioning: 'bottom-center',
+        positioning: "bottom-center",
         anchor: [0.5, 1],
         stopEvent: false,
-      })
-      this.map.addOverlay(overlay)
-    })
+      });
+      this.map.addOverlay(overlay);
+    });
   }
 
   async addTileData({ map, data }) {
-    const tileData = data.filter(record => record.type === 'tile')
-    const styleDatum = tileData.filter(datum => datum.type === 'style')[0]
+    const tileData = data.filter((record) => record.type === "tile");
+    const styleDatum = tileData.filter((datum) => datum.type === "style")[0];
     if (!styleDatum && tileData.length === 0) {
       const baseLayer = new layer.Tile({
         source: new source.OSM(),
-        title: 'OSM Carto'
-      })
-      map.addLayer(baseLayer)
+        title: "OSM Carto",
+      });
+      map.addLayer(baseLayer);
     } else {
-      tileData.forEach(datum => {
+      tileData.forEach((datum) => {
         const tileLayer = new layer.Tile({
           source: new source.XYZ({ url: datum.url }),
-          title: datum.title ? datum.title : "Anonymous"
-        })
-        map.addLayer(tileLayer)
-      })
+          title: datum.title ? datum.title : "Anonymous",
+        });
+        map.addLayer(tileLayer);
+      });
     }
 
     // TODO Layers for WMTS
-    const wmtsData = tileData.filter(datum => datum.type === 'wmts')[0]
+    const wmtsData = tileData.filter((datum) => datum.type === "wmts")[0];
     if (wmtsData) {
       // this.addLayersInWMTS(map, wmtsData)
     }
 
-    return new Promise((resolve,) => {
-      map.on('rendercomplete', () => {
-        resolve(map)
-      })
-    })
+    return new Promise((resolve) => {
+      map.on("rendercomplete", () => {
+        resolve(map);
+      });
+    });
   }
 
   addGPXFile({ map, ol, data }) {
-    const gpxUrl = data.filter(record => record.type === 'gpx')
-    if (!gpxUrl) return
+    const gpxUrl = data.filter((record) => record.type === "gpx");
+    if (!gpxUrl) return;
 
     const style = {
-      'MultiLineString': new ol.style.Style({
+      MultiLineString: new ol.style.Style({
         stroke: new ol.style.Stroke({
-          color: 'red',
+          color: "red",
           width: 3,
-        })
-      })
+        }),
+      }),
     };
 
     map.addLayer(
@@ -238,9 +249,8 @@ const Renderer = class extends defaultExport {
           url: gpxUrl,
           format: new ol.format.GPX(),
         }),
-        style: () => style['MultiLineString'],
-
-      })
+        style: () => style["MultiLineString"],
+      }),
     );
 
     // if (Object.prototype.hasOwnProperty.call(this.config, 'center')) {
@@ -249,27 +259,27 @@ const Renderer = class extends defaultExport {
   }
 
   updateCamera(options, useAnimation) {
-    const map = this.map
+    const map = this.map;
     const view = map.getView();
     if (useAnimation) {
-      flyTo(map, { center: options.center, zoom: options.zoom })
+      flyTo(map, { center: options.center, zoom: options.zoom });
     } else {
       view.animate({
         center: options.center,
         zoom: options.zoom,
-        duration: 300
-      })
+        duration: 300,
+      });
     }
   }
 
   // FIXME Beaware of user projection in ol/proj
   project([x, y]) {
-    return this.map.getPixelFromCoordinate([x, y])
-  };
+    return this.map.getPixelFromCoordinate([x, y]);
+  }
   unproject([x, y]) {
-    return this.map.getCoordinateFromPixel([x, y])
-  };
-}
+    return this.map.getCoordinateFromPixel([x, y]);
+  }
+};
 
 // Pan map to a specific location
 function flyTo(map, status, done) {
@@ -282,7 +292,7 @@ function flyTo(map, status, done) {
   let called = false;
   function callback(complete) {
     --parts;
-    if (called) return
+    if (called) return;
     if (parts === 0 || !complete) {
       called = true;
       done(complete);
@@ -295,7 +305,7 @@ function flyTo(map, status, done) {
       center: nextCenter,
       duration: duration,
     },
-    callback
+    callback,
   );
   // At the same time, zoom out and zoom in
   view.animate(
@@ -307,17 +317,16 @@ function flyTo(map, status, done) {
       zoom: nextZoom,
       duration: duration / 2,
     },
-    callback
+    callback,
   );
 }
 
+const converter = (config) => ({ ...config, use: Renderer });
+const render = renderWith(converter);
+const renderByYaml = renderByYamlWith(converter);
+const renderByScriptTarget = renderByScriptTargetWith(converter);
 
-const converter = config => ({ ...config, use: Renderer })
-const render = renderWith(converter)
-const renderByYaml = renderByYamlWith(converter)
-const renderByScriptTarget = renderByScriptTargetWith(converter)
+globalThis.mapclay = { render, renderByYaml };
 
-globalThis.mapclay = { render, renderByYaml }
-
-export { render, renderByYaml, renderByScriptTarget }
-export default Renderer
+export { render, renderByYaml, renderByScriptTarget };
+export default Renderer;

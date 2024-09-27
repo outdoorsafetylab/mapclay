@@ -1,26 +1,26 @@
-import { BasicDrawComponent, addSimpleSelector } from './BasicDrawComponent'
+import { BasicDrawComponent, addSimpleSelector } from "./BasicDrawComponent";
 
 // Dynamically import CSS, simply add stylesheet at <head>
 export const loadCSS = (url) => {
-  if (document.head.querySelector(`link[href="${url}"]`)) return
+  if (document.head.querySelector(`link[href="${url}"]`)) return;
 
-  const link = document.createElement('link');
+  const link = document.createElement("link");
   Object.assign(link, {
-    rel: 'stylesheet',
+    rel: "stylesheet",
     href: url,
-    onerror: () => console.warn('Fail to load stylesheet:', url)
-  })
+    onerror: () => console.warn("Fail to load stylesheet:", url),
+  });
   document.head.appendChild(link);
-}
+};
 
 // Class for valid options {{{
 export class MapOption {
   constructor({ name, desc, example, example_desc, isValid }) {
     this.name = name;
     this.desc = desc;
-    this.example = example
-    this.example_desc = example_desc
-    this.isValid = isValid
+    this.example = example;
+    this.example_desc = example_desc;
+    this.isValid = isValid;
   }
   valueOf() {
     return this.name;
@@ -30,26 +30,27 @@ export class MapOption {
 
 export default class {
   // properties {{{
-  width = "300px"
-  height = "300px"
-  center = [121, 24]
-  zoom = 7
+  width = "300px";
+  height = "300px";
+  center = [121, 24];
+  zoom = 7;
   control = {
     scale: false,
     fullscreen: false,
-  }
-  layers = []
-  data = []
-  aliases = []
-  svgForMarker = `<svg display="block" height="41px" width="27px" viewBox="0 0 27 41"><g fill-rule="nonzero"><g transform="translate(3.0, 29.0)" fill="#000000"><ellipse opacity="0.04" cx="10.5" cy="5.80029008" rx="10.5" ry="5.25002273"></ellipse><ellipse opacity="0.04" cx="10.5" cy="5.80029008" rx="10.5" ry="5.25002273"></ellipse><ellipse opacity="0.04" cx="10.5" cy="5.80029008" rx="9.5" ry="4.77275007"></ellipse><ellipse opacity="0.04" cx="10.5" cy="5.80029008" rx="8.5" ry="4.29549936"></ellipse><ellipse opacity="0.04" cx="10.5" cy="5.80029008" rx="7.5" ry="3.81822308"></ellipse><ellipse opacity="0.04" cx="10.5" cy="5.80029008" rx="6.5" ry="3.34094679"></ellipse><ellipse opacity="0.04" cx="10.5" cy="5.80029008" rx="5.5" ry="2.86367051"></ellipse><ellipse opacity="0.04" cx="10.5" cy="5.80029008" rx="4.5" ry="2.38636864"></ellipse></g><g fill="#3FB1CE"><path d="M27,13.5 C27,19.074644 20.250001,27.000002 14.75,34.500002 C14.016665,35.500004 12.983335,35.500004 12.25,34.500002 C6.7499993,27.000002 0,19.222562 0,13.5 C0,6.0441559 6.0441559,0 13.5,0 C20.955844,0 27,6.0441559 27,13.5 Z"></path></g><g opacity="0.25" fill="#000000"><path d="M13.5,0 C6.0441559,0 0,6.0441559 0,13.5 C0,19.222562 6.7499993,27 12.25,34.5 C13,35.522727 14.016664,35.500004 14.75,34.5 C20.250001,27 27,19.074644 27,13.5 C27,6.0441559 20.955844,0 13.5,0 Z M13.5,1 C20.415404,1 26,6.584596 26,13.5 C26,15.898657 24.495584,19.181431 22.220703,22.738281 C19.945823,26.295132 16.705119,30.142167 13.943359,33.908203 C13.743445,34.180814 13.612715,34.322738 13.5,34.441406 C13.387285,34.322738 13.256555,34.180814 13.056641,33.908203 C10.284481,30.127985 7.4148684,26.314159 5.015625,22.773438 C2.6163816,19.232715 1,15.953538 1,13.5 C1,6.584596 6.584596,1 13.5,1 Z"></path></g><g transform="translate(6.0, 7.0)" fill="#FFFFFF"></g><g transform="translate(8.0, 8.0)"><circle fill="#000000" opacity="0.25" cx="5.5" cy="5.5" r="5.4999962"></circle><circle fill="#FFFFFF" cx="5.5" cy="5.5" r="5.4999962"></circle></g></g></svg>`.trim()
+  };
+  layers = [];
+  data = [];
+  aliases = [];
+  svgForMarker =
+    `<svg display="block" height="41px" width="27px" viewBox="0 0 27 41"><g fill-rule="nonzero"><g transform="translate(3.0, 29.0)" fill="#000000"><ellipse opacity="0.04" cx="10.5" cy="5.80029008" rx="10.5" ry="5.25002273"></ellipse><ellipse opacity="0.04" cx="10.5" cy="5.80029008" rx="10.5" ry="5.25002273"></ellipse><ellipse opacity="0.04" cx="10.5" cy="5.80029008" rx="9.5" ry="4.77275007"></ellipse><ellipse opacity="0.04" cx="10.5" cy="5.80029008" rx="8.5" ry="4.29549936"></ellipse><ellipse opacity="0.04" cx="10.5" cy="5.80029008" rx="7.5" ry="3.81822308"></ellipse><ellipse opacity="0.04" cx="10.5" cy="5.80029008" rx="6.5" ry="3.34094679"></ellipse><ellipse opacity="0.04" cx="10.5" cy="5.80029008" rx="5.5" ry="2.86367051"></ellipse><ellipse opacity="0.04" cx="10.5" cy="5.80029008" rx="4.5" ry="2.38636864"></ellipse></g><g fill="#3FB1CE"><path d="M27,13.5 C27,19.074644 20.250001,27.000002 14.75,34.500002 C14.016665,35.500004 12.983335,35.500004 12.25,34.500002 C6.7499993,27.000002 0,19.222562 0,13.5 C0,6.0441559 6.0441559,0 13.5,0 C20.955844,0 27,6.0441559 27,13.5 Z"></path></g><g opacity="0.25" fill="#000000"><path d="M13.5,0 C6.0441559,0 0,6.0441559 0,13.5 C0,19.222562 6.7499993,27 12.25,34.5 C13,35.522727 14.016664,35.500004 14.75,34.5 C20.250001,27 27,19.074644 27,13.5 C27,6.0441559 20.955844,0 13.5,0 Z M13.5,1 C20.415404,1 26,6.584596 26,13.5 C26,15.898657 24.495584,19.181431 22.220703,22.738281 C19.945823,26.295132 16.705119,30.142167 13.943359,33.908203 C13.743445,34.180814 13.612715,34.322738 13.5,34.441406 C13.387285,34.322738 13.256555,34.180814 13.056641,33.908203 C10.284481,30.127985 7.4148684,26.314159 5.015625,22.773438 C2.6163816,19.232715 1,15.953538 1,13.5 C1,6.584596 6.584596,1 13.5,1 Z"></path></g><g transform="translate(6.0, 7.0)" fill="#FFFFFF"></g><g transform="translate(8.0, 8.0)"><circle fill="#000000" opacity="0.25" cx="5.5" cy="5.5" r="5.4999962"></circle><circle fill="#FFFFFF" cx="5.5" cy="5.5" r="5.4999962"></circle></g></g></svg>`.trim();
   get map() {
     if (this._map === undefined) {
-      throw Error("map is not set in current Renderer")
+      throw Error("map is not set in current Renderer");
     }
     return this._map;
   }
   set map(value) {
-    if (this._map) throw Error("map cannot be reassigned")
+    if (this._map) throw Error("map cannot be reassigned");
     this._map = value;
   }
   get steps() {
@@ -67,14 +68,17 @@ export default class {
         depends: this.getTerraDrawAdapter,
       },
       this.setExtra,
-    ]
+    ];
   }
   // }}}
   validateOption(option, value) {
-    const isValid = this.constructor.validOptions.find(opt => opt.valueOf() === option)?.isValid
-    if (!isValid) throw Error(`Cannot find inValid method for option ${option}`)
+    const isValid = this.constructor.validOptions.find(
+      (opt) => opt.valueOf() === option,
+    )?.isValid;
+    if (!isValid)
+      throw Error(`Cannot find inValid method for option ${option}`);
 
-    return isValid(value)
+    return isValid(value);
   }
 
   // Valid Options {{{
@@ -82,21 +86,21 @@ export default class {
     new MapOption({
       name: "id",
       desc: "id of map HTML element",
-      isValid: (value) => value?.match(/\w+/) ? true : false
+      isValid: (value) => (value?.match(/\w+/) ? true : false),
     }),
     new MapOption({
       name: "width",
       desc: "CSS width of map HTML element",
       example: "200px",
       example_desc: "",
-      isValid: (value) => CSS.supports(`width: ${value}`)
+      isValid: (value) => CSS.supports(`width: ${value}`),
     }),
     new MapOption({
       name: "height",
       desc: "CSS height of map HTML element",
       example: "200px",
       example_desc: "",
-      isValid: (value) => CSS.supports(`height: ${value}`)
+      isValid: (value) => CSS.supports(`height: ${value}`),
     }),
     new MapOption({
       name: "center",
@@ -106,12 +110,12 @@ export default class {
       isValid: (value) => {
         // TODO xy value other than WGS84
         try {
-          const [x, y] = JSON.parse(value)
-          return !isNaN(x) && !isNaN(y)
+          const [x, y] = JSON.parse(value);
+          return !isNaN(x) && !isNaN(y);
         } catch {
-          return false
+          return false;
         }
-      }
+      },
     }),
     new MapOption({
       name: "zoom",
@@ -119,164 +123,193 @@ export default class {
       example: "7.0",
       example_desc: "Small country / US state",
       isValid: (value) => {
-        const zoom = Number(value)
-        return !isNaN(zoom) && zoom >= 0 && zoom <= 22
-      }
+        const zoom = Number(value);
+        return !isNaN(zoom) && zoom >= 0 && zoom <= 22;
+      },
     }),
     new MapOption({
       name: "control",
       desc: "Object of control options, supports: fullscreen, scale",
       example: "\n  scale: true",
       example_desc: "Add Scale bar",
-      isValid: (value) => typeof value === 'object'
+      isValid: (value) => typeof value === "object",
     }),
     new MapOption({
       name: "debug",
       desc: "Set true to show tile boundary",
       example: "true",
       example_desc: "",
-      isValid: (value) => value === 'true'
+      isValid: (value) => value === "true",
     }),
     new MapOption({
       name: "XYZ",
       desc: "Raster tile format with {x}, {y} and {z}",
-      example: "https://tile.openstreetmap.jp/styles/osm-bright/512/{z}/{x}/{y}.png",
+      example:
+        "https://tile.openstreetmap.jp/styles/osm-bright/512/{z}/{x}/{y}.png",
       example_desc: "Tile from OSM Japan!",
       isValid: (value) => {
-        return URL.parse(value) && value.includes('{x}') && value.includes('{y}') && value.includes('z')
-      }
+        return (
+          URL.parse(value) &&
+          value.includes("{x}") &&
+          value.includes("{y}") &&
+          value.includes("z")
+        );
+      },
     }),
     new MapOption({
       name: "GPX",
       desc: "URL of GPX file",
-      example: "https://raw.githubusercontent.com/openlayers/openlayers/main/examples/data/gpx/fells_loop.gpx",
+      example:
+        "https://raw.githubusercontent.com/openlayers/openlayers/main/examples/data/gpx/fells_loop.gpx",
       example_desc: "Example from topografix",
-      isValid: (value) => URL.parse(value)
+      isValid: (value) => URL.parse(value),
     }),
     new MapOption({
       name: "WMTS",
       desc: "URL of WMTS document",
       example: "https://gis.sinica.edu.tw/tileserver/wmts",
       example_desc: "SINICA Taiwan",
-      isValid: (value) => URL.parse(value)
+      isValid: (value) => URL.parse(value),
     }),
     new MapOption({
       name: "draw",
       desc: "Draw Something on map",
       example: "true",
       example_desc: "Enable Draw Tools",
-      isValid: (value) => value === 'true'
+      isValid: (value) => value === "true",
     }),
     new MapOption({
       name: "eval",
       desc: "Custom Script",
       example: "console.log('this', this)",
       example_desc: "Print Renderer info",
-      isValid: () => true
+      isValid: () => true,
     }),
-  ])
+  ]);
   // }}}
 
   setOptionAliases(config) {
     if (config.XYZ) {
-      const xyzArray = typeof config.XYZ === 'string'
-        ? [config.XYZ]
-        : config.XYZ
+      const xyzArray =
+        typeof config.XYZ === "string" ? [config.XYZ] : config.XYZ;
       xyzArray.forEach((record) => {
         let obj;
-        let url
-        if (typeof record === 'string') {
-          url = new URL(record)
+        let url;
+        if (typeof record === "string") {
+          url = new URL(record);
           obj = {
             type: "tile",
             url: record,
-            title: `${url.host}${url.pathname.split('%7B')[0]}`,
-          }
-        } else if (typeof record === 'object') {
-          url = new URL(record.url)
+            title: `${url.host}${url.pathname.split("%7B")[0]}`,
+          };
+        } else if (typeof record === "object") {
+          url = new URL(record.url);
           obj = {
             type: "tile",
             url: record.url,
-            title: record.title ? record.title : `${url.host}${url.pathname.split('%7B')[0]}`
-          }
+            title: record.title
+              ? record.title
+              : `${url.host}${url.pathname.split("%7B")[0]}`,
+          };
         } else {
           return;
         }
-        config.data.push(obj)
-      })
-      delete config.XYZ
+        config.data.push(obj);
+      });
+      delete config.XYZ;
     }
 
     if (config.WMTS) {
       config.data.push({
         type: "wmts",
         url: config.aliases[config.WMTS] ?? config.WMTS,
-      })
-      delete config.WMTS
+      });
+      delete config.WMTS;
     }
 
     if (config.GPX) {
       config.data.push({
         type: "gpx",
         url: config.GPX,
-      })
-      delete config.GPX
+      });
+      delete config.GPX;
     }
 
     // Replace aliases into real string
-    if (typeof config.center === 'string' && Object.prototype.hasOwnProperty.call(config.aliases, config.center)) {
-      config.center = config.aliases[config.center]
+    if (
+      typeof config.center === "string" &&
+      Object.prototype.hasOwnProperty.call(config.aliases, config.center)
+    ) {
+      config.center = config.aliases[config.center];
     }
-    config.data?.forEach(record => {
+    config.data?.forEach((record) => {
       if (Object.prototype.hasOwnProperty.call(config.aliases, record.url)) {
-        record.title = record.url
-        record.url = config.aliases[record.url]
+        record.title = record.url;
+        record.url = config.aliases[record.url];
       }
-    })
+    });
   }
 
   async createView({ target, width, height }) {
-    target.style.width = width
-    target.style.height = height
+    target.style.width = width;
+    target.style.height = height;
   }
 
   setDraw = ({ target, terraDrawAdapter }) => {
-    const idPrefix = target?.id ? target.id + '-' : ""
+    const idPrefix = target?.id ? target.id + "-" : "";
     const options = {
       idStrategy: {
         isValidId: (_) => true,
-        getId: (function() {
-          let id = idPrefix + window.crypto.randomUUID()
-          return function() {
-            id = idPrefix + window.crypto.randomUUID()
+        getId: (function () {
+          let id = idPrefix + window.crypto.randomUUID();
+          return function () {
+            id = idPrefix + window.crypto.randomUUID();
             return id;
           };
-        })()
-      }
-    }
-    this.terraDraw = BasicDrawComponent(terraDrawAdapter, options)
+        })(),
+      },
+    };
+    this.terraDraw = BasicDrawComponent(terraDrawAdapter, options);
     addSimpleSelector(target, this.terraDraw, {
-      idFilter: (feature) => feature.id.startsWith(idPrefix)
+      idFilter: (feature) => feature.id.startsWith(idPrefix),
     });
 
-    return this.terraDraw
+    return this.terraDraw;
+  };
+
+  getTerraDrawAdapter() {
+    throw Error(`Function getTerraDrawAdapter() is not defined`);
+  }
+  addTileData() {
+    throw Error(`Function addTileData() is not defined`);
+  }
+  addGPXFile() {
+    throw Error(`Function addGPXFile() is not defined`);
+  }
+  addMarkers() {
+    throw Error(`Function addMarkers() is not defined`);
+  }
+  setControl() {
+    throw Error(`Function setControl() is not defined`);
+  }
+  setExtra() {
+    throw Error(`Function setExtra() is not defined`);
+  }
+  updateCamera() {
+    throw Error(`Function updateCamera() is not defined`);
+  }
+  project() {
+    throw Error(`Function project() is not defined`);
+  }
+  unproject() {
+    throw Error(`Function unproject() is not defined`);
   }
 
-  getTerraDrawAdapter() { throw Error(`Function getTerraDrawAdapter() is not defined`) }
-  addTileData() { throw Error(`Function addTileData() is not defined`) };
-  addGPXFile() { throw Error(`Function addGPXFile() is not defined`) }
-  addMarkers() { throw Error(`Function addMarkers() is not defined`) };
-  setControl() { throw Error(`Function setControl() is not defined`) };
-  setExtra() { throw Error(`Function setExtra() is not defined`) };
-  updateCamera() { throw Error(`Function updateCamera() is not defined`) };
-  project() { throw Error(`Function project() is not defined`) };
-  unproject() { throw Error(`Function unproject() is not defined`) };
-
   showLayerSwitcher(data) {
-    const wmtsRecords = data.filter(record => record.type === 'wmts')
-    const tileRecords = data.filter(record => record.type === 'tile')
+    const wmtsRecords = data.filter((record) => record.type === "wmts");
+    const tileRecords = data.filter((record) => record.type === "tile");
 
-    return wmtsRecords.length > 0 || tileRecords.length > 1
+    return wmtsRecords.length > 0 || tileRecords.length > 1;
   }
 
   propsForEval() {
@@ -285,28 +318,29 @@ export default class {
     let entries = [];
     while (currentPrototype !== Object.prototype) {
       props = props.concat(Object.getOwnPropertyNames(currentPrototype));
-      entries = entries.concat(Object.entries(currentPrototype))
+      entries = entries.concat(Object.entries(currentPrototype));
       currentPrototype = Object.getPrototypeOf(currentPrototype);
     }
-    return props
+    return props;
   }
 
   evalScript(script, entries = []) {
-    const props = this.propsForEval()
-    const extraArgNames = entries.map(([key, _]) => key)
+    const props = this.propsForEval();
+    const extraArgNames = entries.map(([key, _]) => key);
     const args = [
-      ...props.map(prop => this[prop]),
-      ...entries.map(([_, value]) => value)
-    ]
-    const func = Function([...props, ...extraArgNames], script)
-      .bind(this, ...args)
+      ...props.map((prop) => this[prop]),
+      ...entries.map(([_, value]) => value),
+    ];
+    const func = Function([...props, ...extraArgNames], script).bind(
+      this,
+      ...args,
+    );
 
     try {
-      return func()
+      return func();
     } catch (err) {
-      console.warn("Fail to run custom script:", err)
-      return null
+      console.warn("Fail to run custom script:", err);
+      return null;
     }
   }
-
 }
