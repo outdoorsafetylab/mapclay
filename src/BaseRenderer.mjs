@@ -52,7 +52,7 @@ export default class {
     if (this._map) throw Error("map cannot be reassigned")
     this._map = value;
   }
-  get run() {
+  get steps() {
     return [
       this.setOptionAliases,
       this.createView,

@@ -34,7 +34,7 @@ const Renderer = class extends defaultExport {
   }
   proj4 = proj4
 
-  get run() {
+  get steps() {
     return [
       this.setCoordinateSystem,
       ...super.run,

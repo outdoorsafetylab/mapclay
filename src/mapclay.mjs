@@ -18,12 +18,24 @@ const defaultAliases = Object.freeze({
     },
   }
 });
+/**
+ * just a single default converter for config
+ *
+ * @param {Object} config -- original config
+ * @return {Object} config -- config patched
+ */
 const applyDefaultAliases = (config) => {
   config.aliases = { ...defaultAliases, ...(config.aliases ?? {}) }
   return config
 }
 // }}}
 // Parse yaml content with raw text {{{
+/**
+ * parseConfigsFromYaml.
+ *
+ * @param {String} configText -- yaml text
+ * @return {Object[]} -- List of config for rendering
+ */
 const parseConfigsFromYaml = (configText) => {
   const configList = []
   yamlLoadAll(
@@ -47,8 +59,13 @@ const parseConfigsFromYaml = (configText) => {
 // Get config from other file by 'apply' {{{
 const appliedConfigs = {}
 
+/**
+ * fetch remote config file and save it for cache
+ *
+ * @param {String} url -- url for remote config file
+ */
 const fetchConfig = async (url) => {
-  if (appliedConfigs[url]) return
+  if (!url || appliedConfigs[url]) return
 
   appliedConfigs[url] = fetch(url)
     .then(response => {
@@ -56,11 +73,18 @@ const fetchConfig = async (url) => {
       return response.text()
     })
     .then(text => yamlLoad(text))
-    .catch((err) => { throw Error(`Fail to fetch applied config ${url}`, err) })
+    .catch(err => { throw Error(`Fail to fetch applied config ${url}`, err) })
 }
 
 // }}}
 // Set option value by aliases {{{
+/**
+ * Replace aliases in each property by property 'aliases'.
+ * An alias must starts with upper-case
+ *
+ * @param {Object} config -- original config
+ * @return {Object} patched config
+ */
 const setValueByAliases = (config) => {
   if (!config.aliases) return config
 
@@ -82,53 +106,64 @@ const setValueByAliases = (config) => {
 }
 // }}}
 // Render each map container by config {{{
-const isClass = (C) => typeof C === "function" && C.prototype !== undefined
-const getRendererClass = async (config) => {
-  const rendererUrl = config.use ?? Object.values(config.aliases?.use)?.at(0)?.value
-  if (!rendererUrl) throw Error(`Renderer URL is not specified ${rendererUrl}`)
 
-  return (await import(rendererUrl).catch((err) => {
-    throw Error(`Fail to import renderer by URL ${rendererUrl}: ${err}`)
-  })).default
+/**
+ * applyOtherConfig.
+ *
+ * @param {Object} config -- original config for rendering
+ * @return {Promise} -- resolve "patched" config
+ */
+const applyOtherConfig = async (config) => {
+  if (config.apply) {
+    await fetchConfig(config.apply)
+    const preset = appliedConfigs[config.apply]
+    config = { ...preset, ...config }
+    setValueByAliases(config)
+  }
+  return config
 }
 
 /**
- * renderTargetWithConfig.
+ * prepareRenderer.
  *
- * @param {HTMLElement} target -- target element for map view
- * @param {Object} config -- options for map configuration
- * @return {Object} renderer -- object responsible for rendering, check property "result" for details
+ * @param {Object} config -- prepare renderer by properties in config
+ * @return {Promise} -- resolve renderer used for rendering an HTMLElement
  */
-const renderTargetWithConfig = async (target, config) => {
-  // In case config.apply is using alias
-  setValueByAliases(config)
-  if (config.apply) {
-    try {
-      fetchConfig(config.apply)
-      const preset = await appliedConfigs[config.apply]
-      config = { ...preset, ...config }
-    } catch (err) {
-      console.warn(err)
-    }
+const prepareRenderer = async (config) => {
+  let renderer
+  if (!config.use) {
+    renderer = config
+  } else {
+    renderer = config.use.steps
+      ? config.use
+      : new (await import(config.use)).default()
+
+    Object.entries(config)
+      .forEach(([key, value]) => renderer[key] = value)
   }
-  setValueByAliases(config)
 
-  // Get renderer
-  const rendererClass = isClass(config.use)
-    ? config.use
-    : await getRendererClass(config)
-  if (!rendererClass) throw Error(`Fail to get renderer class by module ${config.use}`)
-  const renderer = new rendererClass()
+  return renderer
+}
 
-  Object.entries(config)
-    .forEach(([key, value]) => renderer[key] = value)
+// TODO health check
+const healthCheck = ( renderer) => {
+  if (!renderer.steps) throw Error('not health')
+  return renderer
+}
 
-  // Run functions
-  renderer.results = []
-  target.renderer = renderer
-  // TODO Save passed arguments for each function
-  renderer.run.reduce((acc, func) => acc
+/**
+ * runBySteps.
+ *
+ * @param {Object} renderer -- for each function in property "steps",
+ *   run them one by one and store result into property "results"
+ * @return {Promise} -- chanined promises of function calls
+ */
+const runBySteps = (renderer) => renderer.steps
+  .reduce((acc, func) => acc
     .then(() => {
+      if (renderer.results.at(-1).state === 'stop') {
+        return { state: 'stop' }
+      }
       // If dependencies not success, just skip this function
       if (func.depends) {
         const dependentResult = renderer.results
@@ -156,8 +191,46 @@ const renderTargetWithConfig = async (target, config) => {
     })),
     Promise.resolve()
   )
+  .then(() => renderer)
 
-  return renderer
+/**
+ * renderTargetWithConfig.
+ *
+ * @param {HTMLElement} target -- target element for map view
+ * @param {Object} config -- options for map configuration
+ * @return {Promise} promise -- which resolve value is a renderer,
+     property "results" contains result objec of each step
+ */
+const renderTargetWithConfig = ({ target, config }) => {
+  // Store raw config into target element
+  target.mapclayConfig = JSON.parse(JSON.stringify(config))
+
+  // Prepare for rendering
+  config.results = []
+  config.target = target
+  setValueByAliases(config)
+
+  const preRender = [
+    applyOtherConfig,
+    prepareRenderer,
+    healthCheck,
+  ].reduce(
+    (acc, step) => acc
+      .then(async (value) => {
+        if (value.results.at(-1)?.state === 'stop') return value
+        try {
+          const result = await step(value)
+          value.results.push({ func: step, state: 'success', result: result, })
+          return result
+        } catch (err) {
+          value.results.push({ func: step, state: 'stop', result: err, })
+          return value
+        }
+      }),
+    Promise.resolve(config)
+  )
+
+  return preRender.then(renderer => runBySteps(renderer))
 }
 // }}}
 // Render target by config {{{
@@ -193,7 +266,7 @@ const renderWith = (converter) => (element, configObj) => {
       target.title = config.id
     }
     target.style.position = 'relative'
-    target.classList.add('map-container')
+    target.classList.add('mapclay')
     element.append(target)
     return { target, config }
   }
@@ -201,14 +274,7 @@ const renderWith = (converter) => (element, configObj) => {
   // List of promises about rendering each config
   return configListArray
     .map(createContainer)
-    .map(pair => {
-      const { target, config } = pair
-      return {
-        target,
-        config: JSON.parse(JSON.stringify(config)),
-        promise: renderTargetWithConfig(target, config)
-      }
-    })
+    .map(renderTargetWithConfig)
 }
 // }}}
 // Render target element by textContent {{{
