@@ -146,7 +146,7 @@ const prepareRenderer = async (config) => {
 }
 
 // TODO health check
-const healthCheck = ( renderer) => {
+const healthCheck = (renderer) => {
   if (!renderer.steps) throw Error('not health')
   return renderer
 }
@@ -201,13 +201,15 @@ const runBySteps = (renderer) => renderer.steps
  * @return {Promise} promise -- which resolve value is a renderer,
      property "results" contains result objec of each step
  */
-const renderTargetWithConfig = ({ target, config }) => {
-  // Store raw config into target element
-  target.mapclayConfig = JSON.parse(JSON.stringify(config))
+const renderWithConfig = async (config) => {
+  // Store raw config string into target element, used to compare configs are the same
+  config.target.mapclayConfig = JSON.stringify(
+    config,
+    (k, v) => k === 'target' ? undefined : v
+  )
 
   // Prepare for rendering
   config.results = []
-  config.target = target
   setValueByAliases(config)
 
   const preRender = [
@@ -248,33 +250,30 @@ const renderWith = (converter) => (element, configObj) => {
     : null
   if (!configListArray) throw Error(`Invalid config files: ${configObj}`)
 
-  // Remove elements not related to maps
-  const idList = configListArray.map(c => c.id).filter(c => c)
-  element.innerText = ''
-  Array.from(element.children)
-    .filter(e => !idList.includes(e.id))
-    .forEach(e => e.remove())
+  // Remove child elements but matches id in configList
+  element.innerHTML = ''
 
   // Create elements for each config file in array
   const createContainer = (config) => {
-    const elementWithSameId = document.getElementById(config.id)
-    const target = elementWithSameId
-      ? elementWithSameId
-      : document.createElement('div')
-    if (config.id) {
-      target.id = config.id
-      target.title = config.id
+    if (!config.target || !(config.target instanceof HTMLElement)) {
+      const target = document.createElement('div')
+      if (config.id) {
+        target.id = config.id
+        target.title = config.id
+      }
+      target.classList.add('mapclay')
+      config.target = target
     }
-    target.style.position = 'relative'
-    target.classList.add('mapclay')
-    element.append(target)
-    return { target, config }
+    element.append(config.target)
+
+    return config
   }
 
   // List of promises about rendering each config
   return configListArray
     .map(createContainer)
-    .map(renderTargetWithConfig)
+    .filter(config => config.render !== false)
+    .map(renderWithConfig)
 }
 // }}}
 // Render target element by textContent {{{
