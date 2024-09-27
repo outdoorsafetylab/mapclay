@@ -23,7 +23,9 @@ const Renderer = class extends defaultExport {
     return this.map
   };
 
-  getTerraDrawAdapter({ L, map }) {
+  getTerraDrawAdapter({ draw, L, map }) {
+    if (!draw) return { state: 'skip' }
+
     this.terraDrawAdapter = new TerraDrawLeafletAdapter({ lib: L, map })
     return this.getTerraDrawAdapter
   }
