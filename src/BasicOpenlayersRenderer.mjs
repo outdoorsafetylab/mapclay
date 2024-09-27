@@ -37,7 +37,7 @@ const Renderer = class extends defaultExport {
   get steps() {
     return [
       this.setCoordinateSystem,
-      ...super.run,
+      ...super.steps,
       this.setCursor
     ]
   }
