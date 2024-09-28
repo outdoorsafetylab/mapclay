@@ -61,7 +61,6 @@ export default class {
       this.setControl,
       this.addTileData,
       this.addGPXFile,
-      this.addMarkers,
       this.getTerraDrawAdapter,
       {
         valueOf: () => this.setDraw,

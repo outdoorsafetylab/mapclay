@@ -113,9 +113,9 @@ const Renderer = class extends defaultExport {
     }
   }
 
-  addMarkers(maplibregl, markers) {
+  addMarkers(markers) {
     markers.forEach(config => {
-      const marker = new maplibregl.Marker()
+      const marker = new this.maplibregl.Marker()
         .setLngLat(config.xy)
         .addTo(this.map);
       marker.getElement().classList.add("marker");
