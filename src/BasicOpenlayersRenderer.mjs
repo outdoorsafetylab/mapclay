@@ -146,13 +146,12 @@ const Renderer = class extends defaultExport {
     }
   }
 
-  setExtra() {
-    const map = this.map;
-    const config = this.config;
-    if (config.debug === true) {
+  setExtra(config) {
+    const { map, debug, ol } = config
+    if (debug === true) {
       map.addLayer(
         new layer.Tile({
-          source: new source.TileDebug(),
+          source: new ol.source.TileDebug(),
         }),
       );
     }
