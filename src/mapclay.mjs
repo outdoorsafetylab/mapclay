@@ -149,8 +149,11 @@ const prepareRenderer = async (config) => {
 };
 
 // TODO health check
-const healthCheck = (renderer) => {
-  if (!renderer.steps) throw Error("not health");
+const healthCheck = renderer => {
+  if (!renderer.steps) {
+    renderer.steps = [];
+    throw Error("not health");
+  }
   return renderer;
 };
 
@@ -201,7 +204,16 @@ const runBySteps = (renderer) =>
           ),
       Promise.resolve(),
     )
-    .then(() => renderer);
+    .then(() => {
+      const failToRender =
+        !renderer.results ||
+        renderer.results.length === 0 ||
+        !renderer.results.find(r => r.state.match(/success/)) ||
+        renderer.results.find(r => r.state.match(/fail|stop/));
+      const attribute = failToRender ? "unfufilled" : "fulfilled";
+      renderer?.target?.setAttribute("data-render", attribute);
+      return renderer;
+    });
 
 /**
  * renderTargetWithConfig.
@@ -213,9 +225,8 @@ const runBySteps = (renderer) =>
  */
 const renderWithConfig = async (config) => {
   // Store raw config string into target element, used to compare configs are the same
-  config.target.mapclayConfig = JSON.stringify(config, (k, v) =>
-    k === "target" ? undefined : v,
-  );
+  config.target.setAttribute("data-mapclay", config.valueOf());
+  Array.from(config.target.children).forEach(e => e.remove())
 
   // Prepare for rendering
   config.results = [];
@@ -241,6 +252,19 @@ const renderWithConfig = async (config) => {
 };
 // }}}
 // Render target by config {{{
+/**
+ * setValueOf. apply valueOf for compare
+ *
+ * @param {Object} config
+ */
+const setValueOf = config => {
+  config.valueOf = () =>
+    JSON.stringify(config, (k, v) =>
+      k.match(/aliases|target/) ? undefined : v,
+    );
+  return config;
+};
+
 /**
  * @param {HTMLElement} target Element of map(s) container
  * @param {Object[]|Object} configObj - Config(s) for each map. Scope into array if it is an Object
@@ -279,8 +303,12 @@ const renderWith = (converter) => (element, configObj) => {
 
   // List of promises about rendering each config
   return configListArray
+    .map(setValueOf)
     .map(createContainer)
-    .filter((config) => config.render !== false)
+    .filter(config =>
+      config.valueOf() !== config.target.getAttribute("data-mapclay") &&
+      config.target.getAttribute("data-render") !== "fulfilled",
+    )
     .map(renderWithConfig);
 };
 // }}}
