@@ -47,7 +47,7 @@ const Renderer = class extends defaultExport {
       desc: "Coordinate Reference System",
       example: "EPSG:3826",
       example_desc: "Taiwan TM2",
-      isValid: (value) =>
+      isValid: value =>
         value?.toString()?.match(/^EPSG:\d+$|^\d+$/) ? true : false,
     }),
   ]);
@@ -113,7 +113,7 @@ const Renderer = class extends defaultExport {
 
   setCursor({ map }) {
     map.getViewport().style.cursor = "grab";
-    map.on("pointerdrag", (_) => {
+    map.on("pointerdrag", _ => {
       map.getViewport().style.cursor = "grabbing";
     });
     map.on("pointerup", () => {
@@ -181,7 +181,7 @@ const Renderer = class extends defaultExport {
 
   // Apply vector layer for markers onto map
   addMarkers(markers) {
-    markers.forEach((marker) => {
+    markers.forEach(marker => {
       const element = document.createElement("div");
       element.innerHTML = this.svgForMarker;
       element.title = marker.title;
@@ -199,8 +199,8 @@ const Renderer = class extends defaultExport {
   }
 
   async addTileData({ map, data }) {
-    const tileData = data.filter((record) => record.type === "tile");
-    const styleDatum = tileData.filter((datum) => datum.type === "style")[0];
+    const tileData = data.filter(record => record.type === "tile");
+    const styleDatum = tileData.filter(datum => datum.type === "style")[0];
     if (!styleDatum && tileData.length === 0) {
       const baseLayer = new layer.Tile({
         source: new source.OSM(),
@@ -208,7 +208,7 @@ const Renderer = class extends defaultExport {
       });
       map.addLayer(baseLayer);
     } else {
-      tileData.forEach((datum) => {
+      tileData.forEach(datum => {
         const tileLayer = new layer.Tile({
           source: new source.XYZ({ url: datum.url }),
           title: datum.title ? datum.title : "Anonymous",
@@ -218,12 +218,12 @@ const Renderer = class extends defaultExport {
     }
 
     // TODO Layers for WMTS
-    const wmtsData = tileData.filter((datum) => datum.type === "wmts")[0];
+    const wmtsData = tileData.filter(datum => datum.type === "wmts")[0];
     if (wmtsData) {
       // this.addLayersInWMTS(map, wmtsData)
     }
 
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       map.on("rendercomplete", () => {
         resolve(map);
       });
@@ -231,7 +231,7 @@ const Renderer = class extends defaultExport {
   }
 
   addGPXFile({ map, ol, data }) {
-    const gpxUrl = data.filter((record) => record.type === "gpx");
+    const gpxUrl = data.filter(record => record.type === "gpx");
     if (!gpxUrl) return;
 
     const style = {
@@ -321,7 +321,7 @@ function flyTo(map, status, done) {
   );
 }
 
-const converter = (config) => ({ ...config, use: Renderer });
+const converter = config => ({ ...config, use: Renderer });
 const render = renderWith(converter);
 const renderByYaml = renderByYamlWith(converter);
 const renderByScriptTarget = renderByScriptTargetWith(converter);

@@ -24,28 +24,28 @@ const Renderer = class extends defaultExport {
       desc: "Pitch toward the horizon measured in degrees",
       example: "60",
       example_desc: "Look a little upward",
-      isValid: (value) => value <= 90 && value >= 0,
+      isValid: value => value <= 90 && value >= 0,
     }),
     new MapOption({
       name: "bearing",
       desc: "The compass direction that is 'up'",
       example: "-30",
       example_desc: "Rotate map a little",
-      isValid: (value) => value <= 180 && value >= -180,
+      isValid: value => value <= 180 && value >= -180,
     }),
     new MapOption({
       name: "link",
       desc: "Syn map's position with the hash fragment of the page's URL",
       example: "true",
       example_desc: "Add hash for page URL",
-      isValid: (value) => value === "true",
+      isValid: value => value === "true",
     }),
     new MapOption({
       name: "style",
       desc: "URL of style document, read https://maplibre.org/maplibre-style-spec/",
       example: "https://tile.openstreetmap.jp/styles/openmaptiles/style.json",
       example_desc: "Style form OSM japan!!!",
-      isValid: (value) => URL.parse(value),
+      isValid: value => URL.parse(value),
     }),
   ]);
   // }}}
@@ -61,7 +61,7 @@ const Renderer = class extends defaultExport {
     bearing,
     link,
   }) {
-    const tileData = data.filter((d) => d.type === "tile");
+    const tileData = data.filter(d => d.type === "tile");
     const maplibreStyle =
       tileData.length !== 0 ? { version: 8, sources: {}, layers: [] } : style;
 
@@ -114,7 +114,7 @@ const Renderer = class extends defaultExport {
   }
 
   addMarkers(maplibregl, markers) {
-    markers.forEach((config) => {
+    markers.forEach(config => {
       const marker = new maplibregl.Marker()
         .setLngLat(config.xy)
         .addTo(this.map);
@@ -124,7 +124,7 @@ const Renderer = class extends defaultExport {
   }
 
   addTileData({ map, data }) {
-    const tileData = data.filter((d) => d.type === "tile");
+    const tileData = data.filter(d => d.type === "tile");
     const style = map.getStyle();
     tileData.forEach((datum, index) => {
       const source = datum.name ? datum.name : index.toString();
@@ -139,7 +139,7 @@ const Renderer = class extends defaultExport {
   }
 
   async addGPXFile({ maplibregl, map, data }) {
-    const gpxUrl = data.find((record) => record.type === "gpx");
+    const gpxUrl = data.find(record => record.type === "gpx");
     if (!gpxUrl) return { state: "skip" };
 
     addProtocols(maplibregl);
@@ -195,7 +195,7 @@ const Renderer = class extends defaultExport {
   }
 };
 
-const converter = (config) => ({ ...config, use: Renderer });
+const converter = config => ({ ...config, use: Renderer });
 const render = renderWith(converter);
 const renderByYaml = renderByYamlWith(converter);
 const renderByScriptTarget = renderByScriptTargetWith(converter);

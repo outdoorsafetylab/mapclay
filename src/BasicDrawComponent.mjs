@@ -89,7 +89,7 @@ export const addSimpleSelector = (target, draw, options = {}) => {
   if (featureData) {
     try {
       const features = JSON.parse(featureData);
-      features.forEach((f) => (f.properties = { mode: "render" }));
+      features.forEach(f => (f.properties = { mode: "render" }));
       draw.addFeatures(features);
     } catch (err) {
       console.warn(
@@ -139,7 +139,7 @@ export const addSimpleSelector = (target, draw, options = {}) => {
   draw.on("change", () => {});
   draw.on("finish", (id, context) => {
     if (context.action === "draw") {
-      const feature = draw.getSnapshot().find((feature) => feature.id === id);
+      const feature = draw.getSnapshot().find(feature => feature.id === id);
       if (feature) {
         draw.removeFeatures([id]);
         feature.properties.mode = "render";
@@ -156,7 +156,7 @@ export const addSimpleSelector = (target, draw, options = {}) => {
       selector.onchange();
     }
   });
-  document.onclick = (event) => {
+  document.onclick = event => {
     if (selector.value === "delete") {
       const features = draw.getFeaturesAtPointerEvent(event, {
         pointerDistance: 40,

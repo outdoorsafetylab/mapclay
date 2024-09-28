@@ -93,7 +93,7 @@ const Renderer = class extends defaultExport {
       tooltipAnchor: [16, -28],
       shadowSize: [41, 41],
     });
-    markers.forEach((config) => {
+    markers.forEach(config => {
       const xy = Array.from(config.xy).reverse();
       const marker = L.marker(xy, { icon: markerIcon })
         .addTo(this.map)
@@ -104,7 +104,7 @@ const Renderer = class extends defaultExport {
   }
 
   addTileData({ map, data }) {
-    const tileData = data.filter((d) => d.type === "tile");
+    const tileData = data.filter(d => d.type === "tile");
     const baseLayers = {};
     const overlayMaps = {};
     if (tileData.length === 0) {
@@ -125,7 +125,7 @@ const Renderer = class extends defaultExport {
   }
 
   addGPXFile({ map, data }) {
-    const gpxUrl = data.find((record) => record.type === "gpx");
+    const gpxUrl = data.find(record => record.type === "gpx");
     if (!gpxUrl) return;
 
     const script = document.createElement("script");
@@ -175,7 +175,7 @@ const Renderer = class extends defaultExport {
   }
 };
 
-const converter = (config) => ({ ...config, use: Renderer });
+const converter = config => ({ ...config, use: Renderer });
 const render = renderWith(converter);
 const renderByYaml = renderByYamlWith(converter);
 const renderByScriptTarget = renderByScriptTargetWith(converter);

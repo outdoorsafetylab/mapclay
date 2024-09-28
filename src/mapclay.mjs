@@ -27,7 +27,7 @@ const defaultAliases = Object.freeze({
  * @param {Object} config -- original config
  * @return {Object} config -- config patched
  */
-const applyDefaultAliases = (config) => {
+const applyDefaultAliases = config => {
   config.aliases = { ...defaultAliases, ...(config.aliases ?? {}) };
   return config;
 };
@@ -39,9 +39,9 @@ const applyDefaultAliases = (config) => {
  * @param {String} configText -- yaml text
  * @return {Object[]} -- List of config for rendering
  */
-const parseConfigsFromYaml = (configText) => {
+const parseConfigsFromYaml = configText => {
   const configList = [];
-  yamlLoadAll(configText, (result) => {
+  yamlLoadAll(configText, result => {
     if (typeof result === "object" && !Array.isArray(result)) {
       configList.push(result ?? {});
     } else {
@@ -64,16 +64,16 @@ const appliedConfigs = {};
  *
  * @param {String} url -- url for remote config file
  */
-const fetchConfig = async (url) => {
+const fetchConfig = async url => {
   if (!url || appliedConfigs[url]) return;
 
   appliedConfigs[url] = fetch(url)
-    .then((response) => {
+    .then(response => {
       if (response.status !== 200) throw Error();
       return response.text();
     })
-    .then((text) => yamlLoad(text))
-    .catch((err) => {
+    .then(text => yamlLoad(text))
+    .catch(err => {
       throw Error(`Fail to fetch applied config ${url}`, err);
     });
 };
@@ -87,7 +87,7 @@ const fetchConfig = async (url) => {
  * @param {Object} config -- original config
  * @return {Object} patched config
  */
-const setValueByAliases = (config) => {
+const setValueByAliases = config => {
   if (!config.aliases) return config;
 
   Object.entries(config)
@@ -117,7 +117,7 @@ const setValueByAliases = (config) => {
  * @param {Object} config -- original config for rendering
  * @return {Promise} -- resolve "patched" config
  */
-const applyOtherConfig = async (config) => {
+const applyOtherConfig = async config => {
   if (config.apply) {
     await fetchConfig(config.apply);
     const preset = appliedConfigs[config.apply];
@@ -133,7 +133,7 @@ const applyOtherConfig = async (config) => {
  * @param {Object} config -- prepare renderer by properties in config
  * @return {Promise} -- resolve renderer used for rendering an HTMLElement
  */
-const prepareRenderer = async (config) => {
+const prepareRenderer = async config => {
   let renderer;
   if (!config.use) {
     renderer = config;
@@ -164,7 +164,7 @@ const healthCheck = renderer => {
  *   run them one by one and store result into property "results"
  * @return {Promise} -- chanined promises of function calls
  */
-const runBySteps = (renderer) =>
+const runBySteps = renderer =>
   renderer.steps
     .reduce(
       (acc, func) =>
@@ -176,7 +176,7 @@ const runBySteps = (renderer) =>
             // If dependencies not success, just skip this function
             if (func.depends) {
               const dependentResult = renderer.results.findLast(
-                (res) => res.func === func.depends,
+                res => res.func === func.depends,
               )?.state;
               if (["skip", "fail"].includes(dependentResult)) {
                 return { state: "skip" };
@@ -187,7 +187,7 @@ const runBySteps = (renderer) =>
             return func.valueOf().bind(renderer)(renderer);
           })
           // Save non-fail result
-          .then((result) =>
+          .then(result =>
             renderer.results.push({
               func: func.valueOf(),
               state: result.state ? result.state : "success",
@@ -195,7 +195,7 @@ const runBySteps = (renderer) =>
             }),
           )
           // Save fail result
-          .catch((err) =>
+          .catch(err =>
             renderer.results.push({
               func: func.valueOf(),
               state: "fail",
@@ -223,7 +223,7 @@ const runBySteps = (renderer) =>
  * @return {Promise} promise -- which resolve value is a renderer,
      property "results" contains result objec of each step
  */
-const renderWithConfig = async (config) => {
+const renderWithConfig = async config => {
   // Store raw config string into target element, used to compare configs are the same
   config.target.setAttribute("data-mapclay", config.valueOf());
   Array.from(config.target.children).forEach(e => e.remove())
@@ -234,7 +234,7 @@ const renderWithConfig = async (config) => {
 
   const preRender = [applyOtherConfig, prepareRenderer, healthCheck].reduce(
     (acc, step) =>
-      acc.then(async (value) => {
+      acc.then(async value => {
         if (value.results.at(-1)?.state === "stop") return value;
         try {
           const result = await step(value);
@@ -248,7 +248,7 @@ const renderWithConfig = async (config) => {
     Promise.resolve(config),
   );
 
-  return preRender.then((renderer) => runBySteps(renderer));
+  return preRender.then(renderer => runBySteps(renderer));
 };
 // }}}
 // Render target by config {{{
@@ -271,9 +271,9 @@ const setValueOf = config => {
  * @param {Object} options - Valid optoins: "rendererList" (list of renderer info) and "renderer" (Class for renderer)
  * @returns {Promise} - Promise of rendering map(s) on target element
  */
-const renderWith = (converter) => (element, configObj) => {
+const renderWith = converter => (element, configObj) => {
   // Get list of config file, no matter argument is Array or Object
-  converter = converter ?? ((config) => config);
+  converter = converter ?? (config => config);
   const configListArray =
     typeof configObj === "object"
       ? Array.isArray(configObj)
@@ -286,7 +286,7 @@ const renderWith = (converter) => (element, configObj) => {
   element.innerHTML = "";
 
   // Create elements for each config file in array
-  const createContainer = (config) => {
+  const createContainer = config => {
     if (!config.target || !(config.target instanceof HTMLElement)) {
       const target = document.createElement("div");
       if (config.id) {
@@ -305,9 +305,10 @@ const renderWith = (converter) => (element, configObj) => {
   return configListArray
     .map(setValueOf)
     .map(createContainer)
-    .filter(config =>
-      config.valueOf() !== config.target.getAttribute("data-mapclay") &&
-      config.target.getAttribute("data-render") !== "fulfilled",
+    .filter(
+      config =>
+        config.valueOf() !== config.target.getAttribute("data-mapclay") ||
+        config.target.getAttribute("data-render") !== "fulfilled",
     )
     .map(renderWithConfig);
 };
@@ -333,7 +334,7 @@ const renderByScriptTargetWith =
 
     if (!cssSelector || !containers) return;
 
-    containers.forEach((target) => renderByYamlWith(converter)(target));
+    containers.forEach(target => renderByYamlWith(converter)(target));
   };
 // }}}
 
