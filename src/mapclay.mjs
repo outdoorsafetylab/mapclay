@@ -72,7 +72,7 @@ const appliedConfigs = {};
 const fetchConfig = async url => {
   if (!url || appliedConfigs[url]) return;
 
-  appliedConfigs[url] = fetch(url)
+  appliedConfigs[url] = await fetch(url)
     .then(response => {
       if (response.status !== 200) throw Error();
       return response.text();
@@ -123,13 +123,22 @@ const setValueByAliases = config => {
  * @return {Promise} -- resolve "patched" config
  */
 const applyOtherConfig = async config => {
-  if (config.apply) {
-    await fetchConfig(config.apply);
-    const preset = appliedConfigs[config.apply];
-    config = { ...preset, ...config };
-    setValueByAliases(config);
-  }
-  return config;
+  if (!config.apply) return config
+
+  await fetchConfig(config.apply);
+  const preset = appliedConfigs[config.apply];
+  if (!preset) throw Error('Fail to fetch remote config ' + config.aply)
+
+  console.log('preset', preset)
+
+  return {
+    ...preset,
+    ...config,
+    aliases: {
+      ...preset.aliases,
+      ...config.aliases ?? {}
+    },
+  };
 };
 
 /**
@@ -237,7 +246,13 @@ const renderWithConfig = async config => {
   config.results = [];
   setValueByAliases(config);
 
-  const preRender = [applyOtherConfig, prepareRenderer, healthCheck].reduce(
+  const preRender = [
+    setValueByAliases,
+    applyOtherConfig,
+    setValueByAliases,
+    prepareRenderer,
+    healthCheck
+  ].reduce(
     (acc, step) =>
       acc.then(async value => {
         if (value.results.at(-1)?.state === "stop") return value;
@@ -324,26 +339,26 @@ const renderWith = converter => (element, configObj) => {
 // Render target element by textContent {{{
 const renderByYamlWith =
   (converter = null) =>
-  async (target, text = null) => {
-    const yamlText = text ?? target.textContent;
-    const configList = parseConfigsFromYaml(yamlText);
-    return renderWith(converter)(target, configList);
-  };
+    async (target, text = null) => {
+      const yamlText = text ?? target.textContent;
+      const configList = parseConfigsFromYaml(yamlText);
+      return renderWith(converter)(target, configList);
+    };
 // }}}
 // Render target by <script> tag only {{{
 const renderByScriptTargetWith =
   (converter = null) =>
-  async () => {
-    const script = document.currentScript;
-    const cssSelector =
-      script?.getAttribute("data-target") ??
-      URL.parse(script?.src)?.searchParams?.get("target");
-    const containers = document.querySelectorAll(cssSelector);
+    async () => {
+      const script = document.currentScript;
+      const cssSelector =
+        script?.getAttribute("data-target") ??
+        URL.parse(script?.src)?.searchParams?.get("target");
+      const containers = document.querySelectorAll(cssSelector);
 
-    if (!cssSelector || !containers) return;
+      if (!cssSelector || !containers) return;
 
-    containers.forEach(target => renderByYamlWith(converter)(target));
-  };
+      containers.forEach(target => renderByYamlWith(converter)(target));
+    };
 // }}}
 
 const render = renderWith(applyDefaultAliases);
