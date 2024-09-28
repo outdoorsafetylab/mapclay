@@ -25,12 +25,17 @@ const defaultAliases = Object.freeze({
  * just a single default converter for config
  *
  * @param {Object} config -- original config
- * @return {Object} config -- config patched
+ * @return {Object} -- patched config
  */
-const applyDefaultAliases = config => {
-  config.aliases = { ...defaultAliases, ...(config.aliases ?? {}) };
-  return config;
-};
+const applyDefaultAliases = config => ({
+  use: config.use ?? 'Leaflet',
+  width: "100%",
+  ...config,
+  aliases: {
+    ...defaultAliases,
+    ...config.aliases ?? {}
+  },
+});
 // }}}
 // Parse yaml content with raw text {{{
 /**
