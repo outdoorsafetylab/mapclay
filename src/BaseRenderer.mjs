@@ -259,9 +259,9 @@ export default class {
     const options = {
       idStrategy: {
         isValidId: _ => true,
-        getId: (function () {
+        getId: (function() {
           let id = idPrefix + window.crypto.randomUUID();
-          return function () {
+          return function() {
             id = idPrefix + window.crypto.randomUUID();
             return id;
           };
@@ -276,33 +276,16 @@ export default class {
     return this.terraDraw;
   };
 
-  getTerraDrawAdapter() {
-    throw Error(`Function getTerraDrawAdapter() is not defined`);
-  }
-  addTileData() {
-    throw Error(`Function addTileData() is not defined`);
-  }
-  addGPXFile() {
-    throw Error(`Function addGPXFile() is not defined`);
-  }
-  addMarkers() {
-    throw Error(`Function addMarkers() is not defined`);
-  }
-  setControl() {
-    throw Error(`Function setControl() is not defined`);
-  }
-  setExtra() {
-    throw Error(`Function setExtra() is not defined`);
-  }
-  updateCamera() {
-    throw Error(`Function updateCamera() is not defined`);
-  }
-  project() {
-    throw Error(`Function project() is not defined`);
-  }
-  unproject() {
-    throw Error(`Function unproject() is not defined`);
-  }
+  skip = () => ({ state: "skip" })
+  getTerraDrawAdapter = this.skip
+  addTileData = this.skip
+  addGPXFile = this.skip
+  addMarkers = this.skip
+  setControl = this.skip
+  setExtra = this.skip
+  updateCamera = this.skip
+  project = this.skip
+  unproject = this.skip
 
   showLayerSwitcher(data) {
     const wmtsRecords = data.filter(record => record.type === "wmts");
