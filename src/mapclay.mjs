@@ -253,7 +253,10 @@ const renderWithConfig = async config => {
     Promise.resolve(config),
   );
 
-  return preRender.then(renderer => runBySteps(renderer));
+  const promise = preRender.then(renderer => runBySteps(renderer));
+  promise.valueOf = () => config.results
+
+  return promise
 };
 // }}}
 // Render target by config {{{
