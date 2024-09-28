@@ -190,7 +190,7 @@ const runBySteps = renderer =>
           .then(result =>
             renderer.results.push({
               func: func.valueOf(),
-              state: result.state ? result.state : "success",
+              state: result?.state ? result?.state : "success",
               result,
             }),
           )
