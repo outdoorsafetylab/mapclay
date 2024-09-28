@@ -366,7 +366,7 @@ const renderByYaml = renderByYamlWith(applyDefaultAliases);
 const renderByScriptTarget = renderByScriptTargetWith(applyDefaultAliases);
 
 if (document.currentScript) {
-  globalThis.mapclay = { render, renderByYaml };
+  globalThis.mapclay = { render, renderWith, renderByYaml, renderByYamlWith };
 }
 
 export {
