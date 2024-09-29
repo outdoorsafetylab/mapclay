@@ -28,12 +28,12 @@ const defaultAliases = Object.freeze({
  * @return {Object} -- patched config
  */
 const applyDefaultAliases = config => ({
-  use: config.use ?? 'Leaflet',
+  use: config.use ?? "Leaflet",
   width: "100%",
   ...config,
   aliases: {
     ...defaultAliases,
-    ...config.aliases ?? {}
+    ...(config.aliases ?? {}),
   },
 });
 // }}}
@@ -123,20 +123,18 @@ const setValueByAliases = config => {
  * @return {Promise} -- resolve "patched" config
  */
 const applyOtherConfig = async config => {
-  if (!config.apply) return config
+  if (!config.apply) return config;
 
   await fetchConfig(config.apply);
   const preset = appliedConfigs[config.apply];
-  if (!preset) throw Error('Fail to fetch remote config ' + config.aply)
-
-  console.log('preset', preset)
+  if (!preset) throw Error("Fail to fetch remote config " + config.aply);
 
   return {
     ...preset,
     ...config,
     aliases: {
       ...preset.aliases,
-      ...config.aliases ?? {}
+      ...(config.aliases ?? {}),
     },
   };
 };
@@ -203,6 +201,7 @@ const runBySteps = renderer =>
           // Save non-fail result
           .then(result =>
             renderer.results.push({
+              type: "step",
               func: func.valueOf(),
               state: result?.state ? result?.state : "success",
               result,
@@ -211,23 +210,20 @@ const runBySteps = renderer =>
           // Save fail result
           .catch(err =>
             renderer.results.push({
+              type: "step",
               func: func.valueOf(),
               state: "fail",
               result: err,
             }),
-          ),
+          )
+          // Do callback(If it exists) after each step
+          .then(() => {
+            renderer.stepCallback?.call(renderer, renderer);
+            return;
+          }),
       Promise.resolve(),
     )
-    .then(() => {
-      const failToRender =
-        !renderer.results ||
-        renderer.results.length === 0 ||
-        !renderer.results.find(r => r.state.match(/success/)) ||
-        renderer.results.find(r => r.state.match(/fail|stop/));
-      const attribute = failToRender ? "unfufilled" : "fulfilled";
-      renderer?.target?.setAttribute("data-render", attribute);
-      return renderer;
-    });
+    .then(() => renderer);
 
 /**
  * renderTargetWithConfig.
@@ -240,7 +236,7 @@ const runBySteps = renderer =>
 const renderWithConfig = async config => {
   // Store raw config string into target element, used to compare configs are the same
   config.target.setAttribute("data-mapclay", config.valueOf());
-  Array.from(config.target.children).forEach(e => e.remove())
+  Array.from(config.target.children).forEach(e => e.remove());
 
   // Prepare for rendering
   config.results = [];
@@ -251,27 +247,54 @@ const renderWithConfig = async config => {
     applyOtherConfig,
     setValueByAliases,
     prepareRenderer,
-    healthCheck
+    healthCheck,
   ].reduce(
     (acc, step) =>
-      acc.then(async value => {
-        if (value.results.at(-1)?.state === "stop") return value;
-        try {
-          const result = await step(value);
-          value.results.push({ func: step, state: "success", result: result });
-          return result;
-        } catch (err) {
-          value.results.push({ func: step, state: "stop", result: err });
+      acc
+        .then(async value => {
+          if (value.results.at(-1)?.state === "stop") return value;
+          try {
+            const result = await step(value);
+            value.results.push({
+              type: "prepare",
+              func: step,
+              state: result.state ? result.state : "success",
+              result: result,
+            });
+            return result;
+          } catch (err) {
+            value.results.push({
+              type: "prepare",
+              func: step,
+              state: "stop",
+              result: err,
+            });
+            return value;
+          }
+        })
+        .then(value => {
+          value.prepareCallback?.call(value, value.results);
           return value;
-        }
-      }),
+        }),
     Promise.resolve(config),
   );
 
-  const promise = preRender.then(renderer => runBySteps(renderer));
-  promise.valueOf = () => config.results
+  const promise = preRender
+    .then(renderer => runBySteps(renderer))
+    .then(renderer => {
+      const failToRender =
+        !renderer.results ||
+        renderer.results.length === 0 ||
+        !renderer.results.find(r => r.state.match(/success/)) ||
+        renderer.results.find(r => r.state.match(/fail|stop/));
+      const attribute = failToRender ? "unfufilled" : "fulfilled";
+      renderer?.target?.setAttribute("data-render", attribute);
+      return renderer;
+    });
 
-  return promise
+  promise.valueOf = () => config.results;
+
+  return promise;
 };
 // }}}
 // Render target by config {{{
