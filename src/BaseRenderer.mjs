@@ -252,6 +252,9 @@ export default class {
   async createView({ target, width, height }) {
     target.style.width = width;
     target.style.height = height;
+    if (window.getComputedStyle(target.parentElement).display === "flex") {
+      target.style.flexBasis = `calc(${width})`;
+    }
   }
 
   setDraw = ({ target, terraDrawAdapter }) => {
