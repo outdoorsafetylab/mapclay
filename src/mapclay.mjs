@@ -287,7 +287,7 @@ const renderWithConfig = async config => {
         renderer.results.length === 0 ||
         !renderer.results.find(r => r.state.match(/success/)) ||
         renderer.results.find(r => r.state.match(/fail|stop/));
-      const attribute = failToRender ? "unfufilled" : "fulfilled";
+      const attribute = failToRender ? "unfulfilled" : "fulfilled";
       renderer?.target?.setAttribute("data-render", attribute);
       return renderer;
     });
