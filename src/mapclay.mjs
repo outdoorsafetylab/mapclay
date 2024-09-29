@@ -362,26 +362,26 @@ const renderWith = converter => (element, configObj) => {
 // Render target element by textContent {{{
 const renderByYamlWith =
   (converter = null) =>
-    async (target, text = null) => {
-      const yamlText = text ?? target.textContent;
-      const configList = parseConfigsFromYaml(yamlText);
-      return renderWith(converter)(target, configList);
-    };
+  async (target, text = null) => {
+    const yamlText = text ?? target.textContent;
+    const configList = parseConfigsFromYaml(yamlText);
+    return renderWith(converter)(target, configList);
+  };
 // }}}
 // Render target by <script> tag only {{{
 const renderByScriptTargetWith =
   (converter = null) =>
-    async () => {
-      const script = document.currentScript;
-      const cssSelector =
-        script?.getAttribute("data-target") ??
-        URL.parse(script?.src)?.searchParams?.get("target");
-      const containers = document.querySelectorAll(cssSelector);
+  async () => {
+    const script = document.currentScript;
+    const cssSelector =
+      script?.getAttribute("data-target") ??
+      URL.parse(script?.src)?.searchParams?.get("target");
+    const containers = document.querySelectorAll(cssSelector);
 
-      if (!cssSelector || !containers) return;
+    if (!cssSelector || !containers) return;
 
-      containers.forEach(target => renderByYamlWith(converter)(target));
-    };
+    containers.forEach(target => renderByYamlWith(converter)(target));
+  };
 // }}}
 
 const render = renderWith(applyDefaultAliases);

@@ -259,9 +259,9 @@ export default class {
     const options = {
       idStrategy: {
         isValidId: _ => true,
-        getId: (function() {
+        getId: (function () {
           let id = idPrefix + window.crypto.randomUUID();
-          return function() {
+          return function () {
             id = idPrefix + window.crypto.randomUUID();
             return id;
           };
@@ -276,16 +276,16 @@ export default class {
     return this.terraDraw;
   };
 
-  skip = () => ({ state: "skip" })
-  getTerraDrawAdapter = this.skip
-  addTileData = this.skip
-  addGPXFile = this.skip
-  addMarkers = this.skip
-  setControl = this.skip
-  setExtra = this.skip
-  updateCamera = this.skip
-  project = this.skip
-  unproject = this.skip
+  skip = () => ({ state: "skip" });
+  getTerraDrawAdapter = this.skip;
+  addTileData = this.skip;
+  addGPXFile = this.skip;
+  addMarkers = this.skip;
+  setControl = this.skip;
+  setExtra = this.skip;
+  updateCamera = this.skip;
+  project = this.skip;
+  unproject = this.skip;
 
   showLayerSwitcher(data) {
     const wmtsRecords = data.filter(record => record.type === "wmts");

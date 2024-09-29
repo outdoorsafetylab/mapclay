@@ -1,72 +1,86 @@
-import node from '@rollup/plugin-node-resolve';
-import terser from '@rollup/plugin-terser';
+import node from "@rollup/plugin-node-resolve";
+import terser from "@rollup/plugin-terser";
+import { join } from "path";
+import { existsSync } from "fs";
 
 const production = !process.env.ROLLUP_WATCH;
 
 const general = {
   watch: {
     clearScreen: false,
-    include: ["src/**"]
+    include: ["src/**"],
   },
   context: "window",
-}
+};
 
 const generalPlugins = [
-  node({ mainFields: ['module', 'main'] }),
+  node({ mainFields: ["module", "main"] }),
   production && terser(),
-]
+  {
+    name: "watch-anyway",
+    buildStart() {
+      const mapclayPath = join(process.cwd(), "mapclay", "src", "mapclay.mjs");
+      console.log("Watching:", mapclayPath);
+      if (existsSync(mapclayPath)) {
+        this.addWatchFile(mapclayPath);
+      } else {
+        console.log("mapclay.mjs not found at:", mapclayPath);
+      }
+    },
+  },
+];
 
 const outputForMain = [
   {
-    dir: 'dist/',
-    format: 'esm',
-    entryFileNames: '[name].mjs',
+    dir: "dist/",
+    format: "esm",
+    entryFileNames: "[name].mjs",
   },
   {
-    name: 'mapclay',
-    format: 'umd',
+    name: "mapclay",
+    format: "umd",
     file: `dist/mapclay.js`,
     exports: "named",
     esModule: false,
     outro: "renderByScriptTarget()",
   },
-]
+];
 
-const outputForRenderer = (name) => [
+const outputForRenderer = name => [
   {
-    dir: 'dist/renderers/',
-    format: 'esm',
-    entryFileNames: name + '.mjs',
+    dir: "dist/renderers/",
+    format: "esm",
+    entryFileNames: name + ".mjs",
     exports: "named",
   },
   {
     name: name,
-    format: 'umd',
+    format: "umd",
     file: `dist/renderers/${name}.js`,
     exports: "named",
     outro: "renderByScriptTarget()",
   },
-]
+];
 
 export default [
   {
-    input: 'src/mapclay.mjs',
+    input: "src/mapclay.mjs",
     output: outputForMain,
-    plugins: [ ...generalPlugins, ],
+    plugins: [...generalPlugins],
   },
   {
-    input: 'src/BasicLeafletRenderer.mjs',
-    output: outputForRenderer('leaflet'),
-    plugins: [ ...generalPlugins, ],
+    input: "src/BasicLeafletRenderer.mjs",
+    output: outputForRenderer("leaflet"),
+    plugins: [...generalPlugins],
   },
   {
-    input: 'src/BasicMaplibreRenderer.mjs',
-    output: outputForRenderer('maplibre'),
-    plugins: [ ...generalPlugins, ],
+    input: "src/BasicMaplibreRenderer.mjs",
+    output: outputForRenderer("maplibre"),
+    plugins: [...generalPlugins],
   },
   {
-    input: 'src/BasicOpenlayersRenderer.mjs',
-    output: outputForRenderer('openlayers'),
-    plugins: [ ...generalPlugins, ],
+    input: "src/BasicOpenlayersRenderer.mjs",
+    output: outputForRenderer("openlayers"),
+    plugins: [...generalPlugins],
   },
-].map(c => ({ ...general, ...c }))
+].map(c => ({ ...general, ...c }));
