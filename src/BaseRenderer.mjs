@@ -249,7 +249,7 @@ export default class {
     });
   }
 
-  async createView({ target, width, height }) {
+  createView({ target, width, height }) {
     target.style.width = width;
     target.style.height = height;
     if (window.getComputedStyle(target.parentElement).display === "flex") {
@@ -279,16 +279,36 @@ export default class {
     return this.terraDraw;
   };
 
-  skip = () => ({ state: "skip" });
-  getTerraDrawAdapter = this.skip;
-  addTileData = this.skip;
-  addGPXFile = this.skip;
-  addMarkers = this.skip;
-  setControl = this.skip;
-  setExtra = this.skip;
-  updateCamera = this.skip;
-  project = this.skip;
-  unproject = this.skip;
+  skip() {
+    return { state: "skip" };
+  }
+  getTerraDrawAdapter() {
+    return { state: "skip" };
+  }
+  addTileData() {
+    return { state: "skip" };
+  }
+  addGPXFile() {
+    return { state: "skip" };
+  }
+  addMarkers() {
+    return { state: "skip" };
+  }
+  setControl() {
+    return { state: "skip" };
+  }
+  setExtra() {
+    return { state: "skip" };
+  }
+  updateCamera() {
+    return { state: "skip" };
+  }
+  project() {
+    return { state: "skip" };
+  }
+  unproject() {
+    return { state: "skip" };
+  }
 
   showLayerSwitcher(data) {
     const wmtsRecords = data.filter(record => record.type === "wmts");
