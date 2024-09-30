@@ -108,7 +108,7 @@ const Renderer = class extends defaultExport {
     const baseLayers = {};
     const overlayMaps = {};
     if (tileData.length === 0) {
-      const osmTile = "https://b.tile.openstreetmap.org/{z}/{x}/{y}.png";
+      const osmTile = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
       L.tileLayer(osmTile).addTo(map);
     } else {
       tileData.forEach((datum, index) => {
