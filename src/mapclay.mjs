@@ -337,7 +337,7 @@ const renderWith = converter => (element, configObj) => {
       const target = document.createElement("div");
       if (config.id) {
         target.id = config.id;
-        target.title = config.id;
+        target.title = `ID: ${config.id}`;
       }
       target.classList.add("mapclay");
       config.target = target;
