@@ -76,7 +76,7 @@ const Renderer = class extends defaultExport {
     return ol.proj.getUserProjection();
   }
 
-  async addMap({ target, center, zoom }) {
+  async addMap({ ol, target, center, zoom }) {
     // Set basemap and camera
     this.map = new ol.Map({
       target,
