@@ -91,6 +91,9 @@ const Renderer = class extends defaultExport {
 
   // Configure controls
   setControl({ maplibregl, map, control }) {
+    if (!control || Object.values(control).filter(v => v).length == 0)
+      return { state: "skip" };
+
     if (control.fullscreen === true) {
       map.addControl(new maplibregl.FullscreenControl());
     }
@@ -105,6 +108,8 @@ const Renderer = class extends defaultExport {
   // Configure extra stuff
   setExtra(config) {
     const { map, debug } = config;
+    if (!debug && !config.eval) return { state: "skip" };
+
     if (debug === true) {
       map.showTileBoundaries = true;
     }
@@ -125,6 +130,8 @@ const Renderer = class extends defaultExport {
 
   addTileData({ map, data }) {
     const tileData = data.filter(d => d.type === "tile");
+    if (tileData.length == 0) return { state: "skip" };
+
     const style = map.getStyle();
     tileData.forEach((datum, index) => {
       const source = datum.name ? datum.name : index.toString();

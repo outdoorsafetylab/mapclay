@@ -133,6 +133,9 @@ const Renderer = class extends defaultExport {
   }
 
   setControl({ map, control, ol }) {
+    if (!control || Object.values(control).filter(v => v).length == 0)
+      return { state: "skip" };
+
     if (control.fullscreen === true) {
       map.addControl(new ol.control.FullScreen());
     }
@@ -148,6 +151,8 @@ const Renderer = class extends defaultExport {
 
   setExtra(config) {
     const { map, debug, ol } = config;
+    if (!debug && !config.eval) return { state: "skip" };
+
     if (debug === true) {
       map.addLayer(
         new layer.Tile({
@@ -157,23 +162,8 @@ const Renderer = class extends defaultExport {
     }
     if (config.eval) {
       this.evalScript(config.eval, [
-        ["foo", "bar"],
         ["map", map],
-        [
-          "ol",
-          {
-            ...ol,
-            control,
-            format,
-            geom,
-            layer,
-            source,
-            style,
-            proj,
-            proj4,
-            olProj4,
-          },
-        ],
+        ["ol", ol],
       ]);
     }
   }
@@ -199,6 +189,7 @@ const Renderer = class extends defaultExport {
 
   async addTileData({ map, data }) {
     const tileData = data.filter(record => record.type === "tile");
+
     const styleDatum = tileData.filter(datum => datum.type === "style")[0];
     if (!styleDatum && tileData.length === 0) {
       const baseLayer = new layer.Tile({
@@ -230,8 +221,8 @@ const Renderer = class extends defaultExport {
   }
 
   addGPXFile({ map, ol, data }) {
-    const gpxUrl = data.filter(record => record.type === "gpx");
-    if (!gpxUrl) return;
+    const gpxUrl = data.find(record => record.type === "gpx");
+    if (!gpxUrl) return { state: "skip" };
 
     const style = {
       MultiLineString: new ol.style.Style({

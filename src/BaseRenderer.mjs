@@ -279,9 +279,6 @@ export default class {
     return this.terraDraw;
   };
 
-  skip() {
-    return { state: "skip" };
-  }
   getTerraDrawAdapter() {
     return { state: "skip" };
   }

@@ -33,6 +33,9 @@ const Renderer = class extends defaultExport {
   }
 
   setControl({ map, control }) {
+    if (!control || Object.values(control).filter(v => v).length == 0)
+      return { state: "skip" };
+
     if (control.fullscreen) {
       const css = document.createElement("link");
       css.rel = "stylesheet";
@@ -71,6 +74,8 @@ const Renderer = class extends defaultExport {
   // Configure extra stuff
   setExtra(config) {
     const { map, debug } = config;
+    if (!debug && !config.eval) return { state: "skip" };
+
     if (debug === true) {
       map.addLayer(this.debugLayer());
     }
@@ -105,6 +110,7 @@ const Renderer = class extends defaultExport {
 
   addTileData({ map, data }) {
     const tileData = data.filter(d => d.type === "tile");
+
     const baseLayers = {};
     const overlayMaps = {};
     if (tileData.length === 0) {
@@ -126,7 +132,7 @@ const Renderer = class extends defaultExport {
 
   addGPXFile({ map, data }) {
     const gpxUrl = data.find(record => record.type === "gpx");
-    if (!gpxUrl) return;
+    if (!gpxUrl) return { state: "skip" };
 
     const script = document.createElement("script");
     script.src =
