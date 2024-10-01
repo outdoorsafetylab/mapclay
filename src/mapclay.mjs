@@ -201,7 +201,7 @@ const runBySteps = renderer =>
           // Save non-fail result
           .then(result =>
             renderer.results.push({
-              type: "step",
+              type: "render",
               func: func.valueOf(),
               state: result?.state ? result?.state : "success",
               result,
@@ -210,7 +210,7 @@ const runBySteps = renderer =>
           // Save fail result
           .catch(err =>
             renderer.results.push({
-              type: "step",
+              type: "render",
               func: func.valueOf(),
               state: "fail",
               result: err,
