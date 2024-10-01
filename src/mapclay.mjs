@@ -6,16 +6,19 @@ const defaultAliases = Object.freeze({
   use: {
     Leaflet: {
       value: dir + "renderers/leaflet.mjs",
+      url: "https://github.com/outdoorsafetylab/mapclay/blob/master/src/BasicLeafletRenderer.mjs",
       description:
         "Leaflet is the leading open-source JavaScript library for mobile-friendly interactive maps. It has all the mapping features most developers ever need.",
     },
     Maplibre: {
       value: dir + "renderers/maplibre.mjs",
+      url: "https://github.com/outdoorsafetylab/mapclay/blob/master/src/BasicMaplibreRenderer.mjs",
       description:
         "MapLibre GL JS is a TypeScript library that uses WebGL to render interactive maps from vector tiles in a browser. The customization of the map comply with the MapLibre Style Spec.",
     },
     Openlayers: {
       value: dir + "renderers/openlayers.mjs",
+      url: "https://github.com/outdoorsafetylab/mapclay/blob/master/src/BasicOpenlayersRenderer.mjs",
       description:
         "OpenLayers makes it easy to put a dynamic map in any web page. It can display map tiles, vector data and markers loaded from any source. OpenLayers has been developed to further the use of geographic information of all kinds.",
     },
@@ -108,7 +111,13 @@ const setValueByAliases = config => {
         typeof aliasResult === "object" && !Array.isArray(aliasResult)
           ? aliasResult.value
           : aliasResult;
-      if (aliasValue) config[key] = aliasValue;
+      if (aliasValue) {
+        config[key] = aliasValue;
+        if (key === "use") {
+          config.url = aliasResult.url;
+          config.desc = aliasResult.desc;
+        }
+      }
     });
 
   return config;
