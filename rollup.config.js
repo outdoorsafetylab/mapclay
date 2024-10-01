@@ -15,7 +15,7 @@ const general = {
 
 const generalPlugins = [
   node({ mainFields: ["module", "main"] }),
-  production && terser(),
+  // production && terser(),
   {
     name: "watch-anyway",
     buildStart() {
