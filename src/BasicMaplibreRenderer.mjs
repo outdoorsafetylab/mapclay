@@ -130,7 +130,7 @@ const Renderer = class extends defaultExport {
 
   addTileData({ map, data }) {
     const tileData = data.filter(d => d.type === "tile");
-    if (tileData.length == 0) return { state: "skip" };
+    if (tileData.length === 0) return { state: "skip" };
 
     const style = map.getStyle();
     tileData.forEach((datum, index) => {
