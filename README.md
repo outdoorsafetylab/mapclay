@@ -1,5 +1,6 @@
 [![npm version](https://badge.fury.io/js/mapclay.svg)](https://badge.fury.io/js/mapclay)
 
+
 MapClay is a JavaScript library that allows you to create interactive maps using simple YAML or JSON configurations. It supports multiple map rendering engines, including Leaflet, Maplibre, and OpenLayers, making it flexible for various use cases.
 
 ## Quick Start
@@ -59,7 +60,7 @@ XYZ: https://tile.openstreetmap.jp/styles/osm-bright/512/{z}/{x}/{y}.png
 
 <br>
 
-All selected target elements would be rendered:
+All valid target elements would be rendered:
 
 [Try it out](https://markdown-it.github.io/#md3=%7B%22source%22%3A%22%3Cpre%3Euse%3A%20Leaflet%3C%2Fpre%3E%5Cn%3Cpre%3Euse%3A%20Maplibre%3C%2Fpre%3E%5Cn%3Cpre%3Euse%3A%20Openlayers%3C%2Fpre%3E%5Cn%5Cn%3Cscript%20src%3D%27https%3A%2F%2Funpkg.com%2Fmapclay%40latest%2Fdist%2Fmapclay.js%3Ftarget%3Dpre%27%3E%3C%2Fscript%3E%22%2C%22defaults%22%3A%7B%22html%22%3Atrue%2C%22xhtmlOut%22%3Afalse%2C%22breaks%22%3Afalse%2C%22langPrefix%22%3A%22%22%2C%22linkify%22%3Atrue%2C%22typographer%22%3Afalse%2C%22_highlight%22%3Afalse%2C%22_strict%22%3Afalse%2C%22_view%22%3A%22html%22%7D%7D)
 
@@ -100,40 +101,44 @@ Here comes API:
 
 ### Render by text content
 
-Still, write text content on target element for options:
+Still, write text content on target element for options.
+And use `mapclay.renderByYaml()` for this case:
+
+[Try it out](https://markdown-it.github.io/#md3=%7B%22source%22%3A%22%3Cscript%20src%3D%27https%3A%2F%2Funpkg.com%2Fmapclay%40latest%2Fdist%2Fmapclay.js%27%3E%3C%2Fscript%3E%5Cn%5Cn%5Cn%3Cpre%20id%3D%27map%27%3E%5Cnuse%3A%20Maplibre%5Cnwidth%3A%20400px%5Cnheight%3A%2050vh%5Cncenter%3A%20%5B139.6917%2C35.6895%5D%5Cn%3C%2Fpre%3E%5Cn%5Cn%5Cn%3Cscript%20defer%3E%5Cnconst%20target%20%3D%20document.querySelector%28%27%23map%27%29%5Cnmapclay.renderByYaml%28target%2C%20target.textContent%29%5Cn%3C%2Fscript%3E%22%2C%22defaults%22%3A%7B%22html%22%3Atrue%2C%22xhtmlOut%22%3Afalse%2C%22breaks%22%3Afalse%2C%22langPrefix%22%3A%22language-%22%2C%22linkify%22%3Atrue%2C%22typographer%22%3Atrue%2C%22_highlight%22%3Atrue%2C%22_strict%22%3Afalse%2C%22_view%22%3A%22html%22%7D%7D)
 
 ```html
 <!-- In HTML body -->
 <pre id="map">
+use: Maplibre
 width: 400px
-height: 400px
+height: 50vh
 center: [139.6917,35.6895]
-zoom: 8
 </pre>
 ```
 
-Use `mapclay.renderByYaml()` for this case
-
 ```js
 // In <script>
-const target = document.querySelector('#map')
-mapclay.renderByYaml(target, target.textContent)
+const target = document.querySelector('#map');
+mapclay.renderByYaml(target, target.textContent);
 ```
 
 ### Render by config object
 
-Despite of text content, you can manually specify options by config object
+Instead of text content, you can manually specify options by config object:
+
+[Try it out](https://markdown-it.github.io/#md3=%7B%22source%22%3A%22%3Cscript%20src%3D%27https%3A%2F%2Funpkg.com%2Fmapclay%40latest%2Fdist%2Fmapclay.js%27%3E%3C%2Fscript%3E%5Cn%5Cn%5Cn%3Cpre%20id%3D%27map%27%3E%3C%2Fpre%3E%5Cn%5Cn%5Cn%3Cscript%20defer%3E%5Cnconsole.log%28mapclay%29%5Cnconst%20target%20%3D%20document.querySelector%28%27%23map%27%29%5Cn%5Cnmapclay.render%28target%2C%20%7B%5Cn%20%20use%3A%20%5C%22Maplibre%5C%22%2C%5Cn%20%20width%3A%20%5C%22400px%5C%22%2C%5Cn%20%20height%3A%20%5C%22400px%5C%22%2C%5Cn%20%20center%3A%20%5B139.6917%2C35.6895%5D%2C%5Cn%20%20zoom%3A%208%2C%5Cn%7D%29%5Cn%3C%2Fscript%3E%22%2C%22defaults%22%3A%7B%22html%22%3Atrue%2C%22xhtmlOut%22%3Afalse%2C%22breaks%22%3Afalse%2C%22langPrefix%22%3A%22language-%22%2C%22linkify%22%3Atrue%2C%22typographer%22%3Atrue%2C%22_highlight%22%3Atrue%2C%22_strict%22%3Afalse%2C%22_view%22%3A%22html%22%7D%7D)
 
 ```js
 // In <script>
-const target = document.querySelector('#map')
+const target = document.querySelector('#map');
 
 mapclay.render(target, {
-  width: 400px,
-  height: 400px,
-  center: [139.6917,35.6895]
-  zoom: 8
-})
+  use: "Maplibre",
+  width: "400px",
+  height: "400px",
+  center: [139.6917,35.6895],
+  zoom: 8,
+});
 ```
 
 <br>
@@ -142,21 +147,22 @@ mapclay.render(target, {
 
 ### Common Options
 
-Except of `use`, `aliases` and `apply`, no options are strictly defined. Valid optoins are depends on [Renderer](#renderer) (which is specified by `use`).
+Except of [special options](#renderer) defines a renderer, there is no mandatory options.
 
 But there are some general optoins come with [default Renderers](#default-renderers):
 
 option|description|value
 ---|---|---|
-id | id of map HTML element | `String`
-width |  CSS width of map HTML element | `String` for CSS
-height | CSS height of map HTML element | `String` for CSS
-center | Center of map camera | `Array` in [lon, lat]
-zoom | Zoom level for map camera | `Number` `0-22`
-debug | Show tile boundary | `true`
+id | id of map HTML element | `String`, eg: openlayers
+width |  CSS width of map HTML element | `String` for CSS, eg: 100%
+height | CSS height of map HTML element | `String` for CSS, eg: 200px
+center | Center of map camera | `Array` in [lon, lat], eg: [24, 121]
+zoom | Zoom level for map camera | `Number` `0-22`, eg: 12
+debug | Show tile boundary | `Boolean`, eg: true
 control | Object of control options, supports | `fullscreen: true`, `scale: true`
 XYZ | Raster tile URL | `URL` with {x}, {y} and {z}
 GPX | GPX file path | `String` for fetchable resource path
+
 
 ### Option: `aliases`
 
@@ -216,6 +222,8 @@ aliases:
 
 To reuse written config, use `apply` to specify resource path of another config file. Options in current config file are automatically assigned by it.
 
+[Try it out]()
+
 ```yml
 apply: https://unpkg.com/mapclay/assets/default.yml
 
@@ -228,7 +236,7 @@ zoom: City
 
 **`URL` of ES6 module, with Renderer class as default export**
 
-This option specify which [Renderer](#renderer) is used to create a map. If it is not specified, `mapclay` will use first entry in `aliases.use`.
+This option specify which [Renderer](#renderer) is used to create a map.
 
 ```yml
 # Use Renderer with Openlayers by resouece path
@@ -238,6 +246,11 @@ use: https://unpkg.com/mapclay/dist/renderers/openlayers.mjs
 By default, `mapclay.render()` and `mapclay.renderByYaml()` comes with three hidden aliases for default Renderers.
 
 #### Default Renderers
+
+To use default [renderers](#renderer), specify `use` to one of the following aliases:
+1. Leaflet
+2. Maplibre
+3. Openlayers
 
 Check out the [source code](https://github.com/outdoorsafetylab/mapclay/tree/master/src) for each Renderer.
 
@@ -260,52 +273,74 @@ aliases:
 
 ## Renderer
 
-A Renderer is responsible to create map view in target element. `mapclay.render()` simply do the followings behind:
-1. Create a new child element with class `map-container`
-2. Get Renderer by `use` value in current config file
-3. Call `Renderer.createView()` for a new map.
+In short:
+
+> A Renderer is an Object with 'steps' property, which value is an array of render functions.
+
+For example, this is a minimal valid Renderer Object:
 
 ```js
-// Pesudo code in mapclay.render()
-function render(target, config) {
-  // Add child element
-  const child_element = document.createElement('div')
-  target.appendChild(child_element)
-  target.append(child_element)
+const renderer = {
+  steps: [
+    function addContent({target}) {
+      target.textContent = 'Hello Renderer!'
+    }
+  ]
+}
 
-  // Get Renderer by config.use
-  const RendererClass = (await import(config.use)).default
-  const renderer = new RendererClass(config)
-  // Render child element
-  renderer.createView(child_element)
+mapclay.render(element, {
+  use: renderer
+})
+```
+
+`mapclay.render()` probably do the followings behind:
+1. Create a new child element with class `mapclay`, it would be assign to `target` property of config file
+2. Get Renderer by `use` value in current config file
+    * If config file is within `steps`, itself is Renderer
+    * If value of `use` is an object within `steps`, take it as Renderer
+    * If value of `use` is a valid URL, import it as ES6 module. And use default export as class. Get instance of Renderer by calling `new` operator
+
+    For the second case and third case, all config properties would be applied to Renderer
+3. Call each function in `steps` one by one. Function would be bound to Renderer, and Renderer itself is the only argument.
+   Like the following:
+
+```js
+console.log(renderer.steps) // return [step1, step2, step3...]
+
+// Pesudo code in mapclay.render()
+prepareRendering()
+  .then(() => step1.call(renderer, renderer))
+  .then(() => step2.call(renderer, renderer))
+  .then(() => step3.call(renderer, renderer))
+  ...
+```
+
+With these features, each step function can use destructuring assignment to get arguments to do renderering:
+
+```js
+// Get arguments from Renderer Object
+function stepXXX({target, width, height}) {
+  target.style.width = width + 'px'
+  target.style.height = height + 'px'
+  ...
 }
 ```
 
-Create a new one if [default Renderers](#default-renderers) doesn't fit your need. Here is a short example about creating a new custom Renderer Class, which is based on default Renderer `Maplibre`:
+
+[Default Renderers](#default-renderers) only implements basic features. Create a new one if they don't fit your need. Here is a short example about creating a new custom Renderer Class, which is based on default Renderer `Maplibre`:
 
 ```js
-import defaultExport from 'https://unpkg.com/mapclay/dist/renderers/maplibre.mjs'
+import MaplibreRenderer from 'https://unpkg.com/mapclay/dist/renderers/maplibre.mjs'
 
-export default class extends defaultExport {
-  // Override default config in Renderer
-  static defaultConfig = {
-    ...super.defaultConfig,
-    pitch: 60,
-    bearing: 30,
-    style: 'https://tile.openstreetmap.jp/styles/osm-bright/style.json',
-  )
+export default class extends MaplibreRenderer {
+  // Override default steps in default class
+  get steps() {
+    return [...super.steps, this.customStep];
+  }
 
   // Override method createView()
-  async createView(target) {
-    // Do something after map is created by parent
-    const map = await super.createView(target)
-
-    // Add a simple marker
-    const marker = new maplibregl.Marker()
-      .setLngLat([12.550343, 55.665957])
-      .addTo(map);
-
-    return map
+  async customStep({target, customOption}) {
+    doSomething(target, customOption)
   }
 }
 ```
