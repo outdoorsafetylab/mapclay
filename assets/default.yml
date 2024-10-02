@@ -10,13 +10,13 @@ aliases:
       value: ./renderers/openlayers.mjs,
       description: OpenLayers makes it easy to put a dynamic map in any web page. It can display map tiles, vector data and markers loaded from any source. OpenLayers has been developed to further the use of geographic information of all kinds.
   XYZ:
-    OSM Carto: http://b.tile.openstreetmap.org/{z}/{x}/{y}.png
+    OSM Carto: https://tile.openstreetmap.org/{z}/{x}/{y}.png
     OpenCycleMap: https://a.tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey=a5dd6a2f1c934394bce6b0fb077203eb
     Rudymap: https://tile.happyman.idv.tw/map/moi_osm/{z}/{x}/{y}.png
     Happyman gpx: https://tile.happyman.idv.tw/map/gpxtrack/{z}/{x}/{y}.png
     Happyman moi: https://tile.happyman.idv.tw/map/moi_osm/{z}/{x}/{y}.png
-    NLSC aeril: http://wmts.nlsc.gov.tw/wmts/PHOTO2/default/GoogleMapsCompatible/{z}/{y}/{x}
-    NLSC topo: http://wmts.nlsc.gov.tw/wmts/PHOTO_MIX/default/GoogleMapsCompatible/{z}/{y}/{x}
+    NLSC aeril: https://wmts.nlsc.gov.tw/wmts/PHOTO2/default/GoogleMapsCompatible/{z}/{y}/{x}
+    NLSC topo: https://wmts.nlsc.gov.tw/wmts/PHOTO_MIX/default/GoogleMapsCompatible/{z}/{y}/{x}
     TAIWAN_ ERRAIN:   https://osmhacktw.github.io/terrain-rgb/tiles/{z}/{x}/{y}.png
   WMTS:
     NLSC: https://wmts.nlsc.gov.tw/wmts
