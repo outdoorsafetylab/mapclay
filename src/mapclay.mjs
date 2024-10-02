@@ -243,13 +243,8 @@ const runBySteps = renderer =>
      property "results" contains result objec of each step
  */
 const renderWithConfig = async config => {
-  // Store raw config string into target element, used to compare configs are the same
-  config.target.setAttribute("data-mapclay", config.valueOf());
-  Array.from(config.target.children).forEach(e => e.remove());
-
   // Prepare for rendering
   config.results = [];
-  setValueByAliases(config);
 
   const preRender = [
     setValueByAliases,
@@ -321,6 +316,17 @@ const setValueOf = config => {
 };
 
 /**
+ * should render current config, useful when config.target is a rendered map
+ *
+ * @param {Object} config
+ */
+const shouldRender = config =>
+  !(config.target instanceof window.HTMLElement) ||
+  !config.target.classList.contains("mapclay") ||
+  !(config.valueOf() === config.target.getAttribute("data-mapclay")) ||
+  !(config.target.getAttribute("data-render") === "fulfilled");
+
+/**
  * @param {HTMLElement} target Element of map(s) container
  * @param {Object[]|Object} configObj - Config(s) for each map. Scope into array if it is an Object
  * @param {Object} options - Valid optoins: "rendererList" (list of renderer info) and "renderer" (Class for renderer)
@@ -342,7 +348,7 @@ const renderWith = converter => (element, configObj) => {
 
   // Create elements for each config file in array
   const createContainer = config => {
-    if (!config.target || !(config.target instanceof HTMLElement)) {
+    if (shouldRender(config)) {
       const target = document.createElement("div");
       if (config.id) {
         target.id = config.id;
@@ -360,11 +366,7 @@ const renderWith = converter => (element, configObj) => {
   return configListArray
     .map(setValueOf)
     .map(createContainer)
-    .filter(
-      config =>
-        config.valueOf() !== config.target.getAttribute("data-mapclay") ||
-        config.target.getAttribute("data-render") !== "fulfilled",
-    )
+    .filter(shouldRender)
     .map(renderWithConfig);
 };
 // }}}
