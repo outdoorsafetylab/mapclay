@@ -15,12 +15,13 @@ const general = {
 
 const generalPlugins = [
   node({ mainFields: ["module", "main"] }),
-  // production && terser(),
+  production && terser({
+    keep_fnames: true,
+  }),
   {
     name: "watch-anyway",
     buildStart() {
       const mapclayPath = join(process.cwd(), "mapclay", "src", "mapclay.mjs");
-      console.log("Watching:", mapclayPath);
       if (existsSync(mapclayPath)) {
         this.addWatchFile(mapclayPath);
       } else {
