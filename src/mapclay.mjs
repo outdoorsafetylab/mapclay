@@ -186,20 +186,20 @@ const healthCheck = renderer => {
  * @return {Promise} -- chanined promises of function calls
  */
 const runBySteps = renderer =>
-  renderer.steps
+  (renderer.steps ?? [])
     .reduce(
       (acc, func) =>
         acc
           .then(() => {
             if (renderer.results.at(-1).state === "stop") {
-              return { state: "stop" };
+              return { state: "stop", reason: "stop by previous step" };
             }
             // If dependencies not success, just skip this function
             if (func.depends) {
               const dependentResult = renderer.results.findLast(
                 res => res.func === func.depends,
               )?.state;
-              if (["skip", "fail"].includes(dependentResult)) {
+              if (dependentResult.match(/skip|fail/)) {
                 return { state: "skip" };
               }
             }
@@ -212,8 +212,8 @@ const runBySteps = renderer =>
             renderer.results.push({
               type: "render",
               func: func.valueOf(),
-              state: result?.state ? result?.state : "success",
-              result,
+              state: result?.state ?? "success",
+              result: result?.reason ?? result,
             }),
           )
           // Save fail result
@@ -234,6 +234,45 @@ const runBySteps = renderer =>
     )
     .then(() => renderer);
 
+const runByStepsForPrepare = (config) => {
+
+  let renderer = config
+
+  return steps => steps.reduce(
+    (acc, step) =>
+      acc
+        .then(async() => {
+          if (renderer.results.at(-1)?.state?.match(/fail|stop/)) {
+            return {state: 'stop', reason: 'stop by previous step'}
+          }
+          renderer = await step(renderer)
+          return renderer
+        })
+        // Save non-fail result
+        .then(result =>
+          renderer.results.push({
+            type: "prepare",
+            func: step.valueOf(),
+            state: result?.state ?? "success",
+            result: result?.reason ?? renderer,
+          }),
+        )
+        .catch(err => {
+          renderer.results.push({
+            type: "prepare",
+            func: step.valueOf(),
+            state: "fail",
+            result: err
+          })
+        })
+        .then(() => {
+          renderer.prepareCallback?.call(renderer, renderer.results);
+        }),
+    Promise.resolve(renderer)
+  )
+  .then(() => renderer)
+}
+
 /**
  * renderTargetWithConfig.
  *
@@ -246,44 +285,15 @@ const renderWithConfig = async config => {
   // Prepare for rendering
   config.results = [];
 
-  const preRender = [
+  const prepareSteps = [
     setValueByAliases,
     applyOtherConfig,
     setValueByAliases,
     prepareRenderer,
     healthCheck,
-  ].reduce(
-    (acc, step) =>
-      acc
-        .then(async value => {
-          if (value.results.at(-1)?.state === "stop") return value;
-          try {
-            const result = await step(value);
-            value.results.push({
-              type: "prepare",
-              func: step,
-              state: result.state ? result.state : "success",
-              result: result,
-            });
-            return result;
-          } catch (err) {
-            value.results.push({
-              type: "prepare",
-              func: step,
-              state: "stop",
-              result: err,
-            });
-            return value;
-          }
-        })
-        .then(value => {
-          value.prepareCallback?.call(value, value.results);
-          return value;
-        }),
-    Promise.resolve(config),
-  );
+  ]
 
-  const promise = preRender
+  const promise = runByStepsForPrepare(config)(prepareSteps)
     .then(renderer => runBySteps(renderer))
     .then(renderer => {
       const failToRender =
@@ -293,6 +303,7 @@ const renderWithConfig = async config => {
         renderer.results.find(r => r.state.match(/fail|stop/));
       const attribute = failToRender ? "unfulfilled" : "fulfilled";
       renderer?.target?.setAttribute("data-render", attribute);
+
       return renderer;
     });
 
