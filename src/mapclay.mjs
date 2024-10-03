@@ -367,8 +367,16 @@ const renderWith = converter => (element, configObj) => {
       }
       target.classList.add("mapclay");
       config.target = target;
+      target.setAttribute('data-render', 'rendering')
     }
     element.append(config.target);
+
+    if (CSS.supports(`width: ${config.width}`)) {
+      config.target.style.width = config.width
+    }
+    if (CSS.supports(`height: ${config.height}`)) {
+      config.target.style.height = config.height
+    }
 
     return config;
   };
