@@ -474,4 +474,3 @@ By default, `mapclay.render()` and `mapclay.renderByYaml()` dynamically import E
 ## See Also
 
 - MapML: https://maps4html.org/web-map-doc/
-- odyssey.js: http://cartodb.github.io/odyssey.js/
