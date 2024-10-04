@@ -169,22 +169,22 @@ const Renderer = class extends defaultExport {
   }
 
   // Apply vector layer for markers onto map
-  addMarkers(markers) {
-    markers.forEach(marker => {
-      const element = document.createElement("div");
-      element.innerHTML = this.svgForMarker;
-      element.title = marker.title;
-      element.classList.add("marker");
+  addMarker(config) {
+    const element = document.createElement("div");
+    element.innerHTML = this.svgForMarker;
+    element.title = config.title;
+    element.classList.add("marker");
 
-      const overlay = new ol.Overlay({
-        element: element,
-        position: marker.xy,
-        positioning: "bottom-center",
-        anchor: [0.5, 1],
-        stopEvent: false,
-      });
-      this.map.addOverlay(overlay);
+    const overlay = new ol.Overlay({
+      element: element,
+      position: config.xy,
+      positioning: "bottom-center",
+      anchor: [0.5, 1],
+      stopEvent: false,
     });
+    this.map.addOverlay(overlay);
+
+    return element
   }
 
   async addTileData({ map, data }) {

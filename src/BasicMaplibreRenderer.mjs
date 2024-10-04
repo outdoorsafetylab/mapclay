@@ -118,14 +118,14 @@ const Renderer = class extends defaultExport {
     }
   }
 
-  addMarkers(markers) {
-    markers.forEach(config => {
-      const marker = new this.maplibregl.Marker()
-        .setLngLat(config.xy)
-        .addTo(this.map);
-      marker.getElement().classList.add("marker");
-      marker.getElement().title = config.title;
-    });
+  addMarker(config) {
+    const marker = new this.maplibregl.Marker()
+      .setLngLat(config.xy)
+      .addTo(this.map);
+    marker.getElement().classList.add("marker");
+    marker.getElement().title = config.title;
+
+    return marker.getElement()
   }
 
   addTileData({ map, data }) {

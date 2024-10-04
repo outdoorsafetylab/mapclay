@@ -87,25 +87,21 @@ const Renderer = class extends defaultExport {
     }
   }
 
-  addMarkers(markers) {
-    const markerIcon = L.icon({
-      iconUrl: `https://unpkg.com/leaflet@${this.version}/dist/images/marker-icon.png`,
-      iconRetinaUrl: `https://unpkg.com/leaflet@${this.version}/dist/images/marker-icon-2x.png`,
-      shadowUrl: `https://unpkg.com/leaflet@${this.version}/dist/images/marker-shadow.png`,
+  addMarker(config) {
+    const markerIcon = L.divIcon({
+      html: this.svgForMarker,
+      className: "marker",
       iconSize: [25, 41],
       iconAnchor: [12, 41],
-      popupAnchor: [1, -34],
-      tooltipAnchor: [16, -28],
-      shadowSize: [41, 41],
     });
-    markers.forEach(config => {
-      const xy = Array.from(config.xy).reverse();
-      const marker = L.marker(xy, { icon: markerIcon })
-        .addTo(this.map)
-        .bindPopup(config.message);
-      marker.getElement().classList.add("marker");
-      marker.getElement().title = config.title;
-    });
+    const xy = Array.from(config.xy).reverse();
+    const marker = L.marker(xy, { icon: markerIcon })
+      .addTo(this.map)
+      .bindPopup(config.message);
+    marker.getElement().classList.add("marker");
+    marker.getElement().title = config.title;
+
+    return marker.getElement()
   }
 
   addTileData({ map, data }) {

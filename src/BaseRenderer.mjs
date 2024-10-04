@@ -288,7 +288,7 @@ export default class {
   addGPXFile() {
     return { state: "skip" };
   }
-  addMarkers() {
+  addMarker() {
     return { state: "skip" };
   }
   setControl() {
