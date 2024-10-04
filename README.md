@@ -1,5 +1,7 @@
 [![npm version](https://badge.fury.io/js/mapclay.svg)](https://badge.fury.io/js/mapclay)
 
+![](./assets/showcase_1.png)
+
 
 MapClay is a JavaScript library that allows you to create interactive maps using simple YAML or JSON configurations. It supports multiple map rendering engines, including Leaflet, Maplibre, and OpenLayers, making it flexible for various use cases.
 
