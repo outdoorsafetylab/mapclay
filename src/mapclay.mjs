@@ -59,9 +59,9 @@ const parseConfigsFromYaml = configText => {
     }
   });
 
-  if (configList.length === 0) [{}];
-
-  return configList;
+  return configList.length === 0
+    ? [{}]
+    : configList
 };
 // }}}
 // Get config from other file by 'apply' {{{
