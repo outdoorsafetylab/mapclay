@@ -133,7 +133,7 @@ const Renderer = class extends defaultExport {
   }
 
   setControl({ map, control, ol }) {
-    if (!control || Object.values(control).filter(v => v).length == 0)
+    if (!control || Object.values(control).filter(v => v).length === 0)
       return { state: "skip" };
 
     if (control.fullscreen === true) {

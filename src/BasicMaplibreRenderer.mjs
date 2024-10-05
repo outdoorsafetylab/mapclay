@@ -91,7 +91,7 @@ const Renderer = class extends defaultExport {
 
   // Configure controls
   setControl({ maplibregl, map, control }) {
-    if (!control || Object.values(control).filter(v => v).length == 0)
+    if (!control || Object.values(control).filter(v => v).length === 0)
       return { state: "skip" };
 
     if (control.fullscreen === true) {
