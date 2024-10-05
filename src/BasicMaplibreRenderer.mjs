@@ -198,7 +198,8 @@ const Renderer = class extends defaultExport {
     return this.map.project([lng, lat]);
   }
   unproject([x, y]) {
-    return this.map.unproject([x, y]);
+    const { lng, lat } = this.map.unproject([x, y])
+    return [lng, lat]
   }
 };
 
