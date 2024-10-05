@@ -367,7 +367,8 @@ const renderWith = converter => (element, configObj) => {
       }
       target.classList.add("mapclay");
       config.target = target;
-      target.setAttribute('data-render', 'rendering')
+      target.dataset.render = 'rendering'
+      target.dataset.mapclay = config.valueOf()
     }
     element.append(config.target);
 
