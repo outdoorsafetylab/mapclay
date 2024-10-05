@@ -14,7 +14,8 @@ const Renderer = class extends defaultExport {
   L = L;
 
   addMap({ target, center, zoom }) {
-    this.map = L.map(target).setView(center.reverse(), zoom);
+    const [x, y] = center
+    this.map = L.map(target).setView([y, x], zoom);
 
     // Update map by element size
     const resizeObserver = new ResizeObserver(() => {
