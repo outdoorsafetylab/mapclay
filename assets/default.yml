@@ -1,20 +1,23 @@
 aliases:
   use:
-    leaflet:
-      value: ./renderers/leaflet.mjs,
+    Leaflet:
+      value: ./dist/renderers/leaflet.mjs
       description: Leaflet is the leading open-source JavaScript library for mobile-friendly interactive maps. It has all the mapping features most developers ever need.
-    maplibre:
-      value: ./renderers/maplibre.mjs,
+    Maplibre:
+      value: ./dist/renderers/maplibre.mjs
       description: MapLibre GL JS is a TypeScript library that uses WebGL to render interactive maps from vector tiles in a browser. The customization of the map comply with the MapLibre Style Spec.
-    openlayers:
-      value: ./renderers/openlayers.mjs,
+    Openlayers:
+      value: ./dist/renderers/openlayers.mjs
       description: OpenLayers makes it easy to put a dynamic map in any web page. It can display map tiles, vector data and markers loaded from any source. OpenLayers has been developed to further the use of geographic information of all kinds.
   width:
+    One-Third: 33%
     Half: 50%
+    Three-Quarter: 75%
     Full: 100%
   height:
-    Half: 50vh
-    Full: 100vh
+    Small: 200px
+    Medium: 30vh
+    Huge: 75vh
   center:
     ARGENTINA Buenos Aires: [ -58.3816, -34.6037 ]
     BANGLADESH Dhaka: [ 90.4125, 23.8103 ]
@@ -37,7 +40,6 @@ aliases:
     TAIWAN Miaoli County: [120.8152, 24.5734]
     TAIWAN Nantou County: [120.9818101, 23.9512034]
     TAIWAN New Taipei City: [121.457, 25.062]
-    TAIWAN Penghu County: [119.5825, 23.5767]
     TAIWAN Pingtung County: [120.5502695, 22.5468588]
     TAIWAN Taichung City: [120.6736, 24.1477]
     TAIWAN Tainan City: [120.2067478, 22.9963617]
@@ -69,8 +71,6 @@ aliases:
     TAIWAN Rudymap: https://tile.happyman.idv.tw/map/moi_osm/{z}/{x}/{y}.png
     TAIWAN Happyman GPX: https://tile.happyman.idv.tw/map/gpxtrack/{z}/{x}/{y}.png
     TAIWAN Happyman MOI: https://tile.happyman.idv.tw/map/moi_osm/{z}/{x}/{y}.png
-    TAIWAN NLSC AERIAL: https://wmts.nlsc.gov.tw/wmts/PHOTO2/default/GoogleMapsCompatible/{z}/{y}/{x}
-    TAIWAN NLSC TOPO: https://wmts.nlsc.gov.tw/wmts/PHOTO_MIX/default/GoogleMapsCompatible/{z}/{y}/{x}
     TAIWAN TERRAIN-RGB:   https://osmhacktw.github.io/terrain-rgb/tiles/{z}/{x}/{y}.png
   WMTS:
     TAIWAN NLSC: https://wmts.nlsc.gov.tw/wmts
