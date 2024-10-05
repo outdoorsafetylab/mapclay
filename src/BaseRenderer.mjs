@@ -307,6 +307,10 @@ export default class {
     return { state: "skip" };
   }
 
+  restoreCamera() {
+    this.updateCamera({ center: this.center, zoom: this.zoom })
+  }
+
   showLayerSwitcher(data) {
     const wmtsRecords = data.filter(record => record.type === "wmts");
     const tileRecords = data.filter(record => record.type === "tile");
