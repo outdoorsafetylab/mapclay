@@ -89,16 +89,15 @@ const Renderer = class extends defaultExport {
   }
 
   addMarker(config) {
+    const svg = config.type === 'circle' ? this.svgForAnchor : this.svgForMarker
     const markerIcon = L.divIcon({
-      html: this.svgForMarker,
+      html: svg.html,
       className: "marker",
-      iconSize: [25, 41],
-      iconAnchor: [12, 41],
+      iconSize: svg.size,
     });
     const xy = Array.from(config.xy).reverse();
     const marker = L.marker(xy, { icon: markerIcon })
       .addTo(this.map)
-      .bindPopup(config.message);
     marker.getElement().classList.add("marker");
     marker.getElement().title = config.title;
 
