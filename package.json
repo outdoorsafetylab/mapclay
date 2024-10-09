@@ -18,16 +18,11 @@
   "scripts": {
     "watch": "npx rollup -c -w",
     "build": "npx rollup -c",
-    "lint": "npx eslint src"
+    "lint": "standard --fix"
   },
   "devDependencies": {
-    "@eslint/js": "^9.10.0",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-terser": "^0.4.4",
-    "eslint": "^9.10.0",
-    "eslint-plugin-import": "^2.30.0",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^7.1.0",
     "globals": "^15.9.0",
     "rollup": "^4.21.2"
   },
