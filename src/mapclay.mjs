@@ -360,8 +360,8 @@ const renderWith = converter => (element, configObj) => {
     if (shouldRender(config)) {
       const target = document.createElement('div')
       if (config.id) {
-        target.id = config.id
-        target.title = `ID: ${config.id}`
+        target.id = config.id.replaceAll('\x20', '_')
+        target.title = `ID: ${target.id}`
       }
       target.classList.add('mapclay')
       config.target = target
