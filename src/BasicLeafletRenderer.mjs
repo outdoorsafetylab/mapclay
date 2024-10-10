@@ -93,6 +93,7 @@ const Renderer = class extends defaultExport {
       html: svg.html,
       className: 'marker',
       iconSize: svg.size,
+      iconAnchor: svg.anchor,
     })
     const xy = Array.from(config.xy).reverse()
     const marker = L.marker(xy, { icon: markerIcon })
