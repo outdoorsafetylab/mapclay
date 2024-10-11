@@ -171,6 +171,7 @@ const Renderer = class extends defaultExport {
 
   // Apply vector layer for markers onto map
   addMarker (config) {
+    const position = this.ol.proj.fromLonLat(config.xy, this.crs)
     const element = document.createElement('div')
     element.innerHTML = config.type === 'circle' ? this.svgForAnchor.html : this.svgForMarker.html
     element.title = config.title
@@ -178,7 +179,7 @@ const Renderer = class extends defaultExport {
 
     const overlay = new ol.Overlay({
       element,
-      position: config.xy,
+      position,
       positioning: config.type === 'circle' ? 'center-center' : 'bottom-center',
     })
     this.map.addOverlay(overlay)
@@ -250,8 +251,13 @@ const Renderer = class extends defaultExport {
   updateCamera (options, useAnimation) {
     const map = this.map
     const view = map.getView()
+    const xy = this.ol.proj.fromLonLat(options.center, this.crs)
     if (useAnimation) {
-      flyTo(map, { center: options.center, zoom: options.zoom })
+      flyTo(
+        map,
+        { center: xy, zoom: options.zoom },
+        () => null,
+      )
     } else {
       view.animate({
         center: options.center,
