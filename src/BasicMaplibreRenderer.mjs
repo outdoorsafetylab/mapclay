@@ -118,13 +118,22 @@ const Renderer = class extends defaultExport {
   }
 
   addMarker (config) {
-    const marker = new this.maplibregl.Marker()
+    const options = config.type === 'circle'
+      ? {
+          element: new window.DOMParser()
+            .parseFromString(this.svgForAnchor.html, 'image/svg+xml')
+            .querySelector('svg'),
+        }
+      : {}
+    const marker = new this.maplibregl.Marker(options)
       .setLngLat(config.xy)
       .addTo(this.map)
-    marker.getElement().classList.add('marker')
-    marker.getElement().title = config.title
+    const element = marker.getElement()
+    element.classList.add('marker')
+    element.title = config.title
+    element.remove = () => marker.remove()
 
-    return marker.getElement()
+    return element
   }
 
   addTileData ({ map, data }) {

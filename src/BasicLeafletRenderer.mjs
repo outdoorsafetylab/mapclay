@@ -98,10 +98,12 @@ const Renderer = class extends defaultExport {
     const xy = Array.from(config.xy).reverse()
     const marker = L.marker(xy, { icon: markerIcon })
       .addTo(this.map)
-    marker.getElement().classList.add('marker')
-    marker.getElement().title = config.title
+    const element = marker.getElement()
+    element.classList.add('marker')
+    element.title = config.title
 
-    return marker.getElement()
+    element.remove = () => this.map.removeLayer(marker)
+    return element
   }
 
   addTileData ({ map, data }) {

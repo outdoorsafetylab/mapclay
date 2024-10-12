@@ -184,6 +184,7 @@ const Renderer = class extends defaultExport {
     })
     this.map.addOverlay(overlay)
 
+    element.remove = () => this.map.removeOverlay(overlay)
     return element
   }
 
