@@ -268,14 +268,19 @@ const Renderer = class extends defaultExport {
     }
   }
 
-  // FIXME Beaware of user projection in ol/proj
-  project ([x, y]) {
-    return this.map.getPixelFromCoordinate([x, y])
-  }
+  project = ([x, y]) =>
+    this.map.getPixelFromCoordinate(
+      this.ol.proj.fromLonLat(
+        [x, y],
+        this.crs,
+      ),
+    )
 
-  unproject ([x, y]) {
-    return this.map.getCoordinateFromPixel([x, y])
-  }
+  unproject = ([x, y]) =>
+    this.ol.proj.toLonLat(
+      this.map.getCoordinateFromPixel([x, y]),
+      this.crs,
+    )
 }
 
 // Pan map to a specific location
