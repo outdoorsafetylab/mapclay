@@ -174,8 +174,6 @@ const Renderer = class extends defaultExport {
     const position = this.ol.proj.fromLonLat(config.xy, this.crs)
     const element = document.createElement('div')
     element.innerHTML = config.type === 'circle' ? this.svgForAnchor.html : this.svgForMarker.html
-    element.title = config.title
-    element.classList.add('marker')
 
     const overlay = new ol.Overlay({
       element,
@@ -184,6 +182,7 @@ const Renderer = class extends defaultExport {
     })
     this.map.addOverlay(overlay)
 
+    element.classList.add('marker')
     element.remove = () => this.map.removeOverlay(overlay)
     return element
   }

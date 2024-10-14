@@ -130,7 +130,6 @@ const Renderer = class extends defaultExport {
       .addTo(this.map)
     const element = marker.getElement()
     element.classList.add('marker')
-    element.title = config.title
     element.remove = () => marker.remove()
 
     return element
