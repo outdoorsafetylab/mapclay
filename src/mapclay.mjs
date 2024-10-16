@@ -1,23 +1,22 @@
 import { load as yamlLoad, loadAll as yamlLoadAll } from 'js-yaml'
 
 // Renderer list for quick start {{{
-const dir = new URL('./', import.meta.url)
 const defaultAliases = Object.freeze({
   use: {
     Leaflet: {
-      value: dir + 'renderers/leaflet.mjs',
+      value: './renderers/leaflet.mjs',
       url: 'https://github.com/outdoorsafetylab/mapclay/blob/HEAD/src/BasicLeafletRenderer.mjs',
       description:
         'Leaflet is the leading open-source JavaScript library for mobile-friendly interactive maps. It has all the mapping features most developers ever need.',
     },
     Maplibre: {
-      value: dir + 'renderers/maplibre.mjs',
+      value: './renderers/maplibre.mjs',
       url: 'https://github.com/outdoorsafetylab/mapclay/blob/HEAD/src/BasicMaplibreRenderer.mjs',
       description:
         'MapLibre GL JS is a TypeScript library that uses WebGL to render interactive maps from vector tiles in a browser. The customization of the map comply with the MapLibre Style Spec.',
     },
     Openlayers: {
-      value: dir + 'renderers/openlayers.mjs',
+      value: './renderers/openlayers.mjs',
       url: 'https://github.com/outdoorsafetylab/mapclay/blob/HEAD/src/BasicOpenlayersRenderer.mjs',
       description:
         'OpenLayers makes it easy to put a dynamic map in any web page. It can display map tiles, vector data and markers loaded from any source. OpenLayers has been developed to further the use of geographic information of all kinds.',
