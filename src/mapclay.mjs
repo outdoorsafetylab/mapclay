@@ -159,9 +159,13 @@ const prepareRenderer = async config => {
     renderer = config
   } else if (config.use.steps) {
     renderer = config.use
-  } else {
+  } else if (typeof config.use === 'function') {
+    renderer = new config.use()
+  } else if (typeof config.use === 'string') {
     const RendererClass = (await import(config.use)).default
     renderer = new RendererClass()
+  } else {
+    throw `Cannot get Renderer by config.use ${config.use}`
   }
 
   Object.entries(config).forEach(([key, value]) => (renderer[key] = value))
