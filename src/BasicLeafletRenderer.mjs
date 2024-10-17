@@ -123,7 +123,8 @@ const Renderer = class extends defaultExport {
         }
         baseLayers[title] = layer
       })
-      L.control.layers(baseLayers, overlayMaps).addTo(map)
+      const layerControl = L.control.layers(baseLayers, overlayMaps).addTo(map)
+      map.removeControl(layerControl)
     }
   }
 
