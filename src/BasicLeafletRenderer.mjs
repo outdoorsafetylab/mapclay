@@ -171,11 +171,11 @@ const Renderer = class extends defaultExport {
   }
 
   project ([lng, lat]) {
-    return this.map.latLngToLayerPoint([lat, lng])
+    return this.map.latLngToContainerPoint([lat, lng])
   }
 
   unproject ([x, y]) {
-    const latLng = this.map.layerPointToLatLng([x, y])
+    const latLng = this.map.containerPointToLatLng([x, y])
     return [latLng.lng, latLng.lat]
   }
 }
