@@ -118,11 +118,10 @@ const Renderer = class extends defaultExport {
   }
 
   addMarker (config) {
-    const options = config.type === 'circle'
+    const options = config.element
       ? {
-          element: new window.DOMParser()
-            .parseFromString(this.svgForAnchor.html, 'image/svg+xml')
-            .querySelector('svg'),
+          element: config.element,
+          anchor: config.type === 'pin' ? 'bottom' : 'center',
         }
       : {}
     const marker = new this.maplibregl.Marker(options)
