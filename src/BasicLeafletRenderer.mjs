@@ -90,7 +90,7 @@ const Renderer = class extends defaultExport {
   addMarker (config) {
     const options = config.element
       ? {
-          html: config.element,
+          html: config.element.innerHTML,
           iconSize: config.size,
           iconAnchor: config.anchor,
         }
