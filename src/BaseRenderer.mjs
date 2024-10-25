@@ -1,6 +1,10 @@
 import { BasicDrawComponent, addSimpleSelector } from './BasicDrawComponent'
 
-// Dynamically import CSS, simply add stylesheet at <head>
+/**
+ * loadCSS.
+ * @description Dynamically import CSS, simply add stylesheet at <head>
+ * @param {String} url
+ */
 export const loadCSS = url => {
   if (document.head.querySelector(`link[href="${url}"]`)) return
 
@@ -13,7 +17,10 @@ export const loadCSS = url => {
   document.head.appendChild(link)
 }
 
-// Class for valid options {{{
+/**
+ * MapOption.
+ * @description Class for valid options
+ */
 export class MapOption {
   constructor ({ name, desc, example, exampleDesc, isValid }) {
     this.name = name
@@ -27,8 +34,10 @@ export class MapOption {
     return this.name
   }
 }
-// }}}
 
+/**
+ * Class: base class for Map Renderer
+ */
 export default class {
   // properties {{{
   width = '300px'

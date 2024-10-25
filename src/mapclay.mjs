@@ -1,6 +1,13 @@
 import { load as yamlLoad, loadAll as yamlLoadAll } from 'js-yaml'
 
-// Renderer list for quick start {{{
+/**
+ * Renderer: render target HTMLElement by step functions
+ * @typedef {Object} Renderer
+ * @property {Function[]} steps - functions for rendering
+ * @property {HTMLElement} target - target HTMLElement
+ */
+
+/** VAR: List of Renderer for quickstart */
 const defaultAliases = Object.freeze({
   use: {
     Leaflet: {
@@ -23,9 +30,11 @@ const defaultAliases = Object.freeze({
     },
   },
 })
+
 /**
- * just a single default converter for config
+ * applyDefaultAliases.
  *
+ * @description just a single default converter for config
  * @param {Object} config -- original config
  * @return {Object} -- patched config
  */
@@ -38,8 +47,7 @@ const applyDefaultAliases = config => ({
     ...(config.aliases ?? {}),
   },
 })
-// }}}
-// Parse yaml content with raw text {{{
+
 /**
  * parseConfigsFromYaml.
  *
@@ -62,8 +70,8 @@ const parseConfigsFromYaml = configText => {
     ? [{}]
     : configList
 }
-// }}}
-// Get config from other file by 'apply' {{{
+
+/** VAR: Get config from other file by 'apply' */
 const appliedConfigs = {}
 
 /**
@@ -85,8 +93,6 @@ const fetchConfig = async url => {
     })
 }
 
-// }}}
-// Set option value by aliases {{{
 /**
  * Replace aliases in each property by property 'aliases'.
  * An alias must starts with upper-case
@@ -121,8 +127,6 @@ const setValueByAliases = config => {
 
   return config
 }
-// }}}
-// Render each map container by config {{{
 
 /**
  * applyOtherConfig.
@@ -172,7 +176,11 @@ const prepareRenderer = async config => {
   return renderer
 }
 
-// TODO health check
+/**
+ * healthCheck.
+ * @description check Renderer is valid
+ * @param {Renderer} renderer
+ */
 const healthCheck = renderer => {
   if (!renderer.steps) {
     renderer.steps = []
@@ -236,6 +244,11 @@ const runBySteps = renderer =>
     )
     .then(() => renderer)
 
+/**
+ * runByStepsForPrepare.
+ * @description chain step functions for preparing Renderer
+ * @param {Object} config
+ */
 const runByStepsForPrepare = (config) => {
   let renderer = config
 
@@ -312,12 +325,12 @@ const renderWithConfig = async config => {
 
   return promise
 }
-// }}}
-// Render target by config {{{
+
 /**
- * setValueOf. apply valueOf for compare
- *
+ * setValueOf.
+ * @description apply valueOf for compare
  * @param {Object} config
+ * @return {Object} config
  */
 const setValueOf = config => {
   config.valueOf = () =>
@@ -328,8 +341,8 @@ const setValueOf = config => {
 }
 
 /**
- * should render current config, useful when config.target is a rendered map
- *
+ * shouldRender.
+ * @description should render current config, useful when config.target is a rendered map
  * @param {Object} config
  */
 const shouldRender = config =>
@@ -339,6 +352,7 @@ const shouldRender = config =>
   !(config.target.getAttribute('data-render') === 'fulfilled')
 
 /**
+ * renderWith
  * @param {HTMLElement} target Element of map(s) container
  * @param {Object[]|Object} configObj - Config(s) for each map. Scope into array if it is an Object
  * @param {Object} options - Valid optoins: "rendererList" (list of renderer info) and "renderer" (Class for renderer)
@@ -390,31 +404,36 @@ const renderWith = converter => (element, configObj) => {
     .filter(shouldRender)
     .map(renderWithConfig)
 }
-// }}}
-// Render target element by textContent {{{
-const renderByYamlWith =
-  (converter = null) =>
-    async (target, text = null) => {
-      const yamlText = text ?? target.textContent
-      const configList = parseConfigsFromYaml(yamlText)
-      return renderWith(converter)(target, configList)
-    }
-// }}}
-// Render target by <script> tag only {{{
-const renderByScriptTargetWith =
-  (converter = null) =>
-    async () => {
-      const script = document.currentScript
-      const cssSelector =
+
+/**
+ * renderByYamlWith.
+ *
+ * @param {Function} converter - convert config to another config
+ */
+const renderByYamlWith = (converter = null) =>
+  async (target, text = null) => {
+    const yamlText = text ?? target.textContent
+    const configList = parseConfigsFromYaml(yamlText)
+    return renderWith(converter)(target, configList)
+  }
+
+/**
+ * renderByScriptTargetWith.
+ *
+ * @param {Function} converter - convert config to another config
+ */
+const renderByScriptTargetWith = (converter = null) =>
+  async () => {
+    const script = document.currentScript
+    const cssSelector =
       script?.getAttribute('data-target') ??
       URL.parse(script?.src)?.searchParams?.get('target')
-      const containers = document.querySelectorAll(cssSelector)
+    const containers = document.querySelectorAll(cssSelector)
 
-      if (!cssSelector || !containers) return
+    if (!cssSelector || !containers) return
 
-      containers.forEach(target => renderByYamlWith(converter)(target))
-    }
-// }}}
+    containers.forEach(target => renderByYamlWith(converter)(target))
+  }
 
 const render = renderWith(applyDefaultAliases)
 const renderByYaml = renderByYamlWith(applyDefaultAliases)
