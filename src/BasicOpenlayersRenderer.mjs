@@ -172,7 +172,8 @@ const Renderer = class extends defaultExport {
   // Apply vector layer for markers onto map
   addMarker (config) {
     const element = config.element ?? document.createElement('div')
-    if (!element.children) element.innerHTML = this.svgPin
+    if (element.children.length === 0) element.innerHTML = this.svgPin.html
+    config.type = 'pin'
 
     const position = this.ol.proj.fromLonLat(config.xy, this.crs)
     const overlay = new ol.Overlay({
