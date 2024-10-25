@@ -18,9 +18,10 @@
     "yaml"
   ],
   "scripts": {
-    "watch": "npx rollup -c -w",
-    "build": "npx rollup -c",
-    "lint": "standard --fix"
+    "watch": "npx rollup -c scripts/rollup.config.js -w",
+    "build": "npx rollup -c scripts/rollup.config.js",
+    "lint": "standard --fix",
+    "docs": "jsdoc -c scripts/jsdoc.conf src/;"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^15.2.3",

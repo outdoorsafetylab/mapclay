@@ -1,3 +1,5 @@
+docs/
+doc-coverage/
 package-lock.json
 pnpm-lock.yaml
 # Logs
