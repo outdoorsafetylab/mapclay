@@ -4,7 +4,9 @@ import {
   renderByYamlWith,
   renderByScriptTargetWith,
 } from './mapclay.mjs'
-import 'maplibre-gl'
+/* eslint-disable no-unused-vars */
+import * as M from 'maplibre-gl'
+/* eslint-enable */
 import { addProtocols } from 'maplibre-gl-vector-text-protocol'
 import { TerraDrawMapLibreGLAdapter } from 'terra-draw'
 loadCSS('https://unpkg.com/maplibre-gl@4.5.2/dist/maplibre-gl.css')
@@ -15,7 +17,9 @@ const Renderer = class extends defaultExport {
   bearing = 0
   style = 'https://demotiles.maplibre.org/style.json'
   link = false
-  maplibregl = window.maplibregl
+  /* eslint-disable no-undef */
+  maplibregl = maplibregl
+  /* eslint-enable */
 
   // Options {{{
   static validOptions = this.validOptions.concat([
