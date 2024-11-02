@@ -24,6 +24,7 @@
     "docs": "jsdoc -c scripts/jsdoc.conf src/;"
   },
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^28.0.1",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-terser": "^0.4.4",
     "globals": "^15.9.0",
@@ -34,7 +35,7 @@
     "leaflet": "^1.9.4",
     "maplibre-gl": "^4.6.0",
     "maplibre-gl-vector-text-protocol": "github:jimmyrocks/maplibre-gl-vector-text-protocol",
-    "ol": "^10.1.0",
+    "ol": "^10.2.1",
     "proj4": "^2.12.0",
     "terra-draw": "1.0.0-beta.1"
   },

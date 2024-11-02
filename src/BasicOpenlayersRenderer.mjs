@@ -11,7 +11,7 @@ import * as control from 'ol/control'
 import * as format from 'ol/format'
 import * as geom from 'ol/geom'
 import * as layer from 'ol/layer'
-import * as source from 'ol/source'
+import { OSM, Raster, TileDebug, Vector, VectorTile, WMTS, XYZ } from 'ol/source'
 import * as style from 'ol/style'
 import * as proj from 'ol/proj'
 import proj4 from 'proj4'
@@ -32,7 +32,7 @@ const Renderer = class extends defaultExport {
     format,
     geom,
     layer,
-    source,
+    source: { OSM, Raster, TileDebug, Vector, VectorTile, WMTS, XYZ },
     style,
     proj: { ...proj, proj4: olProj4 },
   }

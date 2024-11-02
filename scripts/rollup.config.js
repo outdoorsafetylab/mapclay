@@ -1,5 +1,6 @@
 import node from '@rollup/plugin-node-resolve'
 import terser from '@rollup/plugin-terser'
+import commonjs from '@rollup/plugin-commonjs'
 import { join } from 'path'
 import { existsSync } from 'fs'
 
@@ -15,6 +16,7 @@ const general = {
 
 const generalPlugins = [
   node({ mainFields: ['module', 'main'] }),
+  commonjs(),
   production && terser({
     keep_fnames: true,
   }),
