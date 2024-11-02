@@ -64,15 +64,11 @@ const Renderer = class extends defaultExport {
     const crsString = this.validateOption('crs', crs)
       ? crs
       : (() => {
-          console.warn(
-            `Invalid Coordinate System: ${crs}, set "EPSG:4326" instead`,
-          )
+          console.warn(`Invalid Coordinate System: ${crs}, set "EPSG:4326" instead`)
           return crs
         })()
     const projection = await ol.proj.proj4.fromEPSGCode(crsString).catch(() => {
-      console.warn(
-        `Fail to retrieve Coordinate System ${crsString}, Use ${crs} instead`,
-      )
+      console.warn(`Fail to retrieve Coordinate System ${crsString}, Use ${crs} instead`)
     })
     ol.proj.setUserProjection(projection)
     return ol.proj.getUserProjection()
