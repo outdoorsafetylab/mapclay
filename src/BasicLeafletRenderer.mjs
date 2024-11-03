@@ -169,13 +169,31 @@ const Renderer = class extends defaultExport {
     }
   }
 
-  updateCamera (options, animation) {
-    const latLon = L.latLng(options.center[1], options.center[0])
-    if (animation) {
-      this.map.flyTo(latLon, options.zoom)
-    } else {
-      this.map.setView(latLon, options.zoom)
+  async updateCamera ({ center, zoom, bounds, animation, padding, duration }) {
+    const latLon = center ? L.latLng(center[1], center[0]) : this.map.getCenter()
+    const options = {
+      animate: animation ?? false,
+      padding: [padding, padding],
+      duration: (duration ?? 250) / 1000,
     }
+
+    if (bounds) {
+      const [[w, s], [e, n]] = bounds
+      const latLngBounds = new this.L.LatLngBounds([[s, w], [n, e]])
+      if (!latLngBounds.isValid()) {
+        throw new Error('Bounds are not valid.')
+      }
+      const target = this.map._getBoundsCenterZoom(latLngBounds, options)
+      this.map.flyTo(target.center, target.zoom, options)
+    } else if (animation) {
+      this.map.flyTo(latLon, zoom ?? this.map.getZoom(), options)
+    } else {
+      this.map.setView(latLon, zoom)
+    }
+
+    return new Promise(resolve => {
+      setTimeout(resolve, duration ?? 0)
+    })
   }
 
   project ([lng, lat]) {

@@ -5,7 +5,7 @@ import {
   renderByScriptTargetWith,
 } from './mapclay.mjs'
 /* eslint-disable-next-line no-unused-vars */
-import * as M from 'maplibre-gl'
+import maplibregl from 'maplibre-gl'
 import { addProtocols } from 'maplibre-gl-vector-text-protocol'
 import { TerraDrawMapLibreGLAdapter } from 'terra-draw'
 loadCSS('https://unpkg.com/maplibre-gl@4.5.2/dist/maplibre-gl.css')
@@ -190,16 +190,25 @@ const Renderer = class extends defaultExport {
     }
   }
 
-  updateCamera (options, useAnimation) {
-    if (useAnimation) {
+  async updateCamera ({ bounds, center, zoom, animation, ...others }, useAnimation) {
+    if (bounds) {
+      this.map.fitBounds(bounds, { linear: true, ...others })
+    } else if (animation || useAnimation) {
       this.map.flyTo({
-        center: options.center,
-        zoom: options.zoom,
+        center: center ?? this.map.getCenter(),
+        zoom: zoom ?? this.map.getZoom(),
+        ...others,
       })
     } else {
-      this.map.setCenter(options.center)
-      this.map.setZoom(options.zoom)
+      this.map.setCenter(center)
+      this.map.setZoom(zoom)
     }
+
+    return new Promise(resolve => {
+      this.map.on('zoomend', () => {
+        resolve('zoomend')
+      })
+    })
   }
 
   project ([lng, lat]) {

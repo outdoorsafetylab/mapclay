@@ -184,20 +184,20 @@ const Renderer = class extends defaultExport {
     return element
   }
 
-  async addTileData ({ map, data }) {
+  async addTileData ({ map, data, ol }) {
     const tileData = data.filter(record => record.type === 'tile')
 
     const styleDatum = tileData.filter(datum => datum.type === 'style')[0]
     if (!styleDatum && tileData.length === 0) {
       const baseLayer = new layer.Tile({
-        source: new source.OSM(),
+        source: new ol.source.OSM(),
         title: 'OSM Carto',
       })
       map.addLayer(baseLayer)
     } else {
       tileData.forEach(datum => {
         const tileLayer = new layer.Tile({
-          source: new source.XYZ({ url: datum.url }),
+          source: new ol.source.XYZ({ url: datum.url }),
           title: datum.title ? datum.title : 'Anonymous',
         })
         map.addLayer(tileLayer)
@@ -245,23 +245,25 @@ const Renderer = class extends defaultExport {
     // }
   }
 
-  updateCamera (options, useAnimation) {
+  async updateCamera ({ center, animation, zoom, bounds, duration, padding }) {
     const map = this.map
     const view = map.getView()
-    const xy = this.ol.proj.fromLonLat(options.center, this.crs)
-    if (useAnimation) {
-      flyTo(
-        map,
-        { center: xy, zoom: options.zoom },
-        () => null,
-      )
+    center = center ? this.ol.proj.fromLonLat(center, this.crs) : view.getCenter()
+    zoom = zoom ?? view.getZoom()
+
+    if (bounds) {
+      const boundsTransformed = bounds
+        .map(lonLat => this.ol.proj.fromLonLat(lonLat, this.crs))
+      view.fit(boundsTransformed.flat(), { duration, padding: Array(4).fill(padding) })
+    } else if (animation) {
+      view.animate({ center, zoom, duration })
     } else {
-      view.animate({
-        center: options.center,
-        zoom: options.zoom,
-        duration: 300,
-      })
+      view.setView(center, zoom)
     }
+
+    return new Promise(resolve => {
+      setTimeout(resolve, duration ?? 0)
+    })
   }
 
   project = ([x, y]) =>
@@ -277,46 +279,6 @@ const Renderer = class extends defaultExport {
       this.map.getCoordinateFromPixel([x, y]),
       this.crs,
     )
-}
-
-// Pan map to a specific location
-function flyTo (map, status, done) {
-  const duration = 2500
-  const view = map.getView()
-  const nextZoom = status.zoom ? status.zoom : view.getZoom()
-  const nextCenter = status.center ? status.center : view.center
-
-  let parts = 2
-  let called = false
-  function callback (complete) {
-    --parts
-    if (called) return
-    if (parts === 0 || !complete) {
-      called = true
-      done(complete)
-    }
-  }
-
-  // Move view to the given location
-  view.animate(
-    {
-      center: nextCenter,
-      duration,
-    },
-    callback,
-  )
-  // At the same time, zoom out and zoom in
-  view.animate(
-    {
-      zoom: (view.getZoom() + nextZoom) / 2 - 1,
-      duration: duration / 2,
-    },
-    {
-      zoom: nextZoom,
-      duration: duration / 2,
-    },
-    callback,
-  )
 }
 
 const converter = config => ({ ...config, use: Renderer })
