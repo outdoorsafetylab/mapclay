@@ -443,20 +443,6 @@ use: Maplibre
 console('This is the second YAML doc');
 ```
 
-### Strictly use a default renderer
-
-By default, `mapclay.render()` and `mapclay.renderByYaml()` dynamically import ES6 module by option `use`. It takes time and may fails. If you want to stick to a single Renderer, try to replace script URL with default Renderers:
-
-```html
-<!-- Specify Renderer by use option -->
-<script src='https://unpkg.com/mapclay/dist/mapclay.js'></script>
-
-<!-- Can only use Renderer comes from the following packages -->
-<script src='https://unpkg.com/mapclay/dist/renderers/leaflet.js'></script>
-<script src='https://unpkg.com/mapclay/dist/renderers/maplibre.js'></script>
-<script src='https://unpkg.com/mapclay/dist/renderers/openlayers.js'></script>
-```
-
 ## TODOs
 
 - Features
