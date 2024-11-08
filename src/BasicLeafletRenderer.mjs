@@ -206,12 +206,4 @@ const Renderer = class extends defaultExport {
   }
 }
 
-const converter = config => ({ ...config, use: Renderer })
-const render = renderWith(converter)
-const renderByYaml = renderByYamlWith(converter)
-const renderByScriptTarget = renderByScriptTargetWith(converter)
-
-globalThis.mapclay = { render, renderByYaml }
-
-export { render, renderByYaml, renderByScriptTarget }
 export default Renderer
