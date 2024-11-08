@@ -23,7 +23,7 @@ const generalPlugins = [
   {
     name: 'watch-anyway',
     buildStart () {
-      const mapclayPath = join(process.cwd(), 'mapclay', 'src', 'mapclay.mjs')
+      const mapclayPath = join(process.cwd(), 'src/mapclay.mjs')
       if (existsSync(mapclayPath)) {
         this.addWatchFile(mapclayPath)
       } else {
