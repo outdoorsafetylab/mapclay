@@ -1,3 +1,4 @@
+/** Import */
 import {
   TerraDraw,
   TerraDrawSelectMode,
@@ -9,7 +10,13 @@ import {
   TerraDrawRenderMode,
 } from 'terra-draw'
 
-// ref: https://github.com/JamesLMilner/terra-draw/blob/main/guides/4.MODES.md#selection-mode
+/**
+ * BasicDrawComponent.
+ * ref: https://github.com/JamesLMilner/terra-draw/blob/main/guides/4.MODES.md#selection-mode
+ * @param {TerraDrawBaseAdapter} adapter
+ * @param {Object} options
+ * @return TerraDratxw
+ */
 export const BasicDrawComponent = (adapter, options = {}) =>
   new TerraDraw({
     adapter,
@@ -53,6 +60,13 @@ export const BasicDrawComponent = (adapter, options = {}) =>
     ...options,
   })
 
+/**
+ * addSimpleSelector.
+ *
+ * @param {HTMLElement} target
+ * @param {TerraDraw} draw
+ * @param {Object} options
+ */
 export const addSimpleSelector = (target, draw, options = {}) => {
   const selector = document.createElement('select')
   target.appendChild(selector)

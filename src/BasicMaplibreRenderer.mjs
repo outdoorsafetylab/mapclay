@@ -1,16 +1,13 @@
 import defaultExport, { MapOption, loadCSS } from './BaseRenderer'
-import {
-  renderWith,
-  renderByYamlWith,
-  renderByScriptTargetWith,
-} from './mapclay.mjs'
 /* eslint-disable-next-line no-unused-vars */
 import maplibregl from 'maplibre-gl'
 import { addProtocols } from 'maplibre-gl-vector-text-protocol'
 import { TerraDrawMapLibreGLAdapter } from 'terra-draw'
 loadCSS('https://unpkg.com/maplibre-gl@4.5.2/dist/maplibre-gl.css')
 
+/** class: Openlayers */
 const Renderer = class extends defaultExport {
+  /** fields */
   id = 'maplibre'
   pitch = 0
   bearing = 0
@@ -19,7 +16,7 @@ const Renderer = class extends defaultExport {
   /* eslint-disable-next-line no-undef */
   maplibregl = maplibregl
 
-  // Options {{{
+  /** options */
   static validOptions = this.validOptions.concat([
     new MapOption({
       name: 'pitch',
@@ -50,8 +47,8 @@ const Renderer = class extends defaultExport {
       isValid: value => URL.parse(value),
     }),
   ])
-  // }}}
 
+  /** options: center, zoom, pitch, bearing */
   async addMap ({
     maplibregl,
     target,
@@ -84,6 +81,7 @@ const Renderer = class extends defaultExport {
     })
   }
 
+  /** options: draw */
   getTerraDrawAdapter ({ maplibregl, map, draw }) {
     if (!draw) return { state: 'skip' }
 
@@ -91,7 +89,7 @@ const Renderer = class extends defaultExport {
     return this.terraDrawAdapter
   }
 
-  // Configure controls
+  /** options: control */
   setControl ({ maplibregl, map, control }) {
     if (!control || Object.values(control).filter(v => v).length === 0) { return { state: 'skip' } }
 
@@ -106,7 +104,7 @@ const Renderer = class extends defaultExport {
     }
   }
 
-  // Configure extra stuff
+  /** options: debug, eval */
   setExtra (config) {
     const { map, debug } = config
     if (!debug && !config.eval) return { state: 'skip' }
@@ -119,23 +117,7 @@ const Renderer = class extends defaultExport {
     }
   }
 
-  addMarker (config) {
-    const options = config.element
-      ? {
-          element: config.element,
-          anchor: config.type === 'pin' ? 'bottom' : 'center',
-        }
-      : {}
-    const marker = new this.maplibregl.Marker(options)
-      .setLngLat(config.xy)
-      .addTo(this.map)
-    const element = marker.getElement()
-    element.classList.add('marker')
-    element.remove = () => marker.remove()
-
-    return element
-  }
-
+  /** options: data */
   addTileData ({ map, data }) {
     const tileData = data.filter(d => d.type === 'tile')
     if (tileData.length === 0) return { state: 'skip' }
@@ -153,6 +135,7 @@ const Renderer = class extends defaultExport {
     map.setStyle(style)
   }
 
+  /** options: data.gpx */
   async addGPXFile ({ maplibregl, map, data }) {
     const gpxUrl = data.find(record => record.type === 'gpx')
     if (!gpxUrl) return { state: 'skip' }
@@ -190,6 +173,25 @@ const Renderer = class extends defaultExport {
     }
   }
 
+  /** actions: marker */
+  addMarker (config) {
+    const options = config.element
+      ? {
+          element: config.element,
+          anchor: config.type === 'pin' ? 'bottom' : 'center',
+        }
+      : {}
+    const marker = new this.maplibregl.Marker(options)
+      .setLngLat(config.xy)
+      .addTo(this.map)
+    const element = marker.getElement()
+    element.classList.add('marker')
+    element.remove = () => marker.remove()
+
+    return element
+  }
+
+  /** actions: camera */
   async updateCamera ({ bounds, center, zoom, animation, ...others }, useAnimation) {
     if (bounds) {
       this.map.fitBounds(bounds, { linear: true, ...others })
@@ -211,6 +213,7 @@ const Renderer = class extends defaultExport {
     })
   }
 
+  /** utils: projection */
   project ([lng, lat]) {
     return this.map.project([lng, lat])
   }
@@ -221,4 +224,5 @@ const Renderer = class extends defaultExport {
   }
 }
 
+/** export */
 export default Renderer

@@ -1,9 +1,4 @@
 import defaultExport, { MapOption, loadCSS } from './BaseRenderer'
-import {
-  renderWith,
-  renderByYamlWith,
-  renderByScriptTargetWith,
-} from './mapclay'
 import { TerraDrawOpenLayersAdapter } from 'terra-draw'
 
 import * as ol from 'ol'
@@ -18,7 +13,9 @@ import proj4 from 'proj4'
 import * as olProj4 from 'ol/proj/proj4'
 loadCSS('https://cdn.jsdelivr.net/npm/ol@10.1.0/ol.css')
 
+/** class: Openlayers */
 const Renderer = class extends defaultExport {
+  /** fields */
   id = 'openlayers'
   crs = 'EPSG:4326'
   control = {
@@ -54,6 +51,30 @@ const Renderer = class extends defaultExport {
     }),
   ])
 
+  /** step: cursor */
+  setCursor ({ map }) {
+    map.getViewport().style.cursor = 'grab'
+    map.on('pointerdrag', _ => {
+      map.getViewport().style.cursor = 'grabbing'
+    })
+    map.on('pointerup', () => {
+      map.getViewport().style.cursor = 'grab'
+    })
+  }
+
+  /** step: options */
+  setOptionsAliases (config) {
+    super.handleAliases(config)
+    if (config.STYLE) {
+      config.data.push({
+        type: 'style',
+        url: config.STYLE,
+      })
+      delete config.STYLE
+    }
+  }
+
+  /** options: crs */
   async setCoordinateSystem ({ proj4, ol, crs }) {
     // Set projection
     proj4.defs(
@@ -74,6 +95,7 @@ const Renderer = class extends defaultExport {
     return ol.proj.getUserProjection()
   }
 
+  /** options: center, zoom */
   async addMap ({ ol, target, center, zoom }) {
     // Set basemap and camera
     this.map = new ol.Map({
@@ -88,6 +110,7 @@ const Renderer = class extends defaultExport {
     return this.map
   }
 
+  /** options: draw */
   getTerraDrawAdapter ({ map, ol, draw }) {
     if (!draw) return { state: 'skip' }
 
@@ -109,27 +132,7 @@ const Renderer = class extends defaultExport {
     return this.terraDrawAdapter
   }
 
-  setCursor ({ map }) {
-    map.getViewport().style.cursor = 'grab'
-    map.on('pointerdrag', _ => {
-      map.getViewport().style.cursor = 'grabbing'
-    })
-    map.on('pointerup', () => {
-      map.getViewport().style.cursor = 'grab'
-    })
-  }
-
-  setOptionsAliases (config) {
-    super.handleAliases(config)
-    if (config.STYLE) {
-      config.data.push({
-        type: 'style',
-        url: config.STYLE,
-      })
-      delete config.STYLE
-    }
-  }
-
+  /** options: control */
   setControl ({ map, control, ol }) {
     if (!control || Object.values(control).filter(v => v).length === 0) { return { state: 'skip' } }
 
@@ -146,6 +149,7 @@ const Renderer = class extends defaultExport {
     }
   }
 
+  /** options: debug, eval */
   setExtra (config) {
     const { map, debug, ol } = config
     if (!debug && !config.eval) return { state: 'skip' }
@@ -165,25 +169,7 @@ const Renderer = class extends defaultExport {
     }
   }
 
-  // Apply vector layer for markers onto map
-  addMarker (config) {
-    const element = config.element ?? document.createElement('div')
-    if (element.children.length === 0) element.innerHTML = this.svgPin.html
-    config.type = 'pin'
-
-    const position = this.ol.proj.fromLonLat(config.xy, this.crs)
-    const overlay = new ol.Overlay({
-      element,
-      position,
-      positioning: config.type !== 'pin' ? 'center-center' : 'bottom-center',
-    })
-    this.map.addOverlay(overlay)
-
-    element.classList.add('marker')
-    element.remove = () => this.map.removeOverlay(overlay)
-    return element
-  }
-
+  /** options: data */
   async addTileData ({ map, data, ol }) {
     const tileData = data.filter(record => record.type === 'tile')
 
@@ -217,6 +203,7 @@ const Renderer = class extends defaultExport {
     })
   }
 
+  /** options: data.gpx */
   addGPXFile ({ map, ol, data }) {
     const gpxUrl = data.find(record => record.type === 'gpx')
     if (!gpxUrl) return { state: 'skip' }
@@ -245,6 +232,26 @@ const Renderer = class extends defaultExport {
     // }
   }
 
+  /** actions: marker */
+  addMarker (config) {
+    const element = config.element ?? document.createElement('div')
+    if (element.children.length === 0) element.innerHTML = this.svgPin.html
+    config.type = 'pin'
+
+    const position = this.ol.proj.fromLonLat(config.xy, this.crs)
+    const overlay = new ol.Overlay({
+      element,
+      position,
+      positioning: config.type !== 'pin' ? 'center-center' : 'bottom-center',
+    })
+    this.map.addOverlay(overlay)
+
+    element.classList.add('marker')
+    element.remove = () => this.map.removeOverlay(overlay)
+    return element
+  }
+
+  /** actions: camera */
   async updateCamera ({ center, animation, zoom, bounds, duration, padding }) {
     const map = this.map
     const view = map.getView()
@@ -266,6 +273,7 @@ const Renderer = class extends defaultExport {
     })
   }
 
+  /** utils: projection */
   project = ([x, y]) =>
     this.map.getPixelFromCoordinate(
       this.ol.proj.fromLonLat(
@@ -281,4 +289,5 @@ const Renderer = class extends defaultExport {
     )
 }
 
+/** export */
 export default Renderer

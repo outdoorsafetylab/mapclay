@@ -39,7 +39,7 @@ export class MapOption {
  * Class: base class for Map Renderer
  */
 export default class {
-  // properties {{{
+  /** fields */
   width = '300px'
   height = '300px'
   center = [121, 24]
@@ -87,7 +87,6 @@ export default class {
     ]
   }
 
-  // }}}
   validateOption (option, value) {
     const isValid = this.constructor.validOptions.find(
       opt => opt.valueOf() === option,
@@ -97,7 +96,7 @@ export default class {
     return isValid(value)
   }
 
-  // Valid Options {{{
+  /** options *
   static validOptions = Object.freeze([
     new MapOption({
       name: 'id',
@@ -202,8 +201,8 @@ export default class {
       isValid: () => true,
     }),
   ])
-  // }}}
 
+  /** step: options */
   setOptionAliases (config) {
     if (config.XYZ) {
       const xyzArray =
@@ -266,6 +265,7 @@ export default class {
     })
   }
 
+  /** step: HTMLElement */
   createView ({ target, width, height }) {
     target.style.width = width
     target.style.height = height
@@ -274,6 +274,7 @@ export default class {
     }
   }
 
+  /** step: draw */
   setDraw = ({ target, terraDrawAdapter }) => {
     const idPrefix = target?.id ? target.id + '-' : ''
     const options = {
@@ -296,6 +297,7 @@ export default class {
     return this.terraDraw
   }
 
+  /** options: not-implemented */
   getTerraDrawAdapter () {
     return { state: 'skip' }
   }
@@ -336,13 +338,7 @@ export default class {
     this.updateCamera({ center: this.center, zoom: this.zoom })
   }
 
-  showLayerSwitcher (data) {
-    const wmtsRecords = data.filter(record => record.type === 'wmts')
-    const tileRecords = data.filter(record => record.type === 'tile')
-
-    return wmtsRecords.length > 0 || tileRecords.length > 1
-  }
-
+  /** utils: eval */
   propsForEval () {
     let currentPrototype = this
     let props = []

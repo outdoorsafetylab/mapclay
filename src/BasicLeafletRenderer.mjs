@@ -1,18 +1,16 @@
 import defaultExport, { loadCSS } from './BaseRenderer'
-import {
-  renderWith,
-  renderByYamlWith,
-  renderByScriptTargetWith,
-} from './mapclay.mjs'
 import * as L from 'leaflet/dist/leaflet-src.esm'
 import { TerraDrawLeafletAdapter } from 'terra-draw'
 loadCSS('https://unpkg.com/leaflet@1.9.4/dist/leaflet.css')
 
+/** class: Leaflet */
 const Renderer = class extends defaultExport {
+  /** fields */
   id = 'leaflet'
   version = '1.9.4'
   L = L
 
+  /** options: center, zoom */
   addMap ({ target, center, zoom }) {
     const [x, y] = center
     this.map = L.map(target).setView([y, x], zoom)
@@ -26,6 +24,7 @@ const Renderer = class extends defaultExport {
     return this.map
   }
 
+  /** options: draw */
   getTerraDrawAdapter ({ draw, L, map }) {
     if (!draw) return { state: 'skip' }
 
@@ -33,6 +32,7 @@ const Renderer = class extends defaultExport {
     return this.getTerraDrawAdapter
   }
 
+  /** options: control */
   setControl ({ map, control }) {
     if (!control || Object.values(control).filter(v => v).length === 0) { return { state: 'skip' } }
 
@@ -71,7 +71,7 @@ const Renderer = class extends defaultExport {
     return new L.GridLayer.GridDebug()
   }
 
-  // Configure extra stuff
+  /** options: debug, eval */
   setExtra (config) {
     const { map, debug } = config
     if (!debug && !config.eval) return { state: 'skip' }
@@ -87,6 +87,31 @@ const Renderer = class extends defaultExport {
     }
   }
 
+  /** options: data */
+  addTileData ({ map, data }) {
+    const tileData = data.filter(d => d.type === 'tile')
+
+    const baseLayers = {}
+    const overlayMaps = {}
+    if (tileData.length === 0) {
+      const osmTile = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png'
+      L.tileLayer(osmTile).addTo(map)
+    } else {
+      tileData.forEach((datum, index) => {
+        const customTile = datum.url
+        const layer = L.tileLayer(customTile)
+        const title = datum.title ? datum.title : `Anonymous_${index}`
+        if (index === 0) {
+          layer.addTo(map)
+        }
+        baseLayers[title] = layer
+      })
+      const layerControl = L.control.layers(baseLayers, overlayMaps).addTo(map)
+      map.removeControl(layerControl)
+    }
+  }
+
+  /** actions: marker */
   addMarker (config) {
     const options = config.element
       ? {
@@ -113,62 +138,7 @@ const Renderer = class extends defaultExport {
     return element
   }
 
-  addTileData ({ map, data }) {
-    const tileData = data.filter(d => d.type === 'tile')
-
-    const baseLayers = {}
-    const overlayMaps = {}
-    if (tileData.length === 0) {
-      const osmTile = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png'
-      L.tileLayer(osmTile).addTo(map)
-    } else {
-      tileData.forEach((datum, index) => {
-        const customTile = datum.url
-        const layer = L.tileLayer(customTile)
-        const title = datum.title ? datum.title : `Anonymous_${index}`
-        if (index === 0) {
-          layer.addTo(map)
-        }
-        baseLayers[title] = layer
-      })
-      const layerControl = L.control.layers(baseLayers, overlayMaps).addTo(map)
-      map.removeControl(layerControl)
-    }
-  }
-
-  addGPXFile ({ map, data }) {
-    const gpxUrl = data.find(record => record.type === 'gpx')
-    if (!gpxUrl) return { state: 'skip' }
-
-    const script = document.createElement('script')
-    script.src =
-      'https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.7.0/gpx.min.js'
-    document.body.append(script)
-
-    const options = {
-      gpx_options: {
-        joinTrackSegments: false,
-      },
-      polyline_options: {
-        color: 'red',
-        weight: 3,
-        lineCap: 'round',
-      },
-      marker_options: {
-        startIconUrl: null,
-        endIconUrl: null,
-        shadowUrl: '',
-        wptIconUrls: {
-          '': null,
-        },
-      },
-      async: true,
-    }
-    script.onload = () => {
-      new L.GPX(gpxUrl, options).addTo(map)
-    }
-  }
-
+  /** actions: camera */
   async updateCamera ({ center, zoom, bounds, animation, padding, duration }) {
     const latLon = center ? L.latLng(center[1], center[0]) : this.map.getCenter()
     const options = {
@@ -196,6 +166,7 @@ const Renderer = class extends defaultExport {
     })
   }
 
+  /** utils: projection */
   project ([lng, lat]) {
     return this.map.latLngToContainerPoint([lat, lng])
   }
@@ -206,4 +177,5 @@ const Renderer = class extends defaultExport {
   }
 }
 
+/** export */
 export default Renderer
