@@ -1,4 +1,4 @@
-import { BasicDrawComponent, addSimpleSelector } from './BasicDrawComponent'
+import { BasicDrawComponent, getUtils } from './BasicDrawComponent'
 
 /**
  * loadCSS.
@@ -96,7 +96,7 @@ export default class {
     return isValid(value)
   }
 
-  /** options *
+  /** options */
   static validOptions = Object.freeze([
     new MapOption({
       name: 'id',
@@ -290,7 +290,8 @@ export default class {
       },
     }
     this.terraDraw = BasicDrawComponent(terraDrawAdapter, options)
-    addSimpleSelector(target, this.terraDraw, {
+    target.dataset.draw = ''
+    getUtils(target, this.terraDraw, {
       idFilter: feature => feature.id.startsWith(idPrefix),
     })
 

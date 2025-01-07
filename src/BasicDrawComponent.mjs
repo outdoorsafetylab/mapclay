@@ -61,37 +61,13 @@ export const BasicDrawComponent = (adapter, options = {}) =>
   })
 
 /**
- * addSimpleSelector.
+ * getUtils.
  *
  * @param {HTMLElement} target
  * @param {TerraDraw} draw
  * @param {Object} options
  */
-export const addSimpleSelector = (target, draw, options = {}) => {
-  const selector = document.createElement('select')
-  target.appendChild(selector)
-  selector.name = 'Draw'
-  selector.style =
-    'position: absolute; top: 0.5rem; right: 0.5rem; z-index: 1000;'
-  selector.innerHTML = `
-      <option class="bold-option" value="nothing">Draw Something</option>
-      <optgroup label="Edit Features">
-        <option class="bold-option" value="modify">✎ MODIFY</option>
-        <option class="bold-option" value="delete">🗑 DELETE</option>
-        <option class="bold-option" value="clear"> 🧹 CLEAR</option>
-      </optgroup>
-      <optgroup label="Draw">
-        <option value="point">⢌ Points</option>
-        <option value="linestring">☇ linestring</option>
-        <option value="polygon">⬠ Polygon</option>
-        <option value="circle">⃝  Circle</option>
-        <option value="rectangle">◻ Rectangle</option>
-      </optgroup>
-      <optgroup label="Extra">
-        <option value="features">View Features</option>
-      </optgroup>
-    `
-
+export const getUtils = (target, draw, options = {}) => {
   draw.start()
   draw.setMode('render')
 
@@ -116,15 +92,14 @@ export const addSimpleSelector = (target, draw, options = {}) => {
   }
 
   const cursorHolder = target.querySelector('canvas') ?? target
-  selector.onchange = () => {
-    selector.children[0].textContent = '--STOP--'
-    cursorHolder.style.removeProperty('cursor')
-    const features = draw.getSnapshot()
+  cursorHolder.style.removeProperty('cursor')
+  const features = draw.getSnapshot()
 
-    switch (selector.value) {
-      case 'nothing':
+  new window.MutationObserver(() => {
+    switch (target.dataset.draw) {
+      case '':
+      case undefined:
         draw.setMode('render')
-        selector.children[0].textContent = 'Draw Something'
         break
       case 'modify':
         draw.setMode('select')
@@ -135,8 +110,7 @@ export const addSimpleSelector = (target, draw, options = {}) => {
         break
       case 'clear':
         window.localStorage.removeItem(storageId)
-        selector.value = 'nothing'
-        selector.onchange()
+        target.dataset.draw = ''
         draw.clear()
         break
       case 'features':
@@ -145,12 +119,15 @@ export const addSimpleSelector = (target, draw, options = {}) => {
         )
         break
       default:
-        draw.setMode(selector.value)
+        draw.setMode(target.dataset.draw)
         break
     }
-  }
+  }).observe(target, {
+    attributes: true,
+    attributeFilter: ['data-draw'],
+  })
 
-  draw.on('change', () => {})
+  draw.on('change', () => { })
   draw.on('finish', (id, context) => {
     if (context.action === 'draw') {
       const feature = draw.getSnapshot().find(feature => feature.id === id)
@@ -166,20 +143,18 @@ export const addSimpleSelector = (target, draw, options = {}) => {
     window.localStorage.setItem(storageId, JSON.stringify(features))
 
     if (context.mode !== 'point' && context.action === 'draw') {
-      selector.value = 'nothing'
-      selector.onchange()
+      target.dataset.draw = ''
     }
   })
   document.onclick = event => {
-    if (selector.value === 'delete') {
+    if (target.dataset.draw === 'delete') {
       const features = draw.getFeaturesAtPointerEvent(event, {
         pointerDistance: 40,
       })
       if (features.length > 0) {
         draw.removeFeatures([features[0].id])
         if (draw.getSnapshot().length === 0) {
-          selector.value = 'nothing'
-          selector.onchange()
+          target.dataset.draw = ''
         }
       }
     }
