@@ -5,7 +5,7 @@ import { addProtocols } from 'maplibre-gl-vector-text-protocol'
 import { TerraDrawMapLibreGLAdapter } from 'terra-draw'
 loadCSS('https://unpkg.com/maplibre-gl@4.5.2/dist/maplibre-gl.css')
 
-/** class: Openlayers */
+/** class: Maplibre */
 const Renderer = class extends defaultExport {
   /** fields */
   id = 'maplibre'
@@ -13,6 +13,7 @@ const Renderer = class extends defaultExport {
   bearing = 0
   style = 'https://demotiles.maplibre.org/style.json'
   link = false
+  globe = false
   /* eslint-disable-next-line no-undef */
   maplibregl = maplibregl
 
@@ -46,9 +47,20 @@ const Renderer = class extends defaultExport {
       exampleDesc: 'Style form OSM japan!!!',
       isValid: value => URL.parse(value),
     }),
+    new MapOption({
+      name: 'globe',
+      desc: 'Display a globe',
+      example: 'true',
+      exampleDesc: 'Add globe for lower zoom level',
+      isValid: value => value === 'true',
+    }),
   ])
 
-  /** options: center, zoom, pitch, bearing */
+  get steps () {
+    return [...super.steps, this.setProjection]
+  }
+
+  /** options: center, zoom, pitch, bearing, link, globe */
   async addMap ({
     maplibregl,
     target,
@@ -59,6 +71,7 @@ const Renderer = class extends defaultExport {
     pitch,
     bearing,
     link,
+    globe,
   }) {
     const tileData = data.filter(d => d.type === 'tile')
     const maplibreStyle =
@@ -76,6 +89,9 @@ const Renderer = class extends defaultExport {
 
     return new Promise((resolve, _reject) => {
       this.map.on('load', () => {
+        this.map.setProjection({
+          type: globe ? 'globe' : 'mercator', // Set projection to globe
+        })
         resolve(this.map)
       })
     })

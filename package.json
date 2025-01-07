@@ -33,7 +33,7 @@
   "dependencies": {
     "js-yaml": "^4.1.0",
     "leaflet": "^1.9.4",
-    "maplibre-gl": "^4.6.0",
+    "maplibre-gl": "^5.0.0",
     "maplibre-gl-vector-text-protocol": "github:jimmyrocks/maplibre-gl-vector-text-protocol",
     "ol": "^10.2.1",
     "proj4": "^2.12.0",
