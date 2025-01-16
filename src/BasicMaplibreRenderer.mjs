@@ -56,10 +56,6 @@ const Renderer = class extends defaultExport {
     }),
   ])
 
-  get steps () {
-    return [...super.steps, this.setProjection]
-  }
-
   /** options: center, zoom, pitch, bearing, link, globe */
   async addMap ({
     maplibregl,
