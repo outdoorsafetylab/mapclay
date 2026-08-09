@@ -1,5 +1,5 @@
 import defaultExport, { MapOption, loadCSS } from './BaseRenderer'
-import { TerraDrawOpenLayersAdapter } from 'terra-draw'
+import { TerraDrawOpenLayersAdapter } from 'terra-draw-openlayers-adapter'
 
 import * as ol from 'ol'
 import * as control from 'ol/control'
@@ -11,7 +11,7 @@ import * as style from 'ol/style'
 import * as proj from 'ol/proj'
 import proj4 from 'proj4'
 import * as olProj4 from 'ol/proj/proj4'
-loadCSS('https://cdn.jsdelivr.net/npm/ol@10.1.0/ol.css')
+loadCSS('https://cdn.jsdelivr.net/npm/ol@10.10.0/ol.css')
 
 /** class: Openlayers */
 const Renderer = class extends defaultExport {

@@ -1,19 +1,19 @@
 import defaultExport, { loadCSS } from './BaseRenderer'
-import * as L from 'leaflet/dist/leaflet-src.esm'
-import { TerraDrawLeafletAdapter } from 'terra-draw'
-loadCSS('https://unpkg.com/leaflet@1.9.4/dist/leaflet.css')
+import * as L from 'leaflet'
+import { TerraDrawLeafletAdapter } from 'terra-draw-leaflet-adapter'
+loadCSS('https://unpkg.com/leaflet@2.0.0-alpha.1/dist/leaflet.css')
 
 /** class: Leaflet */
 const Renderer = class extends defaultExport {
   /** fields */
   id = 'leaflet'
-  version = '1.9.4'
+  version = '2.0.0-alpha.1'
   L = L
 
   /** options: center, zoom */
   addMap ({ target, center, zoom }) {
     const [x, y] = center
-    this.map = L.map(target).setView([y, x], zoom)
+    this.map = new L.Map(target).setView([y, x], zoom)
 
     // Update map by element size
     const resizeObserver = new window.ResizeObserver(() => {
@@ -37,38 +37,33 @@ const Renderer = class extends defaultExport {
     if (!control || Object.values(control).filter(v => v).length === 0) { return { state: 'skip' } }
 
     if (control.fullscreen) {
-      const css = document.createElement('link')
-      css.rel = 'stylesheet'
-      css.href =
-        'https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css'
-      document.body.append(css)
-
-      const script = document.createElement('script')
-      script.src =
-        'https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js'
-      document.body.append(script)
-      script.onload = () => {
-        map.addControl(new L.Control.Fullscreen())
+      class FullscreenControl extends L.Control {
+        onAdd (map) {
+          const btn = document.createElement('button')
+          btn.textContent = '⛶'
+          btn.onclick = () => map.getContainer().requestFullscreen?.()
+          return btn
+        }
       }
+      new FullscreenControl({ position: 'topleft' }).addTo(map)
     }
     if (control.scale) {
-      L.control.scale().addTo(map)
+      new L.Control.Scale().addTo(map)
     }
   }
 
   debugLayer () {
-    L.GridLayer.GridDebug = L.GridLayer.extend({
-      createTile: function (coords) {
+    class GridDebug extends L.GridLayer {
+      createTile (coords) {
         const tile = document.createElement('div')
         tile.style.outline = '2px solid'
         tile.style.fontWeight = 'bold'
         tile.style.fontSize = '14pt'
         tile.innerHTML = [coords.z, coords.x, coords.y].join('/')
         return tile
-      },
-    })
-
-    return new L.GridLayer.GridDebug()
+      }
+    }
+    return new GridDebug()
   }
 
   /** options: debug, eval */
@@ -95,18 +90,18 @@ const Renderer = class extends defaultExport {
     const overlayMaps = {}
     if (tileData.length === 0) {
       const osmTile = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png'
-      L.tileLayer(osmTile).addTo(map)
+      new L.TileLayer(osmTile).addTo(map)
     } else {
       tileData.forEach((datum, index) => {
         const customTile = datum.url
-        const layer = L.tileLayer(customTile)
+        const layer = new L.TileLayer(customTile)
         const title = datum.title ? datum.title : `Anonymous_${index}`
         if (index === 0) {
           layer.addTo(map)
         }
         baseLayers[title] = layer
       })
-      const layerControl = L.control.layers(baseLayers, overlayMaps).addTo(map)
+      const layerControl = new L.Control.Layers(baseLayers, overlayMaps).addTo(map)
       map.removeControl(layerControl)
     }
   }
@@ -124,12 +119,12 @@ const Renderer = class extends defaultExport {
           iconSize: this.svgPin.size,
           iconAnchor: this.svgPin.anchor,
         }
-    const markerIcon = L.divIcon({
+    const markerIcon = new L.DivIcon({
       ...options,
       className: 'marker',
     })
     const xy = Array.from(config.xy).reverse()
-    const marker = L.marker(xy, { icon: markerIcon })
+    const marker = new L.Marker(xy, { icon: markerIcon })
       .addTo(this.map)
     const element = marker.getElement()
     element.classList.add('marker')
@@ -140,7 +135,7 @@ const Renderer = class extends defaultExport {
 
   /** actions: camera */
   async updateCamera ({ center, zoom, bounds, animation, padding, duration }) {
-    const latLon = center ? L.latLng(center[1], center[0]) : this.map.getCenter()
+    const latLon = center ? new L.LatLng(center[1], center[0]) : this.map.getCenter()
     const options = {
       animate: animation ?? false,
       padding: [padding, padding],

@@ -1,9 +1,9 @@
 import defaultExport, { MapOption, loadCSS } from './BaseRenderer'
 /* eslint-disable-next-line no-unused-vars */
-import maplibregl from 'maplibre-gl'
+import * as maplibregl from 'maplibre-gl'
 import { addProtocols } from 'maplibre-gl-vector-text-protocol'
-import { TerraDrawMapLibreGLAdapter } from 'terra-draw'
-loadCSS('https://unpkg.com/maplibre-gl@4.5.2/dist/maplibre-gl.css')
+import { TerraDrawMapLibreGLAdapter } from 'terra-draw-maplibre-gl-adapter'
+loadCSS('https://unpkg.com/maplibre-gl@6.1.0/dist/maplibre-gl.css')
 
 /** class: Maplibre */
 const Renderer = class extends defaultExport {

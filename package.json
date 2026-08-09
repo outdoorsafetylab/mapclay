@@ -28,16 +28,19 @@
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-terser": "^0.4.4",
     "globals": "^15.9.0",
-    "rollup": "^4.21.2"
+    "rollup": "^4.62.4"
   },
   "dependencies": {
-    "js-yaml": "^4.1.0",
-    "leaflet": "^1.9.4",
-    "maplibre-gl": "^5.0.0",
+    "js-yaml": "^5.2.3",
+    "leaflet": "2.0.0-alpha.1",
+    "maplibre-gl": "^6.1.0",
     "maplibre-gl-vector-text-protocol": "github:jimmyrocks/maplibre-gl-vector-text-protocol",
-    "ol": "^10.2.1",
-    "proj4": "^2.12.0",
-    "terra-draw": "1.0.0-beta.1"
+    "ol": "^10.10.0",
+    "proj4": "^2.20.9",
+    "terra-draw": "^1.32.2",
+    "terra-draw-leaflet-adapter": "^1.2.0",
+    "terra-draw-maplibre-gl-adapter": "^1.3.0",
+    "terra-draw-openlayers-adapter": "latest"
   },
   "author": "Hsiehg Chin Fan <pham@topo.tw>",
   "homepage": "https://outdoorsafetylab.org/",
