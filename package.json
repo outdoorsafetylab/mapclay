@@ -21,14 +21,20 @@
     "watch": "npx rollup -c scripts/rollup.config.js -w",
     "build": "npx rollup -c scripts/rollup.config.js",
     "lint": "standard --fix",
-    "docs": "jsdoc -c scripts/jsdoc.conf src/;"
+    "docs": "jsdoc -c scripts/jsdoc.conf src/;",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "pnpm build && playwright test"
   },
   "devDependencies": {
+    "@playwright/test": "^1.48.0",
     "@rollup/plugin-commonjs": "^28.0.1",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-terser": "^0.4.4",
     "globals": "^15.9.0",
-    "rollup": "^4.62.4"
+    "jsdom": "^25.0.1",
+    "rollup": "^4.62.4",
+    "vitest": "^2.1.9"
   },
   "dependencies": {
     "js-yaml": "^5.2.3",

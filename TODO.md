@@ -55,9 +55,10 @@ Checklist derived from a review of `README.md` and `src/`. Grouped by priority.
 
 ## Tests
 
-- [ ] Add a test script and suite (jsdom-based). The `data-render` attribute and
-      per-step `results` array make rendering observable.
-- [ ] Cover: alias resolution, `apply` merge, step `skip`/`depends`/`stop` logic,
+- [x] Add a test script and suite (jsdom-based). The `data-render` attribute and
+      per-step `results` array make rendering observable. (`pnpm test` — Vitest + jsdom
+      in `test/`; `pnpm test:e2e` — Playwright real-browser in `e2e/`.)
+- [x] Cover: alias resolution, `apply` merge, step `skip`/`depends`/`stop` logic,
       and one happy-path render per engine (Leaflet / MapLibre / OpenLayers).
 
 ## Docs

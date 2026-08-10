@@ -25,9 +25,23 @@ pnpm install
 | `pnpm watch` | Same as build, in watch mode (rebuilds on `src/**` changes). |
 | `pnpm lint` | Run `standard --fix` (JavaScript Standard Style, auto-fixing). |
 | `pnpm docs` | Generate JSDoc into `docs/` (config: `scripts/jsdoc.conf`). |
+| `pnpm test` | Run the Vitest unit/pipeline suite (jsdom) in `test/`. |
+| `pnpm test:watch` | Same, in watch mode. |
+| `pnpm test:e2e` | Build `dist/`, then run the Playwright happy-path render tests (real browser) in `e2e/`. |
 
-There is currently **no test script / test suite** — adding one is the top item in
-`TODO.md`.
+### Tests
+
+- **`test/`** (Vitest + jsdom): parsing (`parseConfigsFromYaml`) and the render
+  pipeline. Pipeline tests drive `renderWith()` with a **mock renderer** (`config.use`
+  is an object with a `steps` array), then assert on the observable outputs — the
+  per-step `results` array and the `data-render` attribute — covering alias resolution,
+  `apply` merge (with a stubbed `fetch`), and step `skip`/`depends`/`stop`/`fail`.
+- **`e2e/`** (Playwright): one real-browser render per engine
+  (Leaflet / MapLibre / OpenLayers). Each fixture in `e2e/fixtures/` uses
+  `<base href="/dist/">` so the `./renderers/*.mjs` aliases resolve, and the test waits
+  for `data-render="fulfilled"`. A real browser is required because MapLibre needs WebGL
+  and OpenLayers/Leaflet need canvas, which jsdom does not provide. First run:
+  `pnpm exec playwright install chromium`.
 
 ## Build output
 
