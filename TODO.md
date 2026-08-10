@@ -22,7 +22,7 @@ Checklist derived from a review of `README.md` and `src/`. Grouped by priority.
       (`src/BaseRenderer.mjs:170`).
 - [ ] OpenLayers `crs` fallback logs "set EPSG:4326 instead" but returns the invalid
       `crs` unchanged (`src/BasicOpenlayersRenderer.mjs:86`).
-- [ ] Typo `config.aply` in thrown error (`src/mapclay.mjs:142`).
+- [x] Typo `config.aply` in thrown error (`src/mapclay.mjs:142`).
 - [ ] `setValueByAliases` sets `config.desc` from `aliasResult.desc`, but alias data
       uses `description` — `desc` is never populated (`src/mapclay.mjs:123`).
 - [ ] OpenLayers `setOptionsAliases` calls `super.handleAliases`, which does not exist

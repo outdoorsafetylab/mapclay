@@ -139,7 +139,7 @@ const applyOtherConfig = async config => {
 
   await fetchConfig(config.apply)
   const preset = appliedConfigs[config.apply]
-  if (!preset) throw Error('Fail to fetch remote config ' + config.aply)
+  if (!preset) throw Error('Fail to fetch remote config ' + config.apply)
 
   return {
     ...preset,
