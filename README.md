@@ -443,19 +443,11 @@ use: Maplibre
 console('This is the second YAML doc');
 ```
 
-## TODOs
+## Development
 
-- Features
-  - Sync map cameras
-  - UI components for camera reset
-  - Management of layer group
-  - Show current Coordinates
-  - More aliases
-    - XYZ: https://github.com/leaflet-extras/leaflet-providers
-  - Supports PMTiles from [ Protomaps ](https://protomaps.com/)
-- Style
-  - Crosshair at center of map
-- Tests for a variety of options
+Working on mapclay itself? See [`DEVELOPMENT.md`](./DEVELOPMENT.md) for setup, build,
+and the renderer/steps model. Planned work and known issues live in
+[`TODO.md`](./TODO.md).
 
 ## See Also
 
