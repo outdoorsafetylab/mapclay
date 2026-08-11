@@ -1,7 +1,7 @@
 # Development
 
 Quick guide for working on `mapclay`. For what the library does and how to *use*
-it, see [`README.md`](./README.md). For open work, see [`TODO.md`](./TODO.md).
+it, see [`README.md`](./README.md). For open work, see [`issues/`](./issues/).
 
 ## Prerequisites
 
@@ -15,7 +15,7 @@ pnpm install
 
 > Note: one dependency (`maplibre-gl-vector-text-protocol`) is pulled from a GitHub
 > branch, and Leaflet is on a `2.0.0-alpha` release. Installs need network access to
-> GitHub and may not be reproducible across environments. See `TODO.md`.
+> GitHub and may not be reproducible across environments. See `issues/` #5.
 
 ## Scripts
 
@@ -127,7 +127,7 @@ map (or a Promise that resolves when the map is ready) from `addMap`.
 - **`keep_fnames`:** function identity matters (steps are compared by reference for
   `depends` and result tracking). Don't rely on minified/renamed function names.
 - **Security note:** `eval:`, remote `apply:`, and remote `use:` execute arbitrary
-  code/fetches by design. Keep this in mind when touching those paths — see `TODO.md`.
+  code/fetches by design. Keep this in mind when touching those paths — see `issues/` #1, #2.
 
 ## Manual testing
 
