@@ -2,6 +2,8 @@ docs/
 doc-coverage/
 package-lock.json
 pnpm-lock.yaml
+.claude*
+
 # Logs
 logs
 *.log
