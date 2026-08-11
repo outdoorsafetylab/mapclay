@@ -22,7 +22,6 @@ Labels: `security` `bug` `packaging` `docs` `feature` `tests`
 - [x] [#3  `runBySteps` TypeError when `dependentResult` is undefined](0003-runbysteps-undefined.md)
 - [ ] [#4  GPX loading broken across all engines](0004-gpx-broken.md)
 - [x] [#7  XYZ validation checks `z` instead of `{z}`](0007-xyz-validation.md)
-- [ ] [#8  OpenLayers `crs` fallback keeps the invalid crs](0008-openlayers-crs-fallback.md)
 - [ ] [#9  `setValueByAliases` reads `desc` not `description`](0009-desc-alias-mismatch.md)
 - [ ] [#10 OpenLayers calls non-existent `super.handleAliases`](0010-openlayers-handlealiases-missing.md)
 - [ ] [#11 draw util `document.onclick` is global / clobbers handlers](0011-document-onclick-global.md)
@@ -47,5 +46,6 @@ Labels: `security` `bug` `packaging` `docs` `feature` `tests`
 
 ## Closed
 
+- [x] [#8  OpenLayers `crs` fallback keeps the invalid crs](0008-openlayers-crs-fallback.md) `bug`
 - [x] [#22 Typo `config.aply` in thrown error](0022-config-aply-typo.md) `bug`
 - [x] [#23 Add test suite (Vitest jsdom + Playwright)](0023-test-suite.md) `tests`
