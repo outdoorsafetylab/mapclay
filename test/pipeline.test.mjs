@@ -86,6 +86,18 @@ describe('step skip / depends / stop', () => {
     expect(dependentFn).not.toHaveBeenCalled()
   })
 
+  it('skips a step whose dependency never ran, without throwing', async () => {
+    const missingDep = () => 'never registered'
+    const dependentFn = vi.fn(() => 'ok')
+    const { renderer } = await runConfig({
+      use: mockRenderer([
+        { valueOf: () => dependentFn, depends: missingDep },
+      ]),
+    })
+    expect(renderStates(renderer)).toEqual(['skip'])
+    expect(dependentFn).not.toHaveBeenCalled()
+  })
+
   it('stops remaining steps after a step returns state "stop"', async () => {
     const stopStep = () => ({ state: 'stop' })
     const afterFn = vi.fn(() => 'ok')

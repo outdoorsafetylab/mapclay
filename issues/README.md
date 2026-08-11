@@ -19,7 +19,7 @@ Labels: `security` `bug` `packaging` `docs` `feature` `tests`
 - [ ] [#2  Allowlist origins for remote `apply:` / `use:` fetching](0002-remote-fetch-allowlist.md)
 
 ### Correctness bugs
-- [ ] [#3  `runBySteps` TypeError when `dependentResult` is undefined](0003-runbysteps-undefined.md)
+- [x] [#3  `runBySteps` TypeError when `dependentResult` is undefined](0003-runbysteps-undefined.md)
 - [ ] [#4  GPX loading broken across all engines](0004-gpx-broken.md)
 - [ ] [#7  XYZ validation checks `z` instead of `{z}`](0007-xyz-validation.md)
 - [ ] [#8  OpenLayers `crs` fallback keeps the invalid crs](0008-openlayers-crs-fallback.md)
