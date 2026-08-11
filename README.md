@@ -447,7 +447,7 @@ console('This is the second YAML doc');
 
 Working on mapclay itself? See [`DEVELOPMENT.md`](./DEVELOPMENT.md) for setup, build,
 and the renderer/steps model. Planned work and known issues live in
-[`TODO.md`](./TODO.md).
+[`issues/`](./issues/) (see [`issues/README.md`](./issues/README.md) for the board).
 
 ## See Also
 
