@@ -33,7 +33,7 @@ Labels: `security` `bug` `packaging` `docs` `feature` `tests`
 - [ ] [#13 Register the full public API on `globalThis.mapclay`](0013-globalthis-public-api.md)
 
 ### Docs
-- [ ] [#14 Reconcile README vs. code (default `use`, alias paths)](0014-reconcile-readme-vs-code.md)
+- [x] [#14 Reconcile README vs. code (default `use`, alias paths)](0014-reconcile-readme-vs-code.md)
 - [ ] [#15 Generate / commit JSDoc output](0015-jsdoc-output.md)
 - [ ] [#16 Surface render failures beyond `console.warn`](0016-surface-render-failures.md)
 

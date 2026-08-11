@@ -240,6 +240,8 @@ zoom: City
 
 This option specify which [Renderer](#renderer) is used to create a map.
 
+If `use` is omitted, it defaults to the `Leaflet` alias (see [Default Renderers](#default-renderers)).
+
 ```yml
 # Use Renderer with Openlayers by resouece path
 use: https://unpkg.com/mapclay/dist/renderers/openlayers.mjs
@@ -263,15 +265,33 @@ aliases:
   # The following aliases are hidden by default
   use:
     Leaflet:
-      value: renderers/leaflet.mjs,
-      description: Leaflet is the leading open-source JavaScript library for mobile-friendly interactive maps. It has all the mapping features most developers ever need.,
+      value: ./renderers/leaflet.mjs
+      description: Leaflet is the leading open-source JavaScript library for mobile-friendly interactive maps. It has all the mapping features most developers ever need.
     Maplibre:
-      value: renderers/maplibre.mjs,
-      description: MapLibre GL JS is a TypeScript library that uses WebGL to render interactive maps from vector tiles in a browser. The customization of the map comply with the MapLibre Style Spec.,
+      value: ./renderers/maplibre.mjs
+      description: MapLibre GL JS is a TypeScript library that uses WebGL to render interactive maps from vector tiles in a browser. The customization of the map comply with the MapLibre Style Spec.
     Openlayers:
-      value: renderers/openlayers.mjs,
-      description: OpenLayers makes it easy to put a dynamic map in any web page. It can display map tiles, vector data and markers loaded from any source. OpenLayers has been developed to further the use of geographic information of all kinds.,
+      value: ./renderers/openlayers.mjs
+      description: OpenLayers makes it easy to put a dynamic map in any web page. It can display map tiles, vector data and markers loaded from any source. OpenLayers has been developed to further the use of geographic information of all kinds.
 ```
+
+#### How the alias paths resolve
+
+The default `use` aliases point to **relative** paths (`./renderers/*.mjs`). They are
+imported relative to the loaded `mapclay` module, so they only resolve where a
+`renderers/` directory sits next to it:
+
+- **npm** (`import ... from 'mapclay'`): resolves through `index.mjs` → `dist/mapclay.mjs`,
+  which ships alongside `dist/renderers/`, so the aliases work out of the box.
+- **CDN** (`<script src="…/dist/mapclay.js">`): the dynamic `import()` resolves against
+  the page URL, so it works when the script is served from the `dist/` directory (or set
+  a `<base href="…/dist/">`).
+
+Always load `mapclay` through its package entry or the `dist/` bundle. The package also
+ships `src/**`, but deep-importing the unbundled `src/mapclay.mjs` is **not** a supported
+entry point: there is no `src/renderers/` directory, so the built-in aliases won't resolve.
+If you do consume the source directly, override the `use` alias with a full URL or your own
+Renderer.
 
 ## Renderer
 
