@@ -211,7 +211,8 @@ const runBySteps = renderer =>
               const dependentResult = renderer.results.findLast(
                 res => res.func === func.depends,
               )?.state
-              if (dependentResult.match(/skip|fail/)) {
+              // Skip if the dependency is missing or did not succeed
+              if (!dependentResult || dependentResult.match(/skip|fail/)) {
                 return { state: 'skip' }
               }
             }
