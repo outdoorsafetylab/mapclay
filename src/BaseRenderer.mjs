@@ -167,7 +167,7 @@ export default class {
           URL.parse(value) &&
           value.includes('{x}') &&
           value.includes('{y}') &&
-          value.includes('z')
+          value.includes('{z}')
         )
       },
     }),

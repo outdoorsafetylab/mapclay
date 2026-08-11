@@ -21,7 +21,7 @@ Labels: `security` `bug` `packaging` `docs` `feature` `tests`
 ### Correctness bugs
 - [x] [#3  `runBySteps` TypeError when `dependentResult` is undefined](0003-runbysteps-undefined.md)
 - [ ] [#4  GPX loading broken across all engines](0004-gpx-broken.md)
-- [ ] [#7  XYZ validation checks `z` instead of `{z}`](0007-xyz-validation.md)
+- [x] [#7  XYZ validation checks `z` instead of `{z}`](0007-xyz-validation.md)
 - [ ] [#8  OpenLayers `crs` fallback keeps the invalid crs](0008-openlayers-crs-fallback.md)
 - [ ] [#9  `setValueByAliases` reads `desc` not `description`](0009-desc-alias-mismatch.md)
 - [ ] [#10 OpenLayers calls non-existent `super.handleAliases`](0010-openlayers-handlealiases-missing.md)
