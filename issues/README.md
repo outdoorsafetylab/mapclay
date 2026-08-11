@@ -19,9 +19,7 @@ Labels: `security` `bug` `packaging` `docs` `feature` `tests`
 - [ ] [#2  Allowlist origins for remote `apply:` / `use:` fetching](0002-remote-fetch-allowlist.md)
 
 ### Correctness bugs
-- [x] [#3  `runBySteps` TypeError when `dependentResult` is undefined](0003-runbysteps-undefined.md)
 - [ ] [#4  GPX loading broken across all engines](0004-gpx-broken.md)
-- [x] [#7  XYZ validation checks `z` instead of `{z}`](0007-xyz-validation.md)
 - [ ] [#9  `setValueByAliases` reads `desc` not `description`](0009-desc-alias-mismatch.md)
 - [ ] [#10 OpenLayers calls non-existent `super.handleAliases`](0010-openlayers-handlealiases-missing.md)
 - [ ] [#11 draw util `document.onclick` is global / clobbers handlers](0011-document-onclick-global.md)
@@ -32,7 +30,6 @@ Labels: `security` `bug` `packaging` `docs` `feature` `tests`
 - [ ] [#13 Register the full public API on `globalThis.mapclay`](0013-globalthis-public-api.md)
 
 ### Docs
-- [x] [#14 Reconcile README vs. code (default `use`, alias paths)](0014-reconcile-readme-vs-code.md)
 - [ ] [#15 Generate / commit JSDoc output](0015-jsdoc-output.md)
 - [ ] [#16 Surface render failures beyond `console.warn`](0016-surface-render-failures.md)
 
@@ -46,6 +43,9 @@ Labels: `security` `bug` `packaging` `docs` `feature` `tests`
 
 ## Closed
 
+- [x] [#3  `runBySteps` TypeError when `dependentResult` is undefined](0003-runbysteps-undefined.md) `bug`
+- [x] [#7  XYZ validation checks `z` instead of `{z}`](0007-xyz-validation.md) `bug`
 - [x] [#8  OpenLayers `crs` fallback keeps the invalid crs](0008-openlayers-crs-fallback.md) `bug`
+- [x] [#14 Reconcile README vs. code (default `use`, alias paths)](0014-reconcile-readme-vs-code.md) `docs`
 - [x] [#22 Typo `config.aply` in thrown error](0022-config-aply-typo.md) `bug`
 - [x] [#23 Add test suite (Vitest jsdom + Playwright)](0023-test-suite.md) `tests`

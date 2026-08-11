@@ -5,6 +5,7 @@ state: closed
 labels: [docs]
 assignee: pham
 created: 2026-08-11
+closed: 2026-08-11
 ---
 
 ## Description
