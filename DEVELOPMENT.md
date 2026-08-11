@@ -43,6 +43,28 @@ pnpm install
   and OpenLayers/Leaflet need canvas, which jsdom does not provide. First run:
   `pnpm exec playwright install chromium`.
 
+## Issue tracking
+
+Open work lives in [`issues/`](./issues/) — a GitHub-style tracker of one markdown
+file per issue (`NNNN-slug.md`), with [`issues/README.md`](./issues/README.md) as the
+board. That README documents the file mechanics (create / close / query); the flow for
+actually *working* an issue is:
+
+1. **Pick & branch.** Find open work in the board
+   (`grep -l 'state: open' issues/[0-9]*.md`). Cut a branch named
+   `fix/issue-<N>-<slug>` (or `feat/…`) off `master`.
+2. **Fix + test.** Make the change and add coverage: a Vitest test in `test/` and/or
+   an `e2e/` fixture + spec (see [Tests](#tests)). Run `pnpm test` (and `pnpm test:e2e`
+   when the change touches real rendering) and `pnpm lint`.
+3. **Commit.** Reference the issue in the subject, e.g.
+   `fix: <summary> (#<N>)`. Keep unrelated board upkeep in its own commit.
+4. **Merge.** Merge the branch into `master` (history uses merge commits, e.g.
+   `Merge branch 'fix/issue-8-crs-fallback'`).
+5. **Close.** In the issue file set `state: closed` and add a `closed: YYYY-MM-DD`
+   date, tick its task checkbox(es), then move its line from the relevant **Open**
+   subsection to **Closed** in `issues/README.md` (keep the label suffix). New issues
+   start from [`issues/TEMPLATE.md`](./issues/TEMPLATE.md).
+
 ## Build output
 
 `dist/` and `docs/` are gitignored; they are build artifacts, not source. `pnpm build`
