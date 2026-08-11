@@ -20,3 +20,15 @@ for (const { name, fixture, root } of engines) {
     await expect(page.locator(`#map ${root}`)).toBeVisible()
   })
 }
+
+// A well-formed but unresolvable crs (EPSG:999999) passes the crs regex but
+// fails fromEPSGCode; setCoordinateSystem must rethrow so the render step fails
+// and the container reports data-render="unfulfilled" rather than a broken map.
+test('OpenLayers fails render on an unresolvable crs (data-render=unfulfilled)', async ({ page }) => {
+  await page.goto('/e2e/fixtures/openlayers-bad-crs.html')
+
+  const container = page.locator('#map .mapclay')
+  await expect(container).toHaveAttribute('data-render', 'unfulfilled', {
+    timeout: 15_000,
+  })
+})

@@ -76,20 +76,19 @@ const Renderer = class extends defaultExport {
 
   /** options: crs */
   async setCoordinateSystem ({ proj4, ol, crs }) {
+    // Reject an invalid crs outright instead of silently falling back
+    if (!this.validateOption('crs', crs)) {
+      throw Error(`Invalid Coordinate System: ${crs}`)
+    }
+
     // Set projection
     proj4.defs(
       'EPSG:3826',
       '+proj=tmerc +lat_0=0 +lon_0=121 +k=0.9999 +x_0=250000 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs',
     )
     ol.proj.proj4.register(proj4)
-    const crsString = this.validateOption('crs', crs)
-      ? crs
-      : (() => {
-          console.warn(`Invalid Coordinate System: ${crs}, set "EPSG:4326" instead`)
-          return crs
-        })()
-    const projection = await ol.proj.proj4.fromEPSGCode(crsString).catch(() => {
-      console.warn(`Fail to retrieve Coordinate System ${crsString}, Use ${crs} instead`)
+    const projection = await ol.proj.proj4.fromEPSGCode(crs).catch(() => {
+      throw Error(`Failed to retrieve Coordinate System: ${crs}`)
     })
     ol.proj.setUserProjection(projection)
     return ol.proj.getUserProjection()
