@@ -37,4 +37,19 @@ describe('defaultAliases', () => {
     ])
     expect(defaultAliases.use.Leaflet.value).toBe('./renderers/leaflet.mjs')
   })
+
+  it('ships curated XYZ tile presets with full URL templates', () => {
+    const presets = defaultAliases.XYZ
+    expect(Object.keys(presets)).toContain('OSM')
+    expect(Object.keys(presets)).toContain('NLSC EMAP')
+    Object.entries(presets).forEach(([name, { value, desc }]) => {
+      expect(name).toMatch(/^[A-Z]/) // alias marker: uppercase first char
+      // renderers substitute these placeholders; {s}/{r} are not supported
+      expect(value).toContain('{x}')
+      expect(value).toContain('{y}')
+      expect(value).toContain('{z}')
+      expect(value).not.toMatch(/\{[sr]\}/)
+      expect(desc).toBeTruthy() // carries attribution
+    })
+  })
 })

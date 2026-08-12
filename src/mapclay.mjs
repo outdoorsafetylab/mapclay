@@ -29,6 +29,44 @@ const defaultAliases = Object.freeze({
         'OpenLayers makes it easy to put a dynamic map in any web page. It can display map tiles, vector data and markers loaded from any source. OpenLayers has been developed to further the use of geographic information of all kinds.',
     },
   },
+  XYZ: {
+    OSM: {
+      value: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+      desc: 'OpenStreetMap standard style. © OpenStreetMap contributors',
+    },
+    'OSM HOT': {
+      value: 'https://a.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',
+      desc: 'Humanitarian OSM style. © OpenStreetMap contributors, tiles courtesy of Humanitarian OpenStreetMap Team',
+    },
+    OpenTopoMap: {
+      value: 'https://tile.opentopomap.org/{z}/{x}/{y}.png',
+      desc: 'Topographic style with contour lines and hillshading. © OpenStreetMap contributors, SRTM | © OpenTopoMap (CC-BY-SA)',
+    },
+    CyclOSM: {
+      value: 'https://a.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png',
+      desc: 'Bicycle-oriented OSM style. © OpenStreetMap contributors, tiles by CyclOSM',
+    },
+    'CARTO Light': {
+      value: 'https://basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
+      desc: 'Light basemap for data visualization. © OpenStreetMap contributors © CARTO',
+    },
+    'CARTO Dark': {
+      value: 'https://basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
+      desc: 'Dark basemap for data visualization. © OpenStreetMap contributors © CARTO',
+    },
+    'Esri World Imagery': {
+      value: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+      desc: 'Satellite/aerial imagery. © Esri, Maxar, Earthstar Geographics, and the GIS User Community',
+    },
+    'NLSC EMAP': {
+      value: 'https://wmts.nlsc.gov.tw/wmts/EMAP/default/GoogleMapsCompatible/{z}/{y}/{x}',
+      desc: 'Taiwan e-Map (台灣通用電子地圖). © National Land Surveying and Mapping Center, Taiwan',
+    },
+    'NLSC Photo': {
+      value: 'https://wmts.nlsc.gov.tw/wmts/PHOTO2/default/GoogleMapsCompatible/{z}/{y}/{x}',
+      desc: 'Taiwan aerial imagery (正射影像). © National Land Surveying and Mapping Center, Taiwan',
+    },
+  },
 })
 
 /**

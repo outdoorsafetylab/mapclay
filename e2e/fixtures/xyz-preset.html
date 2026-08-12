@@ -1,0 +1,19 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <!-- Resolve mapclay.js and its ./renderers/*.mjs aliases under /dist/ -->
+    <base href="/dist/" />
+  </head>
+  <body>
+    <pre id="map">
+use: Leaflet
+width: 400px
+height: 300px
+center: [121, 24]
+zoom: 8
+XYZ: OpenTopoMap
+    </pre>
+    <script src="mapclay.js" data-target="#map"></script>
+  </body>
+</html>

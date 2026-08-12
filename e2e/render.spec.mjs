@@ -21,6 +21,21 @@ for (const { name, fixture, root } of engines) {
   })
 }
 
+// A built-in XYZ preset name (aliases.XYZ in defaultAliases) must resolve to
+// its tile URL; OpenTopoMap is distinct from Leaflet's OSM fallback, so tile
+// requests against tile.opentopomap.org prove the alias resolved.
+test('XYZ preset resolves to its provider tiles (XYZ: OpenTopoMap)', async ({ page }) => {
+  await page.goto('/e2e/fixtures/xyz-preset.html')
+
+  const container = page.locator('#map .mapclay')
+  await expect(container).toHaveAttribute('data-render', 'fulfilled', {
+    timeout: 15_000,
+  })
+  await expect(
+    page.locator('#map img[src*="tile.opentopomap.org"]').first(),
+  ).toBeAttached()
+})
+
 // A well-formed but unresolvable crs (EPSG:999999) passes the crs regex but
 // fails fromEPSGCode; setCoordinateSystem must rethrow so the render step fails
 // and the container reports data-render="unfulfilled" rather than a broken map.
