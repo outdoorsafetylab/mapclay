@@ -162,7 +162,7 @@ center | Center of map camera | `Array` in [lon, lat], eg: [24, 121]
 zoom | Zoom level for map camera | `Number` `0-22`, eg: 12
 debug | Show tile boundary | `Boolean`, eg: true
 control | Object of control options, supports | `fullscreen: true`, `scale: true`
-XYZ | Raster tile URL | `URL` with {x}, {y} and {z}
+XYZ | Raster tile URL | `URL` with {x}, {y} and {z}, or a [built-in preset name](#built-in-aliases)
 GPX | GPX file path | `String` for fetchable resource path
 
 
@@ -217,6 +217,23 @@ aliases:
       value: [139.6917,35.6895]
       desc: The biggest city in Japan
 ```
+
+#### Built-in aliases
+
+Besides the hidden `use` aliases for [default renderers](#renderer), mapclay ships
+a curated set of `XYZ` presets for keyless raster tile providers, so a basemap is
+one word away:
+
+```yml
+use: Leaflet
+XYZ: OpenTopoMap
+```
+
+Available presets: `OSM`, `OSM HOT`, `OpenTopoMap`, `CyclOSM`, `CARTO Light`,
+`CARTO Dark`, `Esri World Imagery`, `NLSC EMAP`, `NLSC Photo` (the last two are
+Taiwan-specific). Each preset carries its attribution text in its `desc` field;
+mapclay does not render attribution on the map, so make sure your page credits
+the tile provider accordingly.
 
 ### Option: `apply`
 

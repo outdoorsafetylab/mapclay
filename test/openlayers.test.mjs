@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import Renderer from '../src/BasicOpenlayersRenderer.mjs'
+import { defaultAliases } from '../src/mapclay.mjs'
 
 describe('openlayers crs validation', () => {
   it('throws on an invalid crs instead of silently falling back', async () => {
@@ -46,5 +47,19 @@ describe('openlayers option aliases', () => {
       type: 'wmts',
       url: 'https://example.com/wmts',
     })
+  })
+
+  it('turns a resolved XYZ preset URL into a tile data entry', () => {
+    const renderer = new Renderer()
+    // the pipeline resolves `XYZ: OSM` to the URL before this step runs
+    const url = defaultAliases.XYZ.OSM.value
+    const config = { aliases: {}, data: [], XYZ: url }
+
+    renderer.setOptionAliases(config)
+
+    expect(config.XYZ).toBeUndefined()
+    expect(config.data).toContainEqual(
+      expect.objectContaining({ type: 'tile', url }),
+    )
   })
 })

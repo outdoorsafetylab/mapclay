@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { renderWith } from '../src/mapclay.mjs'
+import { render, renderWith } from '../src/mapclay.mjs'
 
 /**
  * Build a mock renderer usable as `config.use`. prepareRenderer accepts any
@@ -42,6 +42,26 @@ describe('alias resolution', () => {
     })
     expect(renderer.url).toBe('http://x')
     expect(renderer.desc).toBe('hi')
+  })
+
+  // built-in presets are merged by the applyDefaultAliases converter, which
+  // only the public entry points (render, renderByYaml) apply
+  it('resolves a built-in XYZ preset without user-defined aliases', async () => {
+    const [promise] = render(makeContainer(), {
+      use: mockRenderer(),
+      XYZ: 'OSM',
+    })
+    const renderer = await promise
+    expect(renderer.XYZ).toBe('https://tile.openstreetmap.org/{z}/{x}/{y}.png')
+  })
+
+  it('leaves an uppercase value with no matching alias untouched', async () => {
+    const [promise] = render(makeContainer(), {
+      use: mockRenderer(),
+      XYZ: 'NotAPreset',
+    })
+    const renderer = await promise
+    expect(renderer.XYZ).toBe('NotAPreset')
   })
 })
 
