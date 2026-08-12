@@ -13,19 +13,19 @@ const defaultAliases = Object.freeze({
     Leaflet: {
       value: './renderers/leaflet.mjs',
       url: 'https://github.com/outdoorsafetylab/mapclay/blob/HEAD/src/BasicLeafletRenderer.mjs',
-      description:
+      desc:
         'Leaflet is the leading open-source JavaScript library for mobile-friendly interactive maps. It has all the mapping features most developers ever need.',
     },
     Maplibre: {
       value: './renderers/maplibre.mjs',
       url: 'https://github.com/outdoorsafetylab/mapclay/blob/HEAD/src/BasicMaplibreRenderer.mjs',
-      description:
+      desc:
         'MapLibre GL JS is a TypeScript library that uses WebGL to render interactive maps from vector tiles in a browser. The customization of the map comply with the MapLibre Style Spec.',
     },
     Openlayers: {
       value: './renderers/openlayers.mjs',
       url: 'https://github.com/outdoorsafetylab/mapclay/blob/HEAD/src/BasicOpenlayersRenderer.mjs',
-      description:
+      desc:
         'OpenLayers makes it easy to put a dynamic map in any web page. It can display map tiles, vector data and markers loaded from any source. OpenLayers has been developed to further the use of geographic information of all kinds.',
     },
   },

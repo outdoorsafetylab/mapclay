@@ -23,7 +23,6 @@ Size (rough effort): `size-S` (quick, localized) `size-M` (moderate, multi-file)
 
 ### Correctness bugs
 - [ ] [#4  GPX loading broken across all engines](0004-gpx-broken.md)
-- [ ] [#9  `setValueByAliases` reads `desc` not `description`](0009-desc-alias-mismatch.md)
 - [ ] [#10 OpenLayers calls non-existent `super.handleAliases`](0010-openlayers-handlealiases-missing.md)
 - [ ] [#11 draw util `document.onclick` is global / clobbers handlers](0011-document-onclick-global.md)
 
@@ -49,6 +48,7 @@ Size (rough effort): `size-S` (quick, localized) `size-M` (moderate, multi-file)
 - [x] [#3  `runBySteps` TypeError when `dependentResult` is undefined](0003-runbysteps-undefined.md) `bug`
 - [x] [#7  XYZ validation checks `z` instead of `{z}`](0007-xyz-validation.md) `bug`
 - [x] [#8  OpenLayers `crs` fallback keeps the invalid crs](0008-openlayers-crs-fallback.md) `bug`
+- [x] [#9  `setValueByAliases` reads `desc` not `description`](0009-desc-alias-mismatch.md) `bug`
 - [x] [#14 Reconcile README vs. code (default `use`, alias paths)](0014-reconcile-readme-vs-code.md) `docs`
 - [x] [#22 Typo `config.aply` in thrown error](0022-config-aply-typo.md) `bug`
 - [x] [#23 Add test suite (Vitest jsdom + Playwright)](0023-test-suite.md) `tests`
