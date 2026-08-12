@@ -2,7 +2,7 @@
 id: 18
 title: Show current coordinates
 state: open
-labels: [feature]
+labels: [feature, size-M]
 assignee: pham
 created: 2026-08-11
 ---

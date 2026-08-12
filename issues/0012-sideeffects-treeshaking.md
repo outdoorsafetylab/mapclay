@@ -2,7 +2,7 @@
 id: 12
 title: Fix `sideEffects: false` — top-level side effects may be tree-shaken
 state: open
-labels: [packaging]
+labels: [packaging, size-S]
 assignee: pham
 created: 2026-08-11
 ---

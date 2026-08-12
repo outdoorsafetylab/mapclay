@@ -2,7 +2,7 @@
 id: 20
 title: PMTiles support (Protomaps)
 state: open
-labels: [feature]
+labels: [feature, size-M]
 assignee: pham
 created: 2026-08-11
 ---

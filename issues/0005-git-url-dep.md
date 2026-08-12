@@ -2,7 +2,7 @@
 id: 5
 title: Replace git-URL dependency maplibre-gl-vector-text-protocol
 state: open
-labels: [packaging]
+labels: [packaging, size-M]
 assignee: pham
 created: 2026-08-11
 ---

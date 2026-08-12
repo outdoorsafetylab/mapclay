@@ -2,7 +2,7 @@
 id: 1
 title: Make `eval` opt-in (or provide a way to disable it)
 state: open
-labels: [security]
+labels: [security, size-M]
 assignee: pham
 created: 2026-08-11
 ---

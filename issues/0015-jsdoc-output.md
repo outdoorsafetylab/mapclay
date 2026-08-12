@@ -2,7 +2,7 @@
 id: 15
 title: Generate and/or commit JSDoc output
 state: open
-labels: [docs]
+labels: [docs, size-M]
 assignee: pham
 created: 2026-08-11
 ---

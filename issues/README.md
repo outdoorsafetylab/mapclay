@@ -12,6 +12,9 @@ the single source of truth for open work (there is no separate `TODO.md`).
 
 Labels: `security` `bug` `packaging` `docs` `feature` `tests`
 
+Size (rough effort): `size-S` (quick, localized) `size-M` (moderate, multi-file)
+`size-L` (design + multi-engine / UI). Query: `grep -l 'size-L' issues/[0-9]*.md`.
+
 ## Open
 
 ### Security

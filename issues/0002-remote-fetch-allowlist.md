@@ -2,7 +2,7 @@
 id: 2
 title: Allowlist / restrict origins for remote `apply:` and `use:` fetching
 state: open
-labels: [security]
+labels: [security, size-M]
 assignee: pham
 created: 2026-08-11
 ---

@@ -2,7 +2,7 @@
 id: 6
 title: Sync map cameras across renderers
 state: open
-labels: [feature]
+labels: [feature, size-L]
 assignee: pham
 created: 2026-08-11
 ---

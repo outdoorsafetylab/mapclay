@@ -2,7 +2,7 @@
 id: 13
 title: Register the full public API on globalThis.mapclay
 state: open
-labels: [packaging]
+labels: [packaging, size-S]
 assignee: pham
 created: 2026-08-11
 ---

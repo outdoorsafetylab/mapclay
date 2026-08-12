@@ -2,7 +2,7 @@
 id: 19
 title: More aliases (e.g. leaflet-providers XYZ presets)
 state: open
-labels: [feature]
+labels: [feature, size-S]
 assignee: pham
 created: 2026-08-11
 ---

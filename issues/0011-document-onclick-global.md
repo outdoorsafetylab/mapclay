@@ -2,7 +2,7 @@
 id: 11
 title: draw util's document.onclick clobbers other handlers and is global
 state: open
-labels: [bug]
+labels: [bug, size-M]
 assignee: pham
 created: 2026-08-11
 ---

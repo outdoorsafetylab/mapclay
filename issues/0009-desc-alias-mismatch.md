@@ -2,7 +2,7 @@
 id: 9
 title: setValueByAliases reads `desc` but alias data uses `description`
 state: open
-labels: [bug]
+labels: [bug, size-S]
 assignee: pham
 created: 2026-08-11
 ---

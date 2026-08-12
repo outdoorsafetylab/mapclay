@@ -2,7 +2,7 @@
 id: 21
 title: Crosshair at center of map
 state: open
-labels: [feature]
+labels: [feature, size-S]
 assignee: pham
 created: 2026-08-11
 ---

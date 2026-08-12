@@ -2,7 +2,7 @@
 id: 10
 title: OpenLayers setOptionsAliases calls non-existent super.handleAliases
 state: open
-labels: [bug]
+labels: [bug, size-S]
 assignee: pham
 created: 2026-08-11
 ---

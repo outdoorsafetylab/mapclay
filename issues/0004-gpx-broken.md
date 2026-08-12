@@ -2,7 +2,7 @@
 id: 4
 title: GPX loading is broken/incomplete across all engines
 state: open
-labels: [bug]
+labels: [bug, size-L]
 assignee: pham
 created: 2026-08-11
 ---

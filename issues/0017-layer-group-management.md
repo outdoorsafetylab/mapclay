@@ -2,7 +2,7 @@
 id: 17
 title: Management of layer groups
 state: open
-labels: [feature]
+labels: [feature, size-L]
 assignee: pham
 created: 2026-08-11
 ---
