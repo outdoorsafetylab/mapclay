@@ -63,8 +63,8 @@ const Renderer = class extends defaultExport {
   }
 
   /** step: options */
-  setOptionsAliases (config) {
-    super.handleAliases(config)
+  setOptionAliases (config) {
+    super.setOptionAliases(config)
     if (config.STYLE) {
       config.data.push({
         type: 'style',
