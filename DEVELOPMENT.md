@@ -45,25 +45,35 @@ pnpm install
 
 ## Issue tracking
 
-Open work lives in [`issues/`](./issues/) — a GitHub-style tracker of one markdown
-file per issue (`NNNN-slug.md`), with [`issues/README.md`](./issues/README.md) as the
-board. That README documents the file mechanics (create / close / query); the flow for
-actually *working* an issue is:
+Open work lives in [`issues/`](./issues/) — a lightweight, GitHub-style tracker of one
+markdown file per issue, named `NNNN-slug.md`. There's no board file listing them; the
+files *are* the source of truth, and `git log -- issues/` is the history.
 
-1. **Pick & branch.** Find open work in the board
-   (`grep -l 'state: open' issues/[0-9]*.md`). Cut a branch named
-   `fix/issue-<N>-<slug>` (or `feat/…`) off `master`.
+File mechanics:
+
+- **Create:** copy [`issues/TEMPLATE.md`](./issues/TEMPLATE.md) to `NNNN-slug.md`, bump
+  the number, and fill in the front-matter.
+- **Close:** set `state: closed` (and add a `closed: YYYY-MM-DD` date) in the file, and
+  tick its task checkbox(es).
+- **Query:** open issues with `grep -l 'state: open' issues/[0-9]*.md`; by label with
+  `grep -rl 'security' issues/`; by size with `grep -l 'size-L' issues/[0-9]*.md`.
+
+Labels: `security` `bug` `packaging` `docs` `feature` `tests`. Size (rough effort):
+`size-S` (quick, localized), `size-M` (moderate, multi-file), `size-L` (design +
+multi-engine / UI).
+
+The flow for actually *working* an issue is:
+
+1. **Pick & branch.** Find open work (`grep -l 'state: open' issues/[0-9]*.md`). Cut a
+   branch named `fix/issue-<N>-<slug>` (or `feat/…`) off `master`.
 2. **Fix + test.** Make the change and add coverage: a Vitest test in `test/` and/or
    an `e2e/` fixture + spec (see [Tests](#tests)). Run `pnpm test` (and `pnpm test:e2e`
    when the change touches real rendering) and `pnpm lint`.
-3. **Commit.** Reference the issue in the subject, e.g.
-   `fix: <summary> (#<N>)`. Keep unrelated board upkeep in its own commit.
+3. **Commit.** Reference the issue in the subject, e.g. `fix: <summary> (#<N>)`.
 4. **Merge.** Merge the branch into `master` (history uses merge commits, e.g.
    `Merge branch 'fix/issue-8-crs-fallback'`).
-5. **Close.** In the issue file set `state: closed` and add a `closed: YYYY-MM-DD`
-   date, tick its task checkbox(es), then move its line from the relevant **Open**
-   subsection to **Closed** in `issues/README.md` (keep the label suffix). New issues
-   start from [`issues/TEMPLATE.md`](./issues/TEMPLATE.md).
+5. **Close.** In the issue file set `state: closed`, add a `closed: YYYY-MM-DD` date,
+   and tick its task checkbox(es).
 
 ## Build output
 
