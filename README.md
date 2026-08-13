@@ -15,30 +15,30 @@ You can include MapClay in your project using npm:
 npm install mapclay
 ```
 
-OR use it directly from a CDN. The following examples will go by this way:
+OR use it directly from a CDN as an ES module. The examples below import from or
+auto-run this URL:
 
-```html
-<script src='https://unpkg.com/mapclay@latest/dist/mapclay.js'></script>
+```
+https://unpkg.com/mapclay@latest/dist/mapclay.mjs
 ```
 
 ### The minimal use cases
 
-Add script from CDN, and specify **CSS selector** for target HTML element by
-- **data attribute** `data-target`
-- **query paremeter** `target`
+Add the module script from CDN with a **query parameter** `target` set to a
+**CSS selector** for the target HTML element:
 
 [Try it out](https://markdown-it.github.io/#md3=%7B%22source%22%3A%22%3Cdiv%20id%3D%27map%27%3E%3C%2Fdiv%3E%5Cn%3Cscript%20src%3D%27https%3A%2F%2Funpkg.com%2Fmapclay%40latest%2Fdist%2Fmapclay.js%3Ftarget%3D%2523map%27%3E%3C%2Fscript%3E%5Cn%22%2C%22defaults%22%3A%7B%22html%22%3Atrue%2C%22xhtmlOut%22%3Afalse%2C%22breaks%22%3Afalse%2C%22langPrefix%22%3A%22%22%2C%22linkify%22%3Atrue%2C%22typographer%22%3Afalse%2C%22_highlight%22%3Afalse%2C%22_strict%22%3Afalse%2C%22_view%22%3A%22html%22%7D%7D) with online markdown editor
 
 ```html
 <!-- Target all <pre> elements -->
 <pre></pre>
-<script data-target="pre" src='https://unpkg.com/mapclay@latest/dist/mapclay.js'></script>
+<script type="module" src='https://unpkg.com/mapclay@latest/dist/mapclay.mjs?target=pre'></script>
 
 <!-- Or... -->
 
 <!-- Target all elements with 'id="map"', selector '#map' in URL encoding is '%23map' -->
 <div id='map'></div>
-<script src='https://unpkg.com/mapclay@latest/dist/mapclay.js?target=%23map'></script>
+<script type="module" src='https://unpkg.com/mapclay@latest/dist/mapclay.mjs?target=%23map'></script>
 ```
 
 <br>
@@ -57,7 +57,7 @@ zoom: 8
 XYZ: https://tile.openstreetmap.jp/styles/osm-bright/512/{z}/{x}/{y}.png
 </pre>
 
-<script src='https://unpkg.com/mapclay@latest/dist/mapclay.js?target=pre'></script>
+<script type="module" src='https://unpkg.com/mapclay@latest/dist/mapclay.mjs?target=pre'></script>
 ```
 
 <br>
@@ -72,7 +72,7 @@ All valid target elements would be rendered:
 <pre>use: Maplibre</pre>
 <pre>use: Openlayers</pre>
 
-<script src='https://unpkg.com/mapclay@latest/dist/mapclay.js?target=pre'></script>
+<script type="module" src='https://unpkg.com/mapclay@latest/dist/mapclay.mjs?target=pre'></script>
 ```
 
 <br>
@@ -88,13 +88,13 @@ Here comes API:
 <head>
     <title>Play with mapclay</title>
     <meta charset='utf-8'>
-    <script src='https://unpkg.com/mapclay@latest/dist/mapclay.js'></script>
 </head>
 <body>
 <pre id="map">
 <!-- ...Options here! -->
 </pre>
-<script>
+<script type="module">
+import { render, renderByYaml } from 'https://unpkg.com/mapclay@latest/dist/mapclay.mjs'
 //...Lets coding!
 </script>
 </body>
@@ -104,7 +104,7 @@ Here comes API:
 ### Render by text content
 
 Still, write text content on target element for options.
-And use `mapclay.renderByYaml()` for this case:
+And use `renderByYaml()` for this case:
 
 [Try it out](https://markdown-it.github.io/#md3=%7B%22source%22%3A%22%3Cscript%20src%3D%27https%3A%2F%2Funpkg.com%2Fmapclay%40latest%2Fdist%2Fmapclay.js%27%3E%3C%2Fscript%3E%5Cn%5Cn%5Cn%3Cpre%20id%3D%27map%27%3E%5Cnuse%3A%20Maplibre%5Cnwidth%3A%20400px%5Cnheight%3A%2050vh%5Cncenter%3A%20%5B139.6917%2C35.6895%5D%5Cn%3C%2Fpre%3E%5Cn%5Cn%5Cn%3Cscript%20defer%3E%5Cnconst%20target%20%3D%20document.querySelector%28%27%23map%27%29%5Cnmapclay.renderByYaml%28target%2C%20target.textContent%29%5Cn%3C%2Fscript%3E%22%2C%22defaults%22%3A%7B%22html%22%3Atrue%2C%22xhtmlOut%22%3Afalse%2C%22breaks%22%3Afalse%2C%22langPrefix%22%3A%22language-%22%2C%22linkify%22%3Atrue%2C%22typographer%22%3Atrue%2C%22_highlight%22%3Atrue%2C%22_strict%22%3Afalse%2C%22_view%22%3A%22html%22%7D%7D)
 
@@ -119,9 +119,11 @@ center: [139.6917,35.6895]
 ```
 
 ```js
-// In <script>
+// In <script type="module">
+import { renderByYaml } from 'https://unpkg.com/mapclay@latest/dist/mapclay.mjs'
+
 const target = document.querySelector('#map');
-mapclay.renderByYaml(target, target.textContent);
+renderByYaml(target, target.textContent);
 ```
 
 ### Render by config object
@@ -131,10 +133,12 @@ Instead of text content, you can manually specify options by config object:
 [Try it out](https://markdown-it.github.io/#md3=%7B%22source%22%3A%22%3Cscript%20src%3D%27https%3A%2F%2Funpkg.com%2Fmapclay%40latest%2Fdist%2Fmapclay.js%27%3E%3C%2Fscript%3E%5Cn%5Cn%5Cn%3Cpre%20id%3D%27map%27%3E%3C%2Fpre%3E%5Cn%5Cn%5Cn%3Cscript%20defer%3E%5Cnconsole.log%28mapclay%29%5Cnconst%20target%20%3D%20document.querySelector%28%27%23map%27%29%5Cn%5Cnmapclay.render%28target%2C%20%7B%5Cn%20%20use%3A%20%5C%22Maplibre%5C%22%2C%5Cn%20%20width%3A%20%5C%22400px%5C%22%2C%5Cn%20%20height%3A%20%5C%22400px%5C%22%2C%5Cn%20%20center%3A%20%5B139.6917%2C35.6895%5D%2C%5Cn%20%20zoom%3A%208%2C%5Cn%7D%29%5Cn%3C%2Fscript%3E%22%2C%22defaults%22%3A%7B%22html%22%3Atrue%2C%22xhtmlOut%22%3Afalse%2C%22breaks%22%3Afalse%2C%22langPrefix%22%3A%22language-%22%2C%22linkify%22%3Atrue%2C%22typographer%22%3Atrue%2C%22_highlight%22%3Atrue%2C%22_strict%22%3Afalse%2C%22_view%22%3A%22html%22%7D%7D)
 
 ```js
-// In <script>
+// In <script type="module">
+import { render } from 'https://unpkg.com/mapclay@latest/dist/mapclay.mjs'
+
 const target = document.querySelector('#map');
 
-mapclay.render(target, {
+render(target, {
   use: "Maplibre",
   width: "400px",
   height: "400px",
@@ -300,9 +304,9 @@ imported relative to the loaded `mapclay` module, so they only resolve where a
 
 - **npm** (`import ... from 'mapclay'`): resolves through `index.mjs` → `dist/mapclay.mjs`,
   which ships alongside `dist/renderers/`, so the aliases work out of the box.
-- **CDN** (`<script src="…/dist/mapclay.js">`): the dynamic `import()` resolves against
-  the page URL, so it works when the script is served from the `dist/` directory (or set
-  a `<base href="…/dist/">`).
+- **CDN** (`<script type="module" src="…/dist/mapclay.mjs">`): the dynamic `import()`
+  resolves against the module's own URL, so the aliases work as long as `dist/renderers/`
+  sits next to the loaded `mapclay.mjs` (which it does on unpkg).
 
 Always load `mapclay` through its package entry or the `dist/` bundle. The package also
 ships `src/**`, but deep-importing the unbundled `src/mapclay.mjs` is **not** a supported

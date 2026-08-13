@@ -6,7 +6,12 @@
   "type": "module",
   "main": "index.mjs",
   "module": "index.mjs",
-  "sideEffects": false,
+  "sideEffects": [
+    "./dist/renderers/*.mjs",
+    "./src/BasicLeafletRenderer.mjs",
+    "./src/BasicMaplibreRenderer.mjs",
+    "./src/BasicOpenlayersRenderer.mjs"
+  ],
   "files": [
     "index.mjs",
     "dist/**",

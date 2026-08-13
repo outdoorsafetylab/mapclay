@@ -2,8 +2,6 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <!-- Resolve mapclay.js and its ./renderers/*.mjs aliases under /dist/ -->
-    <base href="/dist/" />
   </head>
   <body>
     <pre id="map">
@@ -19,6 +17,6 @@ style:
   sources: {}
   layers: []
     </pre>
-    <script src="mapclay.js" data-target="#map"></script>
+    <script type="module" src="/dist/mapclay.mjs?target=%23map"></script>
   </body>
 </html>
