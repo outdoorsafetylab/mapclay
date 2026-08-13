@@ -27,4 +27,5 @@ Related: [[0013-globalthis-public-api]].
 assignment was deleted outright. `sideEffects` now lists the renderer modules that call
 `loadCSS()` at import time (`dist/renderers/*.mjs` + `src/Basic*Renderer.mjs`); `mapclay.mjs`
 is intentionally left out so its `?target=` auto-render block can be tree-shaken by app
-bundlers.
+bundlers. This *declares* the `loadCSS()` side effect so bundlers preserve it; eliminating
+it entirely (lazy CSS in renderer steps) is tracked in [[0027-loadcss-lazy-in-steps]].
