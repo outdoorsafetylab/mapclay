@@ -20,7 +20,7 @@
   "scripts": {
     "watch": "npx rollup -c scripts/rollup.config.js -w",
     "build": "npx rollup -c scripts/rollup.config.js",
-    "lint": "standard --fix",
+    "lint": "eslint --fix .",
     "docs": "jsdoc -c scripts/jsdoc.conf src/;",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -31,8 +31,10 @@
     "@rollup/plugin-commonjs": "^28.0.1",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-terser": "^0.4.4",
+    "eslint": "^9.39.5",
     "globals": "^15.9.0",
     "jsdom": "^25.0.1",
+    "neostandard": "^0.13.0",
     "rollup": "^4.62.4",
     "vitest": "^2.1.9"
   },

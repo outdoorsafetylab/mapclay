@@ -23,7 +23,7 @@ pnpm install
 |---|---|
 | `pnpm build` | Bundle `src/` into `dist/` with Rollup (config: `scripts/rollup.config.js`). |
 | `pnpm watch` | Same as build, in watch mode (rebuilds on `src/**` changes). |
-| `pnpm lint` | Run `standard --fix` (JavaScript Standard Style, auto-fixing). |
+| `pnpm lint` | Run `eslint --fix .` (neostandard preset, auto-fixing; config: `eslint.config.mjs`). |
 | `pnpm docs` | Generate JSDoc into `docs/` (config: `scripts/jsdoc.conf`). |
 | `pnpm test` | Run the Vitest unit/pipeline suite (jsdom) in `test/`. |
 | `pnpm test:watch` | Same, in watch mode. |
@@ -151,7 +151,9 @@ map (or a Promise that resolves when the map is ready) from `addMap`.
 
 ## Conventions
 
-- **Style:** JavaScript Standard Style via `standard` (run `pnpm lint`). ESM only
+- **Style:** JavaScript Standard Style via ESLint + `neostandard`, with one override:
+  trailing commas on multiline literals (`@stylistic/comma-dangle: always-multiline`,
+  see `eslint.config.mjs`). Run `pnpm lint`. ESM only
   (`"type": "module"`), `.mjs` extensions. Prettier config in `package.json` sets
   `arrowParens: avoid`.
 - **Functional core:** `mapclay.mjs` favors small pure functions, currying
