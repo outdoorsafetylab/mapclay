@@ -464,13 +464,11 @@ const renderByYamlWith = (converter = null) =>
  */
 const renderByScriptTargetWith = (converter = null) =>
   async () => {
-    const script = document.currentScript
-    const cssSelector =
-      script?.getAttribute('data-target') ??
-      URL.parse(script?.src)?.searchParams?.get('target')
-    const containers = document.querySelectorAll(cssSelector)
+    const cssSelector = new URL(import.meta.url).searchParams.get('target')
+    if (!cssSelector) return
 
-    if (!cssSelector || !containers) return
+    const containers = document.querySelectorAll(cssSelector)
+    if (!containers.length) return
 
     containers.forEach(target => renderByYamlWith(converter)(target))
   }
@@ -479,8 +477,10 @@ const render = renderWith(applyDefaultAliases)
 const renderByYaml = renderByYamlWith(applyDefaultAliases)
 const renderByScriptTarget = renderByScriptTargetWith(applyDefaultAliases)
 
-if (document.currentScript) {
-  globalThis.mapclay = { render, renderWith, renderByYaml, renderByYamlWith }
+// Auto-render when loaded as `<script type="module" src="…mapclay.mjs?target=SELECTOR">`.
+// A plain `import` (no `?target=`) stays inert, so this is safe for bundlers/npm consumers.
+if (new URL(import.meta.url).searchParams.has('target')) {
+  renderByScriptTarget()
 }
 
 export {

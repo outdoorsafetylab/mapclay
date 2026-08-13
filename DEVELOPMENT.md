@@ -78,17 +78,19 @@ The flow for actually *working* an issue is:
 ## Build output
 
 `dist/` and `docs/` are gitignored; they are build artifacts, not source. `pnpm build`
-produces, for each entry point, both an ESM (`.mjs`) and a UMD (`.js`) bundle:
+produces an ESM (`.mjs`) bundle for each entry point:
 
-- `src/mapclay.mjs` → `dist/mapclay.mjs` (ESM) and `dist/mapclay.js` (UMD)
-- `src/BasicLeafletRenderer.mjs` → `dist/renderers/leaflet.{mjs,js}`
-- `src/BasicMaplibreRenderer.mjs` → `dist/renderers/maplibre.{mjs,js}`
-- `src/BasicOpenlayersRenderer.mjs` → `dist/renderers/openlayers.{mjs,js}`
+- `src/mapclay.mjs` → `dist/mapclay.mjs`
+- `src/BasicLeafletRenderer.mjs` → `dist/renderers/leaflet.mjs`
+- `src/BasicMaplibreRenderer.mjs` → `dist/renderers/maplibre.mjs`
+- `src/BasicOpenlayersRenderer.mjs` → `dist/renderers/openlayers.mjs`
 
-The UMD bundles append `renderByScriptTarget()` as an `outro`, which is what makes the
-`<script src="...mapclay.js?target=...">` auto-render flow work. Rollup is configured
-with `context: 'window'`, and terser runs in production builds with `keep_fnames: true`
-(function names are relied on — see the renderer/steps model below).
+`mapclay.mjs` auto-runs `renderByScriptTarget()` at import time **only when** its own URL
+carries a `?target=` query (read via `import.meta.url`), which is what makes the
+`<script type="module" src="...mapclay.mjs?target=...">` auto-render flow work; a plain
+`import` stays inert. Rollup is configured with `context: 'window'`, and terser runs in
+production builds with `keep_fnames: true` (function names are relied on — see the
+renderer/steps model below).
 
 The published package (`package.json` `files`) ships `index.mjs`, `dist/**`, `src/**`,
 and `assets/**`. `index.mjs` re-exports the three renderers and everything from
@@ -169,7 +171,7 @@ Until there's an automated suite, verify changes in a browser:
 
 ```bash
 pnpm build
-# serve the repo root, then open an HTML file that loads dist/mapclay.js
+# serve the repo root, then open an HTML file that loads dist/mapclay.mjs
 python3 -m http.server 8000
 ```
 
@@ -183,7 +185,7 @@ height: 300px
 center: [121, 24]
 zoom: 8
 </pre>
-<script src="/dist/mapclay.js?target=pre"></script>
+<script type="module" src="/dist/mapclay.mjs?target=pre"></script>
 ```
 
 Check the map element's `data-render` attribute (`fulfilled` / `unfulfilled`) and the

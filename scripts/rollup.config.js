@@ -39,14 +39,6 @@ const outputForMain = [
     format: 'esm',
     entryFileNames: '[name].mjs',
   },
-  {
-    name: 'mapclay',
-    format: 'umd',
-    file: 'dist/mapclay.js',
-    exports: 'named',
-    esModule: false,
-    outro: 'renderByScriptTarget()',
-  },
 ]
 
 const outputForRenderer = name => [
@@ -55,13 +47,6 @@ const outputForRenderer = name => [
     format: 'esm',
     entryFileNames: name + '.mjs',
     exports: 'named',
-  },
-  {
-    name,
-    format: 'umd',
-    file: `dist/renderers/${name}.js`,
-    exports: 'named',
-    outro: 'renderByScriptTarget()',
   },
 ]
 
