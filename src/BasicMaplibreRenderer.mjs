@@ -1,5 +1,4 @@
 import defaultExport, { MapOption, loadCSS } from './BaseRenderer'
-/* eslint-disable-next-line no-unused-vars */
 import * as maplibregl from 'maplibre-gl'
 import { addProtocols } from 'maplibre-gl-vector-text-protocol'
 import { TerraDrawMapLibreGLAdapter } from 'terra-draw-maplibre-gl-adapter'
@@ -14,7 +13,6 @@ const Renderer = class extends defaultExport {
   style = 'https://demotiles.maplibre.org/style.json'
   link = false
   globe = false
-  /* eslint-disable-next-line no-undef */
   maplibregl = maplibregl
 
   /** options */
