@@ -27,7 +27,7 @@ https://unpkg.com/mapclay@latest/dist/mapclay.mjs
 Add the module script from CDN with a **query parameter** `target` set to a
 **CSS selector** for the target HTML element:
 
-[Try it out](https://markdown-it.github.io/#md3=%7B%22source%22%3A%22%3Cdiv%20id%3D%27map%27%3E%3C%2Fdiv%3E%5Cn%3Cscript%20src%3D%27https%3A%2F%2Funpkg.com%2Fmapclay%40latest%2Fdist%2Fmapclay.js%3Ftarget%3D%2523map%27%3E%3C%2Fscript%3E%5Cn%22%2C%22defaults%22%3A%7B%22html%22%3Atrue%2C%22xhtmlOut%22%3Afalse%2C%22breaks%22%3Afalse%2C%22langPrefix%22%3A%22%22%2C%22linkify%22%3Atrue%2C%22typographer%22%3Afalse%2C%22_highlight%22%3Afalse%2C%22_strict%22%3Afalse%2C%22_view%22%3A%22html%22%7D%7D) with online markdown editor
+[Try it out](https://outdoorsafetylab.github.io/mapclay/examples/playground.html#preset=minimal) in the live playground — edit the YAML on the left, see the map render on the right
 
 ```html
 <!-- Target all <pre> elements -->
@@ -45,7 +45,7 @@ Add the module script from CDN with a **query parameter** `target` set to a
 
 The text content of target element would be parsed as [YAML](https://nodeca.github.io/js-yaml/#yaml=dXNlOiBNYXBsaWJyZQp3aWR0aDogNDAwcHgKaGVpZ2h0OiA1MHZoCmNlbnRlcjogWzEzOS42OTE3LDM1LjY4OTVdCnpvb206IDgKWFlaOiBodHRwczovL3RpbGUub3BlbnN0cmVldG1hcC5qcC9zdHlsZXMvb3NtLWJyaWdodC81MTIve3p9L3t4fS97eX0ucG5n), So user can specify [options](#options) to configure map.
 
-[Try it out](https://markdown-it.github.io/#md3=%7B%22source%22%3A%22%60%60%60map%5Cnuse%3A%20Leaflet%5Cnwidth%3A%20400px%5Cnheight%3A%2050vh%5Cncenter%3A%20%5B139.6917%2C35.6895%5D%5Cnzoom%3A%208%5CnXYZ%3A%20https%3A%2F%2Ftile.openstreetmap.jp%2Fstyles%2Fosm-bright%2F512%2F%7Bz%7D%2F%7Bx%7D%2F%7By%7D.png%5Cn%60%60%60%5Cn%5Cn%3Cscript%20src%3D%27https%3A%2F%2Funpkg.com%2Fmapclay%40latest%2Fdist%2Fmapclay.js%3Ftarget%3Dpre%27%3E%3C%2Fscript%3E%22%2C%22defaults%22%3A%7B%22html%22%3Atrue%2C%22xhtmlOut%22%3Afalse%2C%22breaks%22%3Afalse%2C%22langPrefix%22%3A%22%22%2C%22linkify%22%3Atrue%2C%22typographer%22%3Afalse%2C%22_highlight%22%3Afalse%2C%22_strict%22%3Afalse%2C%22_view%22%3A%22html%22%7D%7D)
+[Try it out](https://outdoorsafetylab.github.io/mapclay/examples/playground.html#preset=options)
 
 ```html
 <pre>
@@ -64,7 +64,7 @@ XYZ: https://tile.openstreetmap.jp/styles/osm-bright/512/{z}/{x}/{y}.png
 
 All valid target elements would be rendered:
 
-[Try it out](https://markdown-it.github.io/#md3=%7B%22source%22%3A%22%3Cpre%3Euse%3A%20Leaflet%3C%2Fpre%3E%5Cn%3Cpre%3Euse%3A%20Maplibre%3C%2Fpre%3E%5Cn%3Cpre%3Euse%3A%20Openlayers%3C%2Fpre%3E%5Cn%5Cn%3Cscript%20src%3D%27https%3A%2F%2Funpkg.com%2Fmapclay%40latest%2Fdist%2Fmapclay.js%3Ftarget%3Dpre%27%3E%3C%2Fscript%3E%22%2C%22defaults%22%3A%7B%22html%22%3Atrue%2C%22xhtmlOut%22%3Afalse%2C%22breaks%22%3Afalse%2C%22langPrefix%22%3A%22%22%2C%22linkify%22%3Atrue%2C%22typographer%22%3Afalse%2C%22_highlight%22%3Afalse%2C%22_strict%22%3Afalse%2C%22_view%22%3A%22html%22%7D%7D)
+[Try it out](https://outdoorsafetylab.github.io/mapclay/examples/playground.html#preset=multiple)
 
 
 ```html
@@ -106,7 +106,7 @@ import { render, renderByYaml } from 'https://unpkg.com/mapclay@latest/dist/mapc
 Still, write text content on target element for options.
 And use `renderByYaml()` for this case:
 
-[Try it out](https://markdown-it.github.io/#md3=%7B%22source%22%3A%22%3Cscript%20src%3D%27https%3A%2F%2Funpkg.com%2Fmapclay%40latest%2Fdist%2Fmapclay.js%27%3E%3C%2Fscript%3E%5Cn%5Cn%5Cn%3Cpre%20id%3D%27map%27%3E%5Cnuse%3A%20Maplibre%5Cnwidth%3A%20400px%5Cnheight%3A%2050vh%5Cncenter%3A%20%5B139.6917%2C35.6895%5D%5Cn%3C%2Fpre%3E%5Cn%5Cn%5Cn%3Cscript%20defer%3E%5Cnconst%20target%20%3D%20document.querySelector%28%27%23map%27%29%5Cnmapclay.renderByYaml%28target%2C%20target.textContent%29%5Cn%3C%2Fscript%3E%22%2C%22defaults%22%3A%7B%22html%22%3Atrue%2C%22xhtmlOut%22%3Afalse%2C%22breaks%22%3Afalse%2C%22langPrefix%22%3A%22language-%22%2C%22linkify%22%3Atrue%2C%22typographer%22%3Atrue%2C%22_highlight%22%3Atrue%2C%22_strict%22%3Afalse%2C%22_view%22%3A%22html%22%7D%7D)
+[Try it out](https://outdoorsafetylab.github.io/mapclay/examples/playground.html#preset=options)
 
 ```html
 <!-- In HTML body -->
@@ -130,7 +130,7 @@ renderByYaml(target, target.textContent);
 
 Instead of text content, you can manually specify options by config object:
 
-[Try it out](https://markdown-it.github.io/#md3=%7B%22source%22%3A%22%3Cscript%20src%3D%27https%3A%2F%2Funpkg.com%2Fmapclay%40latest%2Fdist%2Fmapclay.js%27%3E%3C%2Fscript%3E%5Cn%5Cn%5Cn%3Cpre%20id%3D%27map%27%3E%3C%2Fpre%3E%5Cn%5Cn%5Cn%3Cscript%20defer%3E%5Cnconsole.log%28mapclay%29%5Cnconst%20target%20%3D%20document.querySelector%28%27%23map%27%29%5Cn%5Cnmapclay.render%28target%2C%20%7B%5Cn%20%20use%3A%20%5C%22Maplibre%5C%22%2C%5Cn%20%20width%3A%20%5C%22400px%5C%22%2C%5Cn%20%20height%3A%20%5C%22400px%5C%22%2C%5Cn%20%20center%3A%20%5B139.6917%2C35.6895%5D%2C%5Cn%20%20zoom%3A%208%2C%5Cn%7D%29%5Cn%3C%2Fscript%3E%22%2C%22defaults%22%3A%7B%22html%22%3Atrue%2C%22xhtmlOut%22%3Afalse%2C%22breaks%22%3Afalse%2C%22langPrefix%22%3A%22language-%22%2C%22linkify%22%3Atrue%2C%22typographer%22%3Atrue%2C%22_highlight%22%3Atrue%2C%22_strict%22%3Afalse%2C%22_view%22%3A%22html%22%7D%7D)
+[Try it out](https://outdoorsafetylab.github.io/mapclay/examples/playground.html#preset=options)
 
 ```js
 // In <script type="module">
@@ -415,7 +415,7 @@ Since YAML is a [ superset of JSON ](https://yaml.org/spec/1.2.2/#:~:text=supers
 
 Since YAML docs are separated by `---`, you can render multiple maps at once in a single target element by multiple YAML docs.
 
-[Try it out](https://markdown-it.github.io/#md3=%7B%22source%22%3A%22%60%60%60%5Cnuse%3A%20Leaflet%5Cn---%5Cnuse%3A%20Maplibre%5Cn---%5Cnuse%3A%20Openlayers%5Cn%60%60%60%5Cn%5Cn%3Cscript%20src%3D%27https%3A%2F%2Funpkg.com%2Fmapclay%40latest%2Fdist%2Fmapclay.js%3Ftarget%3Dpre%27%3E%3C%2Fscript%3E%22%2C%22defaults%22%3A%7B%22html%22%3Atrue%2C%22xhtmlOut%22%3Afalse%2C%22breaks%22%3Afalse%2C%22langPrefix%22%3A%22%22%2C%22linkify%22%3Atrue%2C%22typographer%22%3Afalse%2C%22_highlight%22%3Afalse%2C%22_strict%22%3Afalse%2C%22_view%22%3A%22html%22%7D%7D)
+[Try it out](https://outdoorsafetylab.github.io/mapclay/examples/playground.html#preset=multiple)
 
 ```yml
 # These are three valid YAML docs
@@ -431,7 +431,7 @@ use: Openlayers
 
 Default Renderers use `eval` options for custom scripts, it simply run `eval(VALUE_OF_OPTION)`.
 
-[Try it out](https://markdown-it.github.io/#md3=%7B%22source%22%3A%22%60%60%60map%5Cn%23%20Get%20View%20projection%20from%20ol.Map%2C%20it%20returns%20EPSG%3A3857%20by%20default%5Cnuse%3A%20Openlayers%5Cneval%3A%20console.log%28map.getView%28%29.getProjection%28%29.getCode%28%29%29%5Cn%60%60%60%5Cn%5Cn%3Cscript%20src%3D%27https%3A%2F%2Funpkg.com%2Fmapclay%40latest%2Fdist%2Fmapclay.js%3Ftarget%3Dpre%27%3E%3C%2Fscript%3E%22%2C%22defaults%22%3A%7B%22html%22%3Atrue%2C%22xhtmlOut%22%3Afalse%2C%22breaks%22%3Afalse%2C%22langPrefix%22%3A%22%22%2C%22linkify%22%3Atrue%2C%22typographer%22%3Afalse%2C%22_highlight%22%3Afalse%2C%22_strict%22%3Afalse%2C%22_view%22%3A%22html%22%7D%7D)
+[Try it out](https://outdoorsafetylab.github.io/mapclay/examples/playground.html#preset=eval)
 
 ```yml
 # Get methods in current Renderer
@@ -466,7 +466,7 @@ eval: console('This is the second YAML doc')
 
 Equals to this... (`;` at end of line matters):
 
-[Try it out](https://markdown-it.github.io/#md3=%7B%22source%22%3A%22%60%60%60%5Cn%23%20This%20YAML%20doc%20would%20be%20parsed%20as%20a%20JSON%20object%5Cnuse%3A%20Leaflet%5Cn---%5Cn%23%20This%20YAML%20doc%20would%20be%20parsed%20as%20String%5Cnconsole%28%27This%20is%20the%20first%20YAML%20doc%27%29%3B%5Cnconsole%28%27with%20multi-lines%27%29%3B%5Cnconsole%28%27string%20of%20script%27%29%3B%5Cn---%5Cn%23%20This%20YAML%20doc%20would%20be%20parsed%20as%20a%20JSON%20object%5Cnuse%3A%20Maplibre%5Cn---%5Cn%23%20This%20YAML%20doc%20would%20be%20parsed%20as%20String%5Cnconsole%28%27This%20is%20the%20second%20YAML%20doc%27%29%3B%5Cn%60%60%60%5Cn%5Cn%3Cscript%20src%3D%27https%3A%2F%2Funpkg.com%2Fmapclay%40latest%2Fdist%2Fmapclay.js%3Ftarget%3Dpre%27%3E%3C%2Fscript%3E%5Cn%22%2C%22defaults%22%3A%7B%22html%22%3Atrue%2C%22xhtmlOut%22%3Afalse%2C%22breaks%22%3Afalse%2C%22langPrefix%22%3A%22language-%22%2C%22linkify%22%3Atrue%2C%22typographer%22%3Atrue%2C%22_highlight%22%3Atrue%2C%22_strict%22%3Afalse%2C%22_view%22%3A%22html%22%7D%7D)
+[Try it out](https://outdoorsafetylab.github.io/mapclay/examples/playground.html#preset=multi-doc)
 
 ```yml
 # This YAML doc would be parsed as a JSON object

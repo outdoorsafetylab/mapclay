@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>mapclay playground</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+      }
+      body {
+        display: flex;
+        flex-direction: column;
+        font-family: system-ui, sans-serif;
+        color: #222;
+      }
+      header {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 0.75rem;
+        padding: 0.6rem 1rem;
+        border-bottom: 1px solid #ddd;
+        background: #fafafa;
+      }
+      header h1 {
+        font-size: 1rem;
+        margin: 0;
+        font-weight: 600;
+      }
+      header a {
+        color: #2563eb;
+        text-decoration: none;
+      }
+      header .spacer {
+        flex: 1;
+      }
+      label {
+        font-size: 0.85rem;
+      }
+      select {
+        font: inherit;
+        padding: 0.15rem 0.3rem;
+      }
+      main {
+        flex: 1;
+        display: flex;
+        min-height: 0;
+      }
+      .pane {
+        flex: 1;
+        min-width: 0;
+        overflow: auto;
+      }
+      #input {
+        width: 100%;
+        height: 100%;
+        border: 0;
+        resize: none;
+        padding: 1rem;
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 0.9rem;
+        line-height: 1.5;
+        tab-size: 2;
+        outline: none;
+      }
+      #output {
+        border-left: 1px solid #ddd;
+        padding: 1rem;
+        background: #f6f7f9;
+      }
+      /* Fallback size for maps whose config omits width/height. Inline styles
+         set by mapclay from `width:`/`height:` options override this. */
+      #output .mapclay {
+        width: 100%;
+        height: 320px;
+        margin-bottom: 1rem;
+        background: #fff;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>mapclay playground</h1>
+      <label>
+        Example:
+        <select id="preset"></select>
+      </label>
+      <span class="spacer"></span>
+      <a href="https://github.com/outdoorsafetylab/mapclay">GitHub</a>
+    </header>
+    <main>
+      <div class="pane">
+        <textarea
+          id="input"
+          spellcheck="false"
+          autocomplete="off"
+          autocapitalize="off"
+        ></textarea>
+      </div>
+      <div class="pane" id="output"></div>
+    </main>
+
+    <script type="module">
+      import { renderByYaml } from '../dist/mapclay.mjs'
+
+      // Each preset is the text content a user would put in a map target
+      // element, mirroring the code blocks in README.md.
+      const presets = {
+        minimal: {
+          label: 'Minimal',
+          text: `use: Leaflet
+width: 400px
+height: 300px
+center: [139.6917, 35.6895]
+zoom: 8
+XYZ: https://tile.openstreetmap.jp/styles/osm-bright/512/{z}/{x}/{y}.png
+`,
+        },
+        options: {
+          label: 'Options',
+          text: `use: Maplibre
+width: 400px
+height: 50vh
+center: [139.6917, 35.6895]
+zoom: 8
+XYZ: https://tile.openstreetmap.jp/styles/osm-bright/512/{z}/{x}/{y}.png
+`,
+        },
+        multiple: {
+          label: 'Multiple maps',
+          text: `use: Leaflet
+---
+use: Maplibre
+---
+use: Openlayers
+`,
+        },
+        eval: {
+          label: 'eval option',
+          text: `# Get View projection from ol.Map, it returns EPSG:3857 by default
+use: Openlayers
+eval: console.log(map.getView().getProjection().getCode())
+`,
+        },
+        'multi-doc': {
+          label: 'Multiple YAML docs',
+          text: `# This YAML doc would be parsed as a JSON object
+use: Leaflet
+---
+# This YAML doc would be parsed as String
+console.log('This is the first YAML doc');
+console.log('with multi-lines');
+console.log('string of script');
+---
+# This YAML doc would be parsed as a JSON object
+use: Maplibre
+---
+# This YAML doc would be parsed as String
+console.log('This is the second YAML doc');
+`,
+        },
+      }
+
+      const input = document.getElementById('input')
+      const output = document.getElementById('output')
+      const select = document.getElementById('preset')
+
+      // Populate the preset dropdown
+      for (const [name, { label }] of Object.entries(presets)) {
+        const option = document.createElement('option')
+        option.value = name
+        option.textContent = label
+        select.append(option)
+      }
+
+      const render = () => renderByYaml(output, input.value)
+
+      let timer
+      const renderDebounced = () => {
+        clearTimeout(timer)
+        timer = setTimeout(render, 300)
+      }
+
+      // `#preset=<name>` in the URL selects the initial example
+      const presetFromHash = () => {
+        const name = new URLSearchParams(location.hash.slice(1)).get('preset')
+        return presets[name] ? name : 'minimal'
+      }
+
+      const loadPreset = name => {
+        input.value = presets[name].text
+        select.value = name
+        render()
+      }
+
+      input.addEventListener('input', renderDebounced)
+
+      select.addEventListener('change', () => {
+        location.hash = `preset=${select.value}`
+      })
+
+      // Drive everything off the hash so links and the dropdown stay in sync
+      window.addEventListener('hashchange', () => loadPreset(presetFromHash()))
+
+      loadPreset(presetFromHash())
+    </script>
+  </body>
+</html>
